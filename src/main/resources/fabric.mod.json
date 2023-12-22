@@ -1,0 +1,39 @@
+{
+	"schemaVersion": 1,
+	"id": "nmm",
+	"version": "${version}",
+	"name": "Nightmare Mode",
+	"description": "This is a mod that increases the focus on survival by making the game harder.",
+	"authors": [
+		"Michael Faulkner"
+	],
+	"icon": "assets/nmm/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"mjf.nmm.NightmareMode"
+		],
+		"client": [
+			"mjf.nmm.NightmareModeClient"
+		],
+		"fabric-datagen": [
+			"mjf.nmm.NightmareModeDataGenerator"
+		]
+	},
+	"mixins": [
+		"nmm.mixins.json",
+		{
+			"config": "nmm.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.15.3",
+		"minecraft": "~1.20.4",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
