@@ -3,7 +3,13 @@
 	"package": "mjf.nmm.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
-		"ExampleMixin"
+		"ai/SensorMixin",
+		"entities/CreeperEntityMixin",
+		"entities/HostileEntityMixin",
+		"entities/MobEntityMixin",
+		"entities/ZombieEntityMixin",
+		"player/HungerManagerMixin",
+		"player/PlayerEntityMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

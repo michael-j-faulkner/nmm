@@ -13,19 +13,12 @@
 		"main": [
 			"mjf.nmm.NightmareMode"
 		],
-		"client": [
-			"mjf.nmm.NightmareModeClient"
-		],
 		"fabric-datagen": [
 			"mjf.nmm.NightmareModeDataGenerator"
 		]
 	},
 	"mixins": [
-		"nmm.mixins.json",
-		{
-			"config": "nmm.client.mixins.json",
-			"environment": "client"
-		}
+		"nmm.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.15.3",

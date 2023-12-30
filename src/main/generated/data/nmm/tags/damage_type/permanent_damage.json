@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:dragon_breath",
+    "minecraft:indirect_magic",
+    "minecraft:magic",
+    "minecraft:wither",
+    "minecraft:wither_skull",
+    "minecraft:sonic_boom",
+    "minecraft:starve",
+    "minecraft:drown"
+  ]
+}
