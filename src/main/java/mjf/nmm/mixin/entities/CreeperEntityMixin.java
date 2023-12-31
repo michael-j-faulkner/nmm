@@ -49,6 +49,8 @@ public abstract class CreeperEntityMixin extends HostileEntity {
 
 	/**
 	 * Delete normal creeper ai
+     * @reason 
+     * @author
 	 */
 	@Overwrite
 	public void initGoals() {

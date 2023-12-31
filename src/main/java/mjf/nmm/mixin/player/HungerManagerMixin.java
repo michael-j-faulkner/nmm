@@ -27,6 +27,8 @@ public abstract class HungerManagerMixin {
 
     /**
      * Remove fast regeneration from food
+     * @reason 
+     * @author
      */
     @Overwrite
     public void update(PlayerEntity player) {

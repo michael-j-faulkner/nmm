@@ -36,6 +36,8 @@ public abstract class ZombieEntityMixin extends HostileEntity {
 
     /**
 	 * Delete normal zombie ai
+     * @reason 
+     * @author
 	 */
 	@Overwrite
 	public void initGoals() {
