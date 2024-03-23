@@ -6,15 +6,20 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
 
+import mjf.nmm.entities.ai.sensors.CustomActivity;
+import mjf.nmm.entities.ai.sensors.CustomMemoryModuleType;
 import mjf.nmm.entities.ai.sensors.CustomSensorType;
+import mjf.nmm.entities.ai.tasks.ForgetTargetOrMineTask;
+import mjf.nmm.entities.ai.tasks.MineBlockTask;
+import net.fabricmc.fabric.api.entity.event.v1.EntityElytraEvents.Custom;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.LivingTargetCache;
+import net.minecraft.entity.ai.brain.MemoryModuleState;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
-import net.minecraft.entity.ai.brain.task.ForgetAttackTargetTask;
 import net.minecraft.entity.ai.brain.task.LookAroundTask;
 import net.minecraft.entity.ai.brain.task.LookAtMobTask;
 import net.minecraft.entity.ai.brain.task.MeleeAttackTask;
@@ -35,9 +40,10 @@ public class ZombieBrain {
 		CustomSensorType.FOLLOW_RANGE_ENTITIES, CustomSensorType.FOLLOW_RANGE_PLAYERS);
     public static final ImmutableList<MemoryModuleType<?>> MEMORY_MODULES = ImmutableList.of(
         MemoryModuleType.MOBS, MemoryModuleType.VISIBLE_MOBS,
-        MemoryModuleType.NEAREST_PLAYERS, MemoryModuleType.NEAREST_VISIBLE_PLAYER, 
+        MemoryModuleType.NEAREST_PLAYERS, CustomMemoryModuleType.NEAREST_TARGETABLE_PLAYERS,
+        CustomMemoryModuleType.NEAREST_TARGETABLE_PLAYER, MemoryModuleType.NEAREST_VISIBLE_PLAYER, 
         MemoryModuleType.NEAREST_VISIBLE_TARGETABLE_PLAYER,
-        MemoryModuleType.LOOK_TARGET, MemoryModuleType.WALK_TARGET, 
+        MemoryModuleType.LOOK_TARGET, MemoryModuleType.WALK_TARGET, CustomMemoryModuleType.MINE_BLOCK_LOCATION,
 		MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE, MemoryModuleType.PATH, MemoryModuleType.ATTACK_TARGET,
         MemoryModuleType.ATTACK_COOLING_DOWN);
 
@@ -69,9 +75,10 @@ public class ZombieBrain {
 
     private static void addFightActivities(ZombieEntity zombie, Brain<ZombieEntity> brain) {
         brain.setTaskList(Activity.FIGHT, 10, ImmutableList.of(
-            ForgetAttackTargetTask.create(),
+            ForgetTargetOrMineTask.create(),
             RangedApproachTask.create(1.0f),
-            MeleeAttackTask.create(10)
+            MeleeAttackTask.create(10),
+            new MineBlockTask<ZombieEntity>()
         ), MemoryModuleType.ATTACK_TARGET);
     }
 

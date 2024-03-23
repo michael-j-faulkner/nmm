@@ -8,13 +8,13 @@ import com.mojang.datafixers.util.Pair;
 
 import mjf.nmm.entities.ai.sensors.CustomSensorType;
 import mjf.nmm.entities.ai.tasks.CreeperIgniteTask;
+import mjf.nmm.entities.ai.tasks.ForgetTargetOrDetonateTask;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
-import net.minecraft.entity.ai.brain.task.ForgetAttackTargetTask;
 import net.minecraft.entity.ai.brain.task.LookAroundTask;
 import net.minecraft.entity.ai.brain.task.LookAtMobTask;
 import net.minecraft.entity.ai.brain.task.RandomTask;
@@ -65,7 +65,7 @@ public class CreeperBrain {
 
     private static void addFightActivities(CreeperEntity creeper, Brain<CreeperEntity> brain) {
         brain.setTaskList(Activity.FIGHT, 10, ImmutableList.of(
-            ForgetAttackTargetTask.create(),
+            ForgetTargetOrDetonateTask.create(),
             RangedApproachTask.create(1.0f)
         ), MemoryModuleType.ATTACK_TARGET);
     }

@@ -2,6 +2,7 @@ package mjf.nmm.entities.ai.tasks;
 
 import java.util.Optional;
 
+import mjf.nmm.entities.ScalingDifficulty;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.LivingTargetCache;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
@@ -20,7 +21,7 @@ public class CreeperIgniteTask {
                 creeper.setFuseSpeed(-1);
                 return true;
             }
-            if (creeper.squaredDistanceTo(target.get()) > 36.0) {
+            if (creeper.squaredDistanceTo(target.get()) > 36.0 + 28.0 * ScalingDifficulty.getPercentDifficulty(world, creeper.getPos())) {
                 creeper.setFuseSpeed(-1);
                 return true;
             }
