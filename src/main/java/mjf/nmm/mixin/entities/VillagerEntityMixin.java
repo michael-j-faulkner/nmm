@@ -84,7 +84,58 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
         map.put(VillagerProfession.TOOLSMITH, new Int2ObjectOpenHashMap<Factory[]>(ImmutableMap.of(1, new Factory[]{new BuyItemFactory(Items.COAL, 15, 16, 2), new SellItemFactory(new ItemStack(Items.STONE_AXE), 1, 1, 12, 1, 0.2f), new SellItemFactory(new ItemStack(Items.STONE_SHOVEL), 1, 1, 12, 1, 0.2f), new SellItemFactory(new ItemStack(Items.STONE_PICKAXE), 1, 1, 12, 1, 0.2f), new SellItemFactory(new ItemStack(Items.STONE_HOE), 1, 1, 12, 1, 0.2f)}, 2, new Factory[]{new BuyItemFactory(Items.IRON_INGOT, 4, 12, 10), new SellItemFactory(new ItemStack(Items.BELL), 36, 1, 12, 5, 0.2f)}, 3, new Factory[]{new BuyItemFactory(Items.FLINT, 30, 12, 20), new SellEnchantedToolFactory(Items.IRON_AXE, 1, 3, 10, 0.2f), new SellEnchantedToolFactory(Items.IRON_SHOVEL, 2, 3, 10, 0.2f), new SellEnchantedToolFactory(Items.IRON_PICKAXE, 3, 3, 10, 0.2f), new SellItemFactory(new ItemStack(Items.DIAMOND_HOE), 4, 1, 3, 10, 0.2f)}, 4, new Factory[]{new BuyItemFactory(Items.DIAMOND, 1, 12, 30), new SellEnchantedToolFactory(Items.DIAMOND_AXE, 12, 3, 15, 0.2f), new SellEnchantedToolFactory(Items.DIAMOND_SHOVEL, 5, 3, 15, 0.2f)}, 5, new Factory[]{new SellEnchantedToolFactory(Items.DIAMOND_PICKAXE, 13, 3, 30, 0.2f)})));
         map.put(VillagerProfession.BUTCHER, new Int2ObjectOpenHashMap<Factory[]>(ImmutableMap.of(1, new Factory[]{new BuyItemFactory(Items.CHICKEN, 14, 16, 2), new BuyItemFactory(Items.PORKCHOP, 7, 16, 2), new BuyItemFactory(Items.RABBIT, 4, 16, 2), new SellItemFactory(Items.RABBIT_STEW, 1, 1, 1)}, 2, new Factory[]{new BuyItemFactory(Items.COAL, 15, 16, 2), new SellItemFactory(Items.COOKED_PORKCHOP, 1, 5, 16, 5), new SellItemFactory(Items.COOKED_CHICKEN, 1, 8, 16, 5)}, 3, new Factory[]{new BuyItemFactory(Items.MUTTON, 7, 16, 20), new BuyItemFactory(Items.BEEF, 10, 16, 20)}, 4, new Factory[]{new BuyItemFactory(Items.DRIED_KELP_BLOCK, 10, 12, 30)}, 5, new Factory[]{new BuyItemFactory(Items.SWEET_BERRIES, 10, 12, 30)})));
         map.put(VillagerProfession.LEATHERWORKER, new Int2ObjectOpenHashMap<Factory[]>(ImmutableMap.of(1, new Factory[]{new BuyItemFactory(Items.LEATHER, 6, 16, 2), new SellDyedArmorFactory(Items.LEATHER_LEGGINGS, 3), new SellDyedArmorFactory(Items.LEATHER_CHESTPLATE, 7)}, 2, new Factory[]{new BuyItemFactory(Items.FLINT, 26, 12, 10), new SellDyedArmorFactory(Items.LEATHER_HELMET, 5, 12, 5), new SellDyedArmorFactory(Items.LEATHER_BOOTS, 4, 12, 5)}, 3, new Factory[]{new BuyItemFactory(Items.RABBIT_HIDE, 9, 12, 20), new SellDyedArmorFactory(Items.LEATHER_CHESTPLATE, 7)}, 4, new Factory[]{new BuyItemFactory(Items.SCUTE, 4, 12, 30), new SellDyedArmorFactory(Items.LEATHER_HORSE_ARMOR, 6, 12, 15)}, 5, new Factory[]{new SellItemFactory(new ItemStack(Items.SADDLE), 6, 1, 12, 30, 0.2f), new SellDyedArmorFactory(Items.LEATHER_HELMET, 5, 12, 30)})));
-        map.put(VillagerProfession.MASON, new Int2ObjectOpenHashMap<Factory[]>(ImmutableMap.of(1, new Factory[]{new BuyItemFactory(Items.CLAY_BALL, 10, 16, 2), new SellItemFactory(Items.BRICK, 1, 10, 16, 1)}, 2, new Factory[]{new BuyItemFactory(Blocks.STONE, 20, 16, 10), new SellItemFactory(Blocks.CHISELED_STONE_BRICKS, 1, 4, 16, 5)}, 3, new Factory[]{new BuyItemFactory(Blocks.GRANITE, 16, 16, 20), new BuyItemFactory(Blocks.ANDESITE, 16, 16, 20), new BuyItemFactory(Blocks.DIORITE, 16, 16, 20), new SellItemFactory(Blocks.DRIPSTONE_BLOCK, 1, 4, 16, 10), new SellItemFactory(Blocks.POLISHED_ANDESITE, 1, 4, 16, 10), new SellItemFactory(Blocks.POLISHED_DIORITE, 1, 4, 16, 10), new SellItemFactory(Blocks.POLISHED_GRANITE, 1, 4, 16, 10)}, 4, new Factory[]{new BuyItemFactory(Items.QUARTZ, 12, 12, 30), new SellItemFactory(Blocks.ORANGE_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.WHITE_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.BLUE_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.LIGHT_BLUE_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.GRAY_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.LIGHT_GRAY_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.BLACK_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.RED_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.PINK_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.MAGENTA_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.LIME_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.GREEN_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.CYAN_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.PURPLE_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.YELLOW_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.BROWN_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.ORANGE_GLAZED_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.WHITE_GLAZED_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.BLUE_GLAZED_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.LIGHT_BLUE_GLAZED_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.GRAY_GLAZED_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.LIGHT_GRAY_GLAZED_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.BLACK_GLAZED_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.RED_GLAZED_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.PINK_GLAZED_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.MAGENTA_GLAZED_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.LIME_GLAZED_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.GREEN_GLAZED_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.CYAN_GLAZED_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.PURPLE_GLAZED_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.YELLOW_GLAZED_TERRACOTTA, 1, 1, 12, 15), new SellItemFactory(Blocks.BROWN_GLAZED_TERRACOTTA, 1, 1, 12, 15)}, 5, new Factory[]{new SellItemFactory(Blocks.QUARTZ_PILLAR, 1, 1, 12, 30), new SellItemFactory(Blocks.QUARTZ_BLOCK, 1, 1, 12, 30)})));
+        map.put(VillagerProfession.MASON, new Int2ObjectOpenHashMap<Factory[]>(ImmutableMap.of(
+            1, new Factory[]{
+                new BuyItemFactory(Items.CLAY_BALL, 10, 16, 2), 
+                new SellItemFactory(Items.BRICK, 1, 10, 16, 1)}, 
+            2, new Factory[]{
+                new BuyItemFactory(Blocks.STONE, 20, 16, 10), 
+                new SellItemFactory(Blocks.CHISELED_STONE_BRICKS, 1, 4, 16, 5)}, 
+            3, new Factory[]{
+                new BuyItemFactory(Blocks.GRANITE, 16, 16, 20), 
+                new BuyItemFactory(Blocks.ANDESITE, 16, 16, 20), 
+                new BuyItemFactory(Blocks.DIORITE, 16, 16, 20), 
+                new SellItemFactory(Blocks.DRIPSTONE_BLOCK, 1, 4, 16, 10), 
+                new SellItemFactory(Blocks.POLISHED_ANDESITE, 1, 4, 16, 10), 
+                new SellItemFactory(Blocks.POLISHED_DIORITE, 1, 4, 16, 10), 
+                new SellItemFactory(Blocks.POLISHED_GRANITE, 1, 4, 16, 10)}, 
+            4, new Factory[]{
+                new BuyItemFactory(Items.QUARTZ, 12, 12, 30), 
+                new SellItemFactory(Blocks.ORANGE_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.WHITE_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.BLUE_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.LIGHT_BLUE_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.GRAY_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.LIGHT_GRAY_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.BLACK_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.RED_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.PINK_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.MAGENTA_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.LIME_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.GREEN_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.CYAN_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.PURPLE_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.YELLOW_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.BROWN_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.ORANGE_GLAZED_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.WHITE_GLAZED_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.BLUE_GLAZED_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.LIGHT_BLUE_GLAZED_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.GRAY_GLAZED_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.LIGHT_GRAY_GLAZED_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.BLACK_GLAZED_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.RED_GLAZED_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.PINK_GLAZED_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.MAGENTA_GLAZED_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.LIME_GLAZED_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.GREEN_GLAZED_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.CYAN_GLAZED_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.PURPLE_GLAZED_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.YELLOW_GLAZED_TERRACOTTA, 1, 1, 12, 15), 
+                new SellItemFactory(Blocks.BROWN_GLAZED_TERRACOTTA, 1, 1, 12, 15)}, 
+            5, new Factory[]{
+                new SellItemFactory(Blocks.QUARTZ_PILLAR, 1, 1, 12, 30), 
+                new SellItemFactory(Blocks.QUARTZ_BLOCK, 1, 1, 12, 30)})));
     });
     
     @Shadow

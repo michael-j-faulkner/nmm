@@ -29,7 +29,8 @@ public abstract class SpiderEntityMixin extends HostileEntity {
     @Override
     public boolean tryAttack(Entity target) {
         if (super.tryAttack(target)) {
-            if (this.getWorld().getBlockState(target.getBlockPos()).getHardness(target.getWorld(), target.getBlockPos()) >= 0.0f) {
+            if (this.getWorld().getBlockState(target.getBlockPos()).getHardness(target.getWorld(), target.getBlockPos()) >= 0.0f 
+                    && !this.getWorld().getBlockState(this.getBlockPos()).isOf(Blocks.COBWEB)) {
                 this.getWorld().breakBlock(target.getBlockPos(), true);
                 this.getWorld().setBlockState(target.getBlockPos(), Blocks.COBWEB.getDefaultState());
             }

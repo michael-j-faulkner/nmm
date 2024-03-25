@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.GameRules;
 
 public class Events {
     public static void registerEvents() {
@@ -19,7 +20,7 @@ public class Events {
 	}
 
 	private static void onWorldLoad(MinecraftServer server, ServerWorld world) {
-		// Disable Natural Regen
-		// server.getGameRules().get(GameRules.NATURAL_REGENERATION).set(false, server);
+		// Prevent sleep from skipping the night
+		world.getGameRules().get(GameRules.PLAYERS_SLEEPING_PERCENTAGE).set(101, server);
 	}
 }
