@@ -15,8 +15,11 @@ import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
+import net.minecraft.entity.ai.brain.task.ForgetTask;
+import net.minecraft.entity.ai.brain.task.GoToRememberedPositionTask;
 import net.minecraft.entity.ai.brain.task.LookAroundTask;
 import net.minecraft.entity.ai.brain.task.LookAtMobTask;
+import net.minecraft.entity.ai.brain.task.LookAtMobWithIntervalTask;
 import net.minecraft.entity.ai.brain.task.RandomTask;
 import net.minecraft.entity.ai.brain.task.RangedApproachTask;
 import net.minecraft.entity.ai.brain.task.StrollTask;
@@ -25,6 +28,9 @@ import net.minecraft.entity.ai.brain.task.WaitTask;
 import net.minecraft.entity.ai.brain.task.WanderAroundTask;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.CreeperEntity;
+import net.minecraft.entity.mob.HoglinBrain;
+import net.minecraft.entity.mob.HoglinEntity;
+import net.minecraft.util.math.intprovider.UniformIntProvider;
 
 public class CreeperBrain {
 	public static final ImmutableList<SensorType<? extends Sensor<? super CreeperEntity>>> SENSORS = ImmutableList.of(
@@ -40,6 +46,7 @@ public class CreeperBrain {
         CreeperBrain.addCoreActivities(creeper, brain);
         CreeperBrain.addIdleActivities(creeper, brain);
         CreeperBrain.addFightActivities(creeper, brain);
+        CreeperBrain.addAvoidTasks(creeper, brain);
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setDefaultActivity(Activity.IDLE);
         brain.resetPossibleActivities();
@@ -70,8 +77,19 @@ public class CreeperBrain {
         ), MemoryModuleType.ATTACK_TARGET);
     }
 
+    private static void addAvoidTasks(CreeperEntity creeper, Brain<CreeperEntity> brain) {
+        brain.setTaskList(Activity.AVOID, 10, ImmutableList.of(
+            GoToRememberedPositionTask.createEntityBased(MemoryModuleType.AVOID_TARGET, 1.3f, 15, false), 
+            ForgetTask.create(CreeperBrain::escapedAvoidTarget, MemoryModuleType.AVOID_TARGET)
+        ), MemoryModuleType.AVOID_TARGET);
+    }
+
+    private static boolean escapedAvoidTarget(CreeperEntity creeper) {
+        return creeper.squaredDistanceTo(creeper.getBrain().getOptionalMemory(MemoryModuleType.AVOID_TARGET).get()) > 225.0;
+    }
+
     public static void updateActivities(Brain<CreeperEntity> brain) {
-		brain.resetPossibleActivities(ImmutableList.of(Activity.FIGHT, Activity.IDLE));
+		brain.resetPossibleActivities(ImmutableList.of(Activity.AVOID, Activity.FIGHT, Activity.IDLE));
     }
 
     private static Optional<? extends LivingEntity> getTarget(CreeperEntity creeper) {

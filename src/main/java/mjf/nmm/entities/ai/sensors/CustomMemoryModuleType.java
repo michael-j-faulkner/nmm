@@ -13,9 +13,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 public class CustomMemoryModuleType <U> {
-    public static MemoryModuleType<List<PlayerEntity>> NEAREST_TARGETABLE_PLAYERS;
-    public static MemoryModuleType<PlayerEntity> NEAREST_TARGETABLE_PLAYER;
-    public static MemoryModuleType<BlockPos> MINE_BLOCK_LOCATION;
+    public static final MemoryModuleType<List<PlayerEntity>> NEAREST_TARGETABLE_PLAYERS = register("nearest_targetable_players");
+    public static final MemoryModuleType<PlayerEntity> NEAREST_TARGETABLE_PLAYER = register("nearest_targetable_player");
+    public static final MemoryModuleType<BlockPos> MINE_BLOCK_LOCATION = register("mine_block_location", BlockPos.CODEC);
 
     private static <U> MemoryModuleType<U> register(String id, Codec<U> codec) {
         return Registry.register(Registries.MEMORY_MODULE_TYPE, new Identifier(id), new MemoryModuleType<U>(Optional.of(codec)));
@@ -23,11 +23,5 @@ public class CustomMemoryModuleType <U> {
 
     private static <U> MemoryModuleType<U> register(String id) {
         return Registry.register(Registries.MEMORY_MODULE_TYPE, new Identifier(id), new MemoryModuleType<U>(Optional.empty()));
-    }
-
-    public static void register() {
-        NEAREST_TARGETABLE_PLAYERS  = register("nearest_targetable_players");
-        NEAREST_TARGETABLE_PLAYER   = register("nearest_targetable_player");
-        MINE_BLOCK_LOCATION         = register("mine_block_location", BlockPos.CODEC);
     }
 }

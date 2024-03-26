@@ -1,5 +1,6 @@
 package mjf.nmm.mixin.entities;
 
+import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -26,10 +27,8 @@ import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 
 @Mixin(AbstractSkeletonEntity.class)
@@ -45,13 +44,6 @@ public abstract class AbstractSkeletonEntityMixin extends HostileEntity {
 		cir.setReturnValue(cir.getReturnValue()
 			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3));
 	}
-
-    @Inject(at = @At("RETURN"), method = "initialize")
-    private void initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt, CallbackInfoReturnable<EntityData> ci) {
-        double percentDifficulty = ScalingDifficulty.getPercentDifficulty(world, this.getPos());
-        this.updateArrowSpeed((float)(percentDifficulty + 1.5));
-        this.arrowDamage = 2.0 * (1.0 + 3 * percentDifficulty);
-    }
 
     private void updateArrowSpeed(float arrowSpeed) {
         this.ARROW_SPEED = arrowSpeed;
@@ -86,6 +78,12 @@ public abstract class AbstractSkeletonEntityMixin extends HostileEntity {
      */
     @Overwrite 
     public void shootAt(LivingEntity target, float pullProgress) {
+        if (this.getWorld() instanceof ServerWorld) {
+            double percentDifficulty = ScalingDifficulty.getPercentDifficulty((ServerWorld)this.getWorld(), this.getPos());
+            this.updateArrowSpeed((float)(percentDifficulty + 1.5));
+            this.arrowDamage = 2.0 * (1.0 + 3 * percentDifficulty);
+        }
+
         ItemStack itemStack = this.getProjectileType(this.getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW)));
         PersistentProjectileEntity persistentProjectileEntity = this.createArrowProjectile(itemStack, pullProgress);
 
@@ -97,7 +95,7 @@ public abstract class AbstractSkeletonEntityMixin extends HostileEntity {
         double deltaY = target.getBodyY(0.3333333333333333) - persistentProjectileEntity.getY();
         double yVel = this.calcYVel(deltaY, horDistSqrd);
 
-        persistentProjectileEntity.setVelocity(deltaX, yVel, deltaZ, this.ARROW_SPEED, 0.0f);
+        persistentProjectileEntity.setVelocity(deltaX, yVel, deltaZ, this.ARROW_SPEED, 1.0f);
         persistentProjectileEntity.setDamage(this.arrowDamage);
         this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0f, 1.0f / (this.getRandom().nextFloat() * 0.4f + 0.8f));
         this.getWorld().spawnEntity(persistentProjectileEntity);

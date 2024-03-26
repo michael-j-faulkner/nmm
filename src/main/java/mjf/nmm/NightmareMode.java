@@ -25,8 +25,6 @@ public class NightmareMode implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		Events.registerEvents();
-		CustomSensorType.register();
-		CustomMemoryModuleType.register();
 		CustomActivity.register();
 		AlterSpawns.alterSpawns();
 	}

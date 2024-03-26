@@ -72,8 +72,8 @@ public class NightmareModeDataGenerator implements DataGeneratorEntrypoint {
 				.add(DamageTypes.MAGIC)
 				.add(DamageTypes.WITHER)
 				.add(DamageTypes.WITHER_SKULL)
-				.add(DamageTypes.SONIC_BOOM)
-				.add(DamageTypes.STARVE);
+				.add(DamageTypes.STARVE)
+				.add(DamageTypes.THORNS);
 		}
 
 	}

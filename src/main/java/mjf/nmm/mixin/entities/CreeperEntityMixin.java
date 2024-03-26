@@ -3,16 +3,24 @@ package mjf.nmm.mixin.entities;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.ai.brain.Brain;
+import net.minecraft.entity.ai.brain.LivingTargetCache;
+import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.passive.CatEntity;
+import net.minecraft.entity.passive.OcelotEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
+
+import java.util.Optional;
+import java.util.function.Predicate;
 
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -70,9 +78,22 @@ public abstract class CreeperEntityMixin extends HostileEntity {
         return (Brain<CreeperEntity>) super.getBrain();
     }
 
+	protected int lookForCatTimer = 0;
+
     protected void mobTick() {
-        this.getBrain().tick((ServerWorld)this.getWorld(), (CreeperEntity) (Object) this);
+		Brain<CreeperEntity> brain = this.getBrain();
+        brain.tick((ServerWorld)this.getWorld(), (CreeperEntity) (Object) this);
 		CreeperBrain.updateActivities(this.getBrain());
 		super.mobTick();
-    }
+
+		if (this.lookForCatTimer > 0) {
+			--this.lookForCatTimer;
+			return;
+		}
+		Optional<LivingTargetCache> visibleMobs = brain.getOptionalMemory(MemoryModuleType.VISIBLE_MOBS);
+		if (visibleMobs.isPresent()) {
+			brain.remember(MemoryModuleType.AVOID_TARGET, visibleMobs.get().findFirst(entity -> entity instanceof CatEntity || entity instanceof OcelotEntity));
+		}
+		this.lookForCatTimer = 20;
+	}
 }
