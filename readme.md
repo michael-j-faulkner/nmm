@@ -15,6 +15,8 @@ A summary of the changes are listed below:
 ## Zombie
 
 # TODO
+ - Update Loottables
+
  - Skeletons shoot tipped arrows based on what effects target has (maybe not)
  - Spiders place webs
  - Endermen destroy lights

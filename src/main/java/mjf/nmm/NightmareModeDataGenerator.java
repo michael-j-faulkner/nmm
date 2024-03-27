@@ -47,12 +47,6 @@ public class NightmareModeDataGenerator implements DataGeneratorEntrypoint {
 				.pool(LootPool.builder().rolls(ConstantLootNumberProvider.create(1.0f))
 				.with(ItemEntry.builder(Items.IRON_NUGGET).apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(3, 5))))
 				.with(ItemEntry.builder(Items.POPPY).apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0, 2))))));
-			biConsumer.accept(Registries.ENTITY_TYPE.getId(EntityType.WITHER).withPrefixedPath("entities/"), LootTable.builder()
-				.pool(LootPool.builder().rolls(ConstantLootNumberProvider.create(1.0f))
-				.with(ItemEntry.builder(Items.ENCHANTED_GOLDEN_APPLE))));
-			biConsumer.accept(Registries.ENTITY_TYPE.getId(EntityType.ENDER_DRAGON).withPrefixedPath("entities/"), LootTable.builder()
-				.pool(LootPool.builder().rolls(ConstantLootNumberProvider.create(1.0f))
-				.with(ItemEntry.builder(Items.ENCHANTED_GOLDEN_APPLE))));
 		}
 		
 	}
