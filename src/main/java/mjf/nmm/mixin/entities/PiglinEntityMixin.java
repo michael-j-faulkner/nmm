@@ -72,7 +72,8 @@ public abstract class PiglinEntityMixin extends AbstractPiglinEntity implements 
     @Inject(at = @At("RETURN"), method = "createPiglinAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3));
+			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.35)
+            .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 12.0));
 	}
 
     private static final float ARROW_SPEED = 1.6f;
@@ -98,8 +99,7 @@ public abstract class PiglinEntityMixin extends AbstractPiglinEntity implements 
         this.playSound(SoundEvents.ITEM_CROSSBOW_SHOOT, 1.0f, 1.0f / (this.getRandom().nextFloat() * 0.4f + 0.8f));
 
         if (this.getWorld() instanceof ServerWorld && projectile instanceof PersistentProjectileEntity) {
-            double percentDifficulty = ScalingDifficulty.getPercentDifficulty((ServerWorld)this.getWorld(), this.getPos());
-            ((PersistentProjectileEntity)projectile).setDamage(2.0 * (1.0 + 4 * percentDifficulty));
+            ((PersistentProjectileEntity)projectile).setDamage(8.0);
         }
     }
 }

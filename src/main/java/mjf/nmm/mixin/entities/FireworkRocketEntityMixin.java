@@ -31,7 +31,7 @@ public abstract class FireworkRocketEntityMixin extends ProjectileEntity impleme
     @ModifyArg(method = "explode", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"))
     private float scaleDamage(float damage) {
         if (this.getWorld() instanceof ServerWorld && this.getOwner() instanceof PillagerEntity)
-            return (1.0f + 3 * (float)ScalingDifficulty.getPercentDifficulty((ServerWorld)this.getWorld(), this.getPos())) * damage;
+            return 2.0f * damage;
         return damage;
     }
 }

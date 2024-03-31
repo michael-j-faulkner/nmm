@@ -14,6 +14,8 @@ public class VindicatorEntityMixin {
     @Inject(at = @At("RETURN"), method = "createVindicatorAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32.0));
+			.add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32.0)
+            .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 12.0)
+            .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.35));
 	}
 }

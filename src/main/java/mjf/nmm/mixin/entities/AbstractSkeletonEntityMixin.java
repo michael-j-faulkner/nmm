@@ -36,22 +36,12 @@ public abstract class AbstractSkeletonEntityMixin extends HostileEntity {
     protected AbstractSkeletonEntityMixin(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
     }
-    
-    private double arrowDamage = 2.0;
 
     @Inject(at = @At("RETURN"), method = "createAbstractSkeletonAttributes", cancellable = true)
     private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3));
+			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.33));
 	}
-
-    private void updateArrowSpeed(float arrowSpeed) {
-        this.ARROW_SPEED = arrowSpeed;
-        this.SPEED_SQUARED = ARROW_SPEED * ARROW_SPEED;
-        this.C1 = SPEED_SQUARED / GRAV;
-        this.C2 = 2.0 * GRAV / SPEED_SQUARED;
-        this.C3 = (GRAV * GRAV) / (SPEED_SQUARED * SPEED_SQUARED);
-    }
 
     @Shadow
     private final BowAttackGoal<AbstractSkeletonEntity> bowAttackGoal = new BowAttackGoal<AbstractSkeletonEntity>((AbstractSkeletonEntity)(Object)this, 1.0, 20, 30.0f);
@@ -59,7 +49,7 @@ public abstract class AbstractSkeletonEntityMixin extends HostileEntity {
     @Shadow
     protected abstract PersistentProjectileEntity createArrowProjectile(ItemStack arrow, float damageModifier);
 
-    private float ARROW_SPEED = 1.0f;
+    private float ARROW_SPEED = 2.0f;
     private static final double GRAV = 0.068; // Acutal is 0.08, but roughly accounting for drag 0.0784;
     // Constants for trajectory equation
     private double SPEED_SQUARED = ARROW_SPEED * ARROW_SPEED;
@@ -78,12 +68,6 @@ public abstract class AbstractSkeletonEntityMixin extends HostileEntity {
      */
     @Overwrite 
     public void shootAt(LivingEntity target, float pullProgress) {
-        if (this.getWorld() instanceof ServerWorld) {
-            double percentDifficulty = ScalingDifficulty.getPercentDifficulty((ServerWorld)this.getWorld(), this.getPos());
-            this.updateArrowSpeed((float)(percentDifficulty + 1.5));
-            this.arrowDamage = 2.0 * (1.0 + 3 * percentDifficulty);
-        }
-
         ItemStack itemStack = this.getProjectileType(this.getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW)));
         PersistentProjectileEntity persistentProjectileEntity = this.createArrowProjectile(itemStack, pullProgress);
 
@@ -96,7 +80,7 @@ public abstract class AbstractSkeletonEntityMixin extends HostileEntity {
         double yVel = this.calcYVel(deltaY, horDistSqrd);
 
         persistentProjectileEntity.setVelocity(deltaX, yVel, deltaZ, this.ARROW_SPEED, 1.0f);
-        persistentProjectileEntity.setDamage(this.arrowDamage);
+        persistentProjectileEntity.setDamage(2.0);
         this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0f, 1.0f / (this.getRandom().nextFloat() * 0.4f + 0.8f));
         this.getWorld().spawnEntity(persistentProjectileEntity);
     }

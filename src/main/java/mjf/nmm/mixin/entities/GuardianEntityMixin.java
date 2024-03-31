@@ -7,15 +7,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.EndermiteEntity;
+import net.minecraft.entity.mob.GuardianEntity;
 
-@Mixin(EndermiteEntity.class)
-public class EndermiteEntityMixin {
-    @Inject(at = @At("RETURN"), method = "createEndermiteAttributes", cancellable = true)
+@Mixin(GuardianEntity.class)
+public class GuardianEntityMixin {
+    @Inject(at = @At("RETURN"), method = "createGuardianAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.35)
-			.add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0)
-			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 12.0));
+			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 10.0)
+            .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32.0));
 	}
 }

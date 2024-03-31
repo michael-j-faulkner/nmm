@@ -20,7 +20,7 @@ public class ScalingDifficulty {
         long inhabitedTime = world instanceof ChunkRegion ? 0 : world.getChunk(blockPos).getInhabitedTime();
         double inhabitedDifficulty = 3.0 * MathHelper.clamp(inhabitedTime / (20.0 * 60.0 * 60.0 * HOURS_UNTIL_MAX), 0.0, 1.0);
         @SuppressWarnings("resource")
-        OptionalDouble avgPlayerDifficulty = world.toServerWorld().getPlayers().stream().filter(player -> player.squaredDistanceTo(pos) < 128 * 128).mapToDouble(player -> getPlayerDifficulty(world.getServer(), player)).average();
+        OptionalDouble avgPlayerDifficulty = world.toServerWorld().getPlayers().stream().filter(player -> player.squaredDistanceTo(pos) < 128 * 128 && !player.isSpectator()).mapToDouble(player -> getPlayerDifficulty(world.getServer(), player)).average();
         double moonDifficulty = 2.0 * world.getMoonSize();
 
         int difficulty = (int)Math.round(MathHelper.clamp(inhabitedDifficulty + (avgPlayerDifficulty.isPresent() ? avgPlayerDifficulty.getAsDouble() : 0.0) + moonDifficulty, 0.0, 10.0));

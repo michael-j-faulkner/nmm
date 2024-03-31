@@ -22,6 +22,8 @@ import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.IllagerEntity;
 import net.minecraft.entity.mob.PillagerEntity;
 import net.minecraft.entity.projectile.FireworkRocketEntity;
@@ -51,6 +53,12 @@ public abstract class PillagerEntityMixin extends IllagerEntity implements Cross
     protected float modifyRange(float range) {
         return 30.0f;
     }
+
+    @Inject(at = @At("RETURN"), method = "createPillagerAttributes", cancellable = true)
+	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
+		cir.setReturnValue(cir.getReturnValue()
+			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.45));
+	}
 
     @Override
     public ItemStack getProjectileType(ItemStack stack) {

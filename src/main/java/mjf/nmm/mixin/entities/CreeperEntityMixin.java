@@ -9,6 +9,9 @@ import net.minecraft.entity.ai.brain.LivingTargetCache;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.passive.CatEntity;
@@ -44,14 +47,32 @@ public abstract class CreeperEntityMixin extends HostileEntity {
 	@Inject(at = @At("RETURN"), method = "createCreeperAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3));
+			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.35));
 	}
 
 	@Shadow
     private int explosionRadius;
+	@Shadow
+	private static TrackedData<Boolean> CHARGED;
 
 	public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-		this.explosionRadius = 3 + (int)Math.round(2.0 * ScalingDifficulty.getPercentDifficulty(world, this.getPos()));
+		double percentDifficulty = ScalingDifficulty.getPercentDifficulty(world, this.getPos());
+		if (random.nextFloat() < 0.1 * percentDifficulty) {
+			this.dataTracker.set(CHARGED, true);
+		}
+        if (random.nextFloat() < 0.1 * percentDifficulty) {
+            this.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, -1));
+        }
+        if (random.nextFloat() < 0.1 * percentDifficulty) {
+            this.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, -1));
+        }
+        if (random.nextFloat() < 0.1 * percentDifficulty) {
+            this.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, -1));
+        }
+        if (random.nextFloat() < 0.1 * percentDifficulty) {
+            this.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, -1, 3));
+        }
+		this.explosionRadius = 3;
 		return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
