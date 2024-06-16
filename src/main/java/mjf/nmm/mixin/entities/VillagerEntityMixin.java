@@ -13,6 +13,7 @@ import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.MerchantEntity;
@@ -24,6 +25,8 @@ import net.minecraft.item.Items;
 import net.minecraft.item.map.MapIcon;
 import net.minecraft.registry.tag.StructureTags;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOffers;
 import net.minecraft.village.TradeOffers.BuyItemFactory;
 import net.minecraft.village.TradeOffers.EnchantBookFactory;
@@ -140,6 +143,16 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
     
     @Shadow
     public abstract VillagerData getVillagerData();
+
+    public class TradeItemFactory implements TradeOffers.Factory {
+
+        @Override
+        public TradeOffer create(Entity var1, Random var2) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'create'");
+        }
+        
+    }
 
     @ModifyVariable(method = "fillRecipes", at = @At("STORE"), ordinal = 0)
     private Int2ObjectMap<TradeOffers.Factory[]> replaceVillagerTrades(Int2ObjectMap<TradeOffers.Factory[]> map) {
