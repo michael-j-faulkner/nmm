@@ -3,7 +3,6 @@ package mjf.nmm.mixin.entities;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.LivingTargetCache;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
@@ -23,8 +22,6 @@ import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 
 import java.util.Optional;
-import java.util.function.Predicate;
-
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;

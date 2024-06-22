@@ -19,7 +19,6 @@ public class ScalingDifficulty {
         // When world is ChunkRegion, the world is paritially loaded and we can't get the chunk
         long inhabitedTime = world instanceof ChunkRegion ? 0 : world.getChunk(blockPos).getInhabitedTime();
         double inhabitedDifficulty = 3.0 * MathHelper.clamp(inhabitedTime / (20.0 * 60.0 * 60.0 * HOURS_UNTIL_MAX), 0.0, 1.0);
-        @SuppressWarnings("resource")
         OptionalDouble avgPlayerDifficulty = world.toServerWorld().getPlayers().stream().filter(player -> player.squaredDistanceTo(pos) < 128 * 128 && !player.isSpectator()).mapToDouble(player -> getPlayerDifficulty(world.getServer(), player)).average();
         double moonDifficulty = 2.0 * world.getMoonSize();
 

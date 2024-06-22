@@ -19,7 +19,6 @@ import net.minecraft.entity.ai.brain.task.ForgetTask;
 import net.minecraft.entity.ai.brain.task.GoToRememberedPositionTask;
 import net.minecraft.entity.ai.brain.task.LookAroundTask;
 import net.minecraft.entity.ai.brain.task.LookAtMobTask;
-import net.minecraft.entity.ai.brain.task.LookAtMobWithIntervalTask;
 import net.minecraft.entity.ai.brain.task.RandomTask;
 import net.minecraft.entity.ai.brain.task.RangedApproachTask;
 import net.minecraft.entity.ai.brain.task.StrollTask;
@@ -28,9 +27,6 @@ import net.minecraft.entity.ai.brain.task.WaitTask;
 import net.minecraft.entity.ai.brain.task.WanderAroundTask;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.CreeperEntity;
-import net.minecraft.entity.mob.HoglinBrain;
-import net.minecraft.entity.mob.HoglinEntity;
-import net.minecraft.util.math.intprovider.UniformIntProvider;
 
 public class CreeperBrain {
 	public static final ImmutableList<SensorType<? extends Sensor<? super CreeperEntity>>> SENSORS = ImmutableList.of(

@@ -3,18 +3,14 @@ package mjf.nmm.entities.ai.tasks;
 import com.google.common.collect.ImmutableMap;
 
 import mjf.nmm.entities.ai.sensors.CustomMemoryModuleType;
-import net.fabricmc.fabric.api.entity.event.v1.EntityElytraEvents.Custom;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.MemoryModuleState;
-import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.task.MultiTickTask;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
 
 public class MineBlockTask<E extends LivingEntity> extends MultiTickTask<E> {
     protected BlockPos targetPos;

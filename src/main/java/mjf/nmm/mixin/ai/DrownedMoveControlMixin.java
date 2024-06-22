@@ -2,11 +2,8 @@ package mjf.nmm.mixin.ai;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.mob.DrownedEntity;
 import net.minecraft.util.math.Vec3d;
 
 @Mixin(targets = "net.minecraft.entity.mob.DrownedEntity$DrownedMoveControl")

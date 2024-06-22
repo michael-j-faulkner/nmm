@@ -50,10 +50,41 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
         super(entityType, world);
     }
 
+    public static class TradeFactory implements Factory {
+        private final ItemStack buyItem1;
+        private final ItemStack buyItem2;
+        private final ItemStack sellItem;
+        private final int maxUses;
+        private final int experience;
+        private final float multiplier;
+
+        public TradeFactory(ItemStack buyItem, ItemStack sellItem, int maxUses, int experience) {
+            this(buyItem, ItemStack.EMPTY, sellItem, maxUses, experience);
+        }
+
+        public TradeFactory(ItemStack buyItem1, ItemStack buyItem2, ItemStack sellItem, int maxUses, int experience) {
+            this(buyItem1, buyItem2, sellItem, maxUses, experience, 0.01f);
+        }
+
+        public TradeFactory(ItemStack buyItem1, ItemStack buyItem2, ItemStack sellItem, int maxUses, int experience, float multiplier) {
+            this.buyItem1 = buyItem1;
+            this.buyItem2 = buyItem2;
+            this.sellItem = sellItem;
+            this.maxUses = maxUses;
+            this.experience = experience;
+            this.multiplier = multiplier;
+        }
+
+        @Override
+        public TradeOffer create(Entity entity, Random random) {
+            return new TradeOffer(this.buyItem1.copy(), this.buyItem2.copy(), this.sellItem.copy(), this.maxUses, this.experience, this.multiplier);
+        }
+    }
+
     private static final Map<VillagerProfession, Int2ObjectMap<Factory[]>> CUSTOM_TRADES = Util.make(Maps.newHashMap(), map -> {
         map.put(VillagerProfession.FARMER, new Int2ObjectOpenHashMap<Factory[]>(ImmutableMap.of(
             1, new Factory[]{
-                new BuyItemFactory(Items.NETHER_STAR, 20, 16, 2),
+                new TradeFactory(new ItemStack(Items.DIAMOND, 64), new ItemStack(Items.ENCHANTED_GOLDEN_APPLE, 1), 1, 5),
                 new BuyItemFactory(Items.ENDERMAN_SPAWN_EGG, 26, 16, 2), 
                 new BuyItemFactory(Items.FIRE_CHARGE, 22, 16, 2), 
                 new BuyItemFactory(Items.CORNFLOWER, 15, 16, 2), 
@@ -143,16 +174,6 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
     
     @Shadow
     public abstract VillagerData getVillagerData();
-
-    public class TradeItemFactory implements TradeOffers.Factory {
-
-        @Override
-        public TradeOffer create(Entity var1, Random var2) {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'create'");
-        }
-        
-    }
 
     @ModifyVariable(method = "fillRecipes", at = @At("STORE"), ordinal = 0)
     private Int2ObjectMap<TradeOffers.Factory[]> replaceVillagerTrades(Int2ObjectMap<TradeOffers.Factory[]> map) {

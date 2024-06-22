@@ -6,17 +6,14 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
 
-import mjf.nmm.entities.ai.sensors.CustomActivity;
 import mjf.nmm.entities.ai.sensors.CustomMemoryModuleType;
 import mjf.nmm.entities.ai.sensors.CustomSensorType;
 import mjf.nmm.entities.ai.tasks.ForgetTargetOrMineTask;
 import mjf.nmm.entities.ai.tasks.MineBlockTask;
-import net.fabricmc.fabric.api.entity.event.v1.EntityElytraEvents.Custom;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.LivingTargetCache;
-import net.minecraft.entity.ai.brain.MemoryModuleState;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.entity.ai.brain.sensor.SensorType;

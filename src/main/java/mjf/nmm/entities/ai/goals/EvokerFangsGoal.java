@@ -1,14 +1,11 @@
 package mjf.nmm.entities.ai.goals;
 
-import org.jetbrains.annotations.Nullable;
-
 import mjf.nmm.entities.interfaces.EvokerEntityAccessor;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.mob.EvokerEntity;
 import net.minecraft.entity.mob.EvokerFangsEntity;
-import net.minecraft.entity.mob.SpellcastingIllagerEntity;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;

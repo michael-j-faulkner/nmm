@@ -1,12 +1,10 @@
 package mjf.nmm.mixin.entities;
 
-import org.apache.logging.log4j.core.jmx.Server;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-import mjf.nmm.entities.ScalingDifficulty;
 import mjf.nmm.entities.interfaces.FireworkRocketAccessor;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.PillagerEntity;

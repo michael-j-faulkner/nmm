@@ -3,9 +3,6 @@ package mjf.nmm.entities.ai.tasks;
 import java.util.List;
 import java.util.Optional;
 
-import javax.swing.text.html.Option;
-
-import mjf.nmm.NightmareMode;
 import mjf.nmm.entities.ai.sensors.CustomMemoryModuleType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.MemoryModuleType;

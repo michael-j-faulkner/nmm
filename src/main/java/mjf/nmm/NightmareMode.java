@@ -1,17 +1,10 @@
 package mjf.nmm;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.loader.api.metadata.CustomValue;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.biome.SpawnSettings;
-import net.minecraft.world.gen.feature.DefaultBiomeFeatures;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import mjf.nmm.entities.ai.sensors.CustomActivity;
-import mjf.nmm.entities.ai.sensors.CustomMemoryModuleType;
-import mjf.nmm.entities.ai.sensors.CustomSensorType;
 import mjf.nmm.events.Events;
 import mjf.nmm.world.AlterSpawns;
 
