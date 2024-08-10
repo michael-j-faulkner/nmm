@@ -37,9 +37,10 @@ public abstract class WitherSkeletonEntityMixin extends AbstractSkeletonEntity {
      * @reason
      */
     @Overwrite
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-        EntityData resultingEntityData = super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
-        this.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(10.0);
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+        EntityData resultingEntityData = super.initialize(world, difficulty, spawnReason, entityData);
+        this.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(30.0);
+        this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue(0.4);
         this.updateAttackType();
         return resultingEntityData;
     }

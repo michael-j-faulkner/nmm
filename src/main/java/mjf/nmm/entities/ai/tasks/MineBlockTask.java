@@ -26,7 +26,7 @@ public class MineBlockTask<E extends LivingEntity> extends MultiTickTask<E> {
         this.elapsedTime = 0;
         this.targetPos = entity.getBrain().getOptionalMemory(CustomMemoryModuleType.MINE_BLOCK_LOCATION).get();
 
-        float miningSpeed = entity.getMainHandStack().getItem().getMiningSpeedMultiplier(entity.getMainHandStack(), world.getBlockState(this.targetPos));
+        float miningSpeed = entity.getMainHandStack().getItem().getMiningSpeed(entity.getMainHandStack(), world.getBlockState(this.targetPos));
         float hardness = world.getBlockState(this.targetPos).getHardness(world, this.targetPos);
         if (hardness > 0) {
             this.timeToBreak = Math.round(30 * hardness / miningSpeed);

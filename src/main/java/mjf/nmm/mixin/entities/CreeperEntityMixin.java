@@ -52,7 +52,8 @@ public abstract class CreeperEntityMixin extends HostileEntity {
 	@Shadow
 	private static TrackedData<Boolean> CHARGED;
 
-	public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
+	@Override
+	public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
 		double percentDifficulty = ScalingDifficulty.getPercentDifficulty(world, this.getPos());
 		if (random.nextFloat() < 0.1 * percentDifficulty) {
 			this.dataTracker.set(CHARGED, true);
@@ -70,7 +71,7 @@ public abstract class CreeperEntityMixin extends HostileEntity {
             this.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, -1, 3));
         }
 		this.explosionRadius = 3;
-		return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+		return super.initialize(world, difficulty, spawnReason, entityData);
     }
 
 	/**

@@ -31,16 +31,16 @@ public abstract class WitherSkullEntityMixin extends ExplosiveProjectileEntity {
         super.onCollision(hitResult);
         if (this.getWorld() instanceof ServerWorld) {
             if (this.isCharged()) {
-                this.getWorld().createExplosion((Entity)this, this.getX(), this.getY(), this.getZ(), 5.0f, true, World.ExplosionSourceType.MOB);
+                this.getWorld().createExplosion((Entity)this, this.getX(), this.getY(), this.getZ(), 8.0f, true, World.ExplosionSourceType.MOB);
                 WitherSkeletonEntity witherSkeleton = EntityType.WITHER_SKELETON.create(this.getWorld());
                 if (witherSkeleton != null) {
                     witherSkeleton.updatePositionAndAngles(this.getX(), this.getY(), this.getZ(), 360 * this.getWorld().getRandom().nextFloat(), 0);
-                    witherSkeleton.initialize((ServerWorld)this.getWorld(), this.getWorld().getLocalDifficulty(this.getBlockPos()), SpawnReason.NATURAL, null, null);
+                    witherSkeleton.initialize((ServerWorld)this.getWorld(), this.getWorld().getLocalDifficulty(this.getBlockPos()), SpawnReason.NATURAL, null);
                     this.getWorld().spawnEntity(witherSkeleton);
                 }
             }
             else {
-                this.getWorld().createExplosion((Entity)this, this.getX(), this.getY(), this.getZ(), 2.0f, false, World.ExplosionSourceType.MOB);
+                this.getWorld().createExplosion((Entity)this, this.getX(), this.getY(), this.getZ(), 4.0f, true, World.ExplosionSourceType.MOB);
             }
             this.discard();
         }

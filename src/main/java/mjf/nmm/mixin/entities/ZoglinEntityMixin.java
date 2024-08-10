@@ -32,7 +32,7 @@ public class ZoglinEntityMixin {
     @Inject(at = @At("RETURN"), method = "createZoglinAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 12.0)
-            .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.35));
+			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 20.0)
+            .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.4));
 	}
 }

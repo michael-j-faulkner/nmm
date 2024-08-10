@@ -49,38 +49,48 @@ public abstract class ZombieEntityMixin extends HostileEntity {
     public void initEquipment(Random random, LocalDifficulty localDifficulty) {
         super.initEquipment(random, localDifficulty);
         double percentDifficulty = ScalingDifficulty.getPercentDifficulty((ServerWorld)this.getWorld(), this.getPos());
-        if (random.nextFloat() < 0.5 * percentDifficulty) {
-            switch (random.nextInt(12)) {
+        if (random.nextFloat() < percentDifficulty) {
+            switch (random.nextInt(3)) {
             case 0:
-                this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.STONE_PICKAXE));
+                switch ((int) (2 * percentDifficulty + random.nextFloat())) {
+                    case 0:
+                        this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.STONE_PICKAXE));
+                        break;
+                    case 1:
+                        this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_PICKAXE));
+                        break;
+                    case 2:
+                    case 3:
+                        this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_PICKAXE));
+                        break;
+                }
                 break;
             case 1:
+                switch ((int) (2 * percentDifficulty + random.nextFloat())) {
+                case 0:
+                    this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.STONE_SHOVEL));
+                    break;
+                case 1:
+                    this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SHOVEL));
+                    break;
+                case 2:
+                case 3:
+                    this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_SHOVEL));
+                    break;
+                }
             case 2:
-                this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_PICKAXE));
-                break;
-            case 3:
-                this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_PICKAXE));
-                break;
-            case 4:
-                this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.STONE_SHOVEL));
-                break;
-            case 5:
-            case 6:
-                this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SHOVEL));
-                break;
-            case 7:
-                this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_SHOVEL));
-                break;
-            case 8:
-                this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.STONE_AXE));
-                break;
-            case 9:
-            case 10:
-                this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_AXE));
-                break;
-            case 11:
-                this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_AXE));
-                break;
+                switch ((int) (2 * percentDifficulty + random.nextFloat())) {
+                case 0:
+                    this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.STONE_AXE));
+                    break;
+                case 1:
+                    this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_AXE));
+                    break;
+                case 2:
+                case 3:
+                    this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_AXE));
+                    break;
+                }
             }
         }
     }

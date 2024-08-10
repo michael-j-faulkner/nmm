@@ -20,12 +20,6 @@ public abstract class MagmaCubeEntityMixin extends SlimeEntity {
         super(entityType, world);
     }
 
-    @Inject(at = @At("RETURN"), method = "createMagmaCubeAttributes", cancellable = true)
-	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
-		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3));
-	}
-
 @Override
     public void onPlayerCollision(PlayerEntity player) {
         if (this.canAttack()) {

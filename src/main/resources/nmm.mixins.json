@@ -1,17 +1,20 @@
 {
 	"required": true,
 	"package": "mjf.nmm.mixin",
-	"compatibilityLevel": "JAVA_17",
+	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"ai/DrownedMoveControlMixin",
 		"ai/PhantomEntityFindTargetMixin",
 		"ai/SensorMixin",
 		"enderdragon/ChargingPlayerPhaseMixin",
 		"enderdragon/DragonFireballEntityMixin",
+		"enderdragon/EnderDragonEntityMixin",
 		"enderdragon/EnderDragonFightMixin",
 		"enderdragon/HoldingPatternPhaseMixin",
 		"entities/AbstractSkeletonEntityMixin",
 		"entities/BlazeEntityMixin",
+		"entities/BreezeWindChargeEntityMixin",
+		"entities/CaveSpiderEntityMixin",
 		"entities/CreeperEntityMixin",
 		"entities/ElderGuardianEntityMixin",
 		"entities/EndermanEntityMixin",
@@ -32,10 +35,12 @@
 		"entities/PiglinEntityMixin",
 		"entities/PiglinBruteEntityMixin",
 		"entities/PillagerEntityMixin",
+		"entities/RavagerEntityMixin",
 		"entities/SilverfishEntityMixin",
 		"entities/ShulkerBulletEntityMixin",
 		"entities/SlimeEntityMixin",
 		"entities/SmallFireballEntityMixin",
+		"entities/SpawnRestrictionMixin",
 		"entities/SpiderEntityMixin",
 		"entities/VexEntityMixin",
 		"entities/VillagerEntityMixin",
@@ -49,8 +54,9 @@
 		"entities/ZombifiedPiglinEntityMixin",
 		"items/CrossbowItemMixin",
 		"player/HungerManagerMixin",
-		"player/PlayerEntityMixin",
-		"player/PlayerManagerMixin"
+		"player/PlayerEntityMixin", 
+		"player/PlayerManagerMixin", 
+		"spawner/PatrolSpawnerMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

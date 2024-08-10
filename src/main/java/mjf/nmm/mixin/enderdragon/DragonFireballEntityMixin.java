@@ -23,7 +23,7 @@ public abstract class DragonFireballEntityMixin extends ExplosiveProjectileEntit
         if (hitResult.getType() == HitResult.Type.ENTITY) {
             ci.cancel();
         } else {
-            this.getWorld().createExplosion(this, this.getX(), this.getY(), this.getZ(), 4, ExplosionSourceType.MOB);
+            this.getWorld().createExplosion(this, this.getX(), this.getY(), this.getZ(), 8, true, ExplosionSourceType.MOB);
         }
     }
 }

@@ -18,10 +18,10 @@ public class CustomMemoryModuleType <U> {
     public static final MemoryModuleType<BlockPos> MINE_BLOCK_LOCATION = register("mine_block_location", BlockPos.CODEC);
 
     private static <U> MemoryModuleType<U> register(String id, Codec<U> codec) {
-        return Registry.register(Registries.MEMORY_MODULE_TYPE, new Identifier(id), new MemoryModuleType<U>(Optional.of(codec)));
+        return Registry.register(Registries.MEMORY_MODULE_TYPE, Identifier.of(id), new MemoryModuleType<U>(Optional.of(codec)));
     }
 
     private static <U> MemoryModuleType<U> register(String id) {
-        return Registry.register(Registries.MEMORY_MODULE_TYPE, new Identifier(id), new MemoryModuleType<U>(Optional.empty()));
+        return Registry.register(Registries.MEMORY_MODULE_TYPE, Identifier.of(id), new MemoryModuleType<U>(Optional.empty()));
     }
 }

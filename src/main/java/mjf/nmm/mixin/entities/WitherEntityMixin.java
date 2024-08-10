@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityGroup;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
@@ -16,6 +15,7 @@ import net.minecraft.entity.boss.ServerBossBar;
 import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.WitherSkeletonEntity;
+import net.minecraft.registry.tag.EntityTypeTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -51,7 +51,7 @@ public abstract class WitherEntityMixin extends HostileEntity {
     @Shadow
     private int blockBreakingCooldown;
     @Shadow
-    private static final Predicate<LivingEntity> CAN_ATTACK_PREDICATE = entity -> entity.getGroup() != EntityGroup.UNDEAD && entity.isMobOrPlayer();
+    private static final Predicate<LivingEntity> CAN_ATTACK_PREDICATE = entity -> !entity.getType().isIn(EntityTypeTags.UNDEAD) && entity.isMobOrPlayer();
     @Shadow
     private static final TargetPredicate HEAD_TARGET_PREDICATE = TargetPredicate.createAttackable().setBaseMaxDistance(32.0).setPredicate(CAN_ATTACK_PREDICATE).ignoreVisibility();
 
@@ -66,7 +66,7 @@ public abstract class WitherEntityMixin extends HostileEntity {
             int timeRemaining = this.getInvulnerableTimer() - 1;
             this.bossBar.setPercent(1.0f - (float)timeRemaining / 220.0f);
             if (timeRemaining <= 0) {
-                this.getWorld().createExplosion((Entity)this, this.getX(), this.getEyeY(), this.getZ(), 7.0f, true, World.ExplosionSourceType.MOB);
+                this.getWorld().createExplosion((Entity)this, this.getX(), this.getEyeY(), this.getZ(), 12.0f, true, World.ExplosionSourceType.MOB);
                 if (!this.isSilent()) {
                     this.getWorld().syncGlobalEvent(WorldEvents.WITHER_SPAWNS, this.getBlockPos(), 0);
                 }
@@ -74,7 +74,7 @@ public abstract class WitherEntityMixin extends HostileEntity {
                     WitherSkeletonEntity witherSkeleton = EntityType.WITHER_SKELETON.create(this.getWorld());
                     if (witherSkeleton != null && this.getWorld() instanceof ServerWorld) {
                         witherSkeleton.updatePositionAndAngles(this.getX(), this.getY(), this.getZ(), 360 * this.getRandom().nextFloat(), 0);
-                        witherSkeleton.initialize((ServerWorld)this.getWorld(), this.getWorld().getLocalDifficulty(this.getBlockPos()), SpawnReason.NATURAL, null, null);
+                        witherSkeleton.initialize((ServerWorld)this.getWorld(), this.getWorld().getLocalDifficulty(this.getBlockPos()), SpawnReason.NATURAL, null);
                         this.getWorld().spawnEntity(witherSkeleton);
                     }
                 }
@@ -91,7 +91,8 @@ public abstract class WitherEntityMixin extends HostileEntity {
         for (int i = 0; i < 2; ++i) {
             if (this.age < this.skullCooldowns[i]) 
                 continue;
-            this.skullCooldowns[i] = this.age + 10 + this.random.nextInt(10);
+            // Cooldown if tracked entity is gone/too far away
+            this.skullCooldowns[i] = this.age + 10;
 
             // Charged Skull Logic
             this.chargedSkullCooldowns[i] = this.chargedSkullCooldowns[i] + 1;
@@ -113,7 +114,6 @@ public abstract class WitherEntityMixin extends HostileEntity {
                 }
                 this.shootSkullAt(i + 1, target);
                 this.skullCooldowns[i] = this.age + 40 + this.random.nextInt(20);
-                // this.chargedSkullCooldowns[i] = 0;
                 continue;
             }
 

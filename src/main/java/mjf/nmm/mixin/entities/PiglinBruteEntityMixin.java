@@ -37,7 +37,9 @@ public class PiglinBruteEntityMixin {
     @Inject(at = @At("RETURN"), method = "createPiglinBruteAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 12.0)
-            .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.4));
+			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 20.0)
+            .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.45)
+            .add(EntityAttributes.GENERIC_ARMOR, 20.0)
+            .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, 12.0));
 	}
 }

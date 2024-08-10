@@ -23,6 +23,6 @@ public class CustomSensorType<U extends Sensor<?>> {
     }
 
     private static <U extends Sensor<?>> SensorType<U> register(String id, Supplier<U> factory) {
-        return Registry.register(Registries.SENSOR_TYPE, new Identifier(id), new SensorType<U>(factory));
+        return Registry.register(Registries.SENSOR_TYPE, Identifier.of(id), new SensorType<U>(factory));
     }
 }

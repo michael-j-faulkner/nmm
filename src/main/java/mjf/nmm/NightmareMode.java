@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import mjf.nmm.commands.Commands;
 import mjf.nmm.entities.ai.sensors.CustomActivity;
 import mjf.nmm.events.Events;
 import mjf.nmm.world.AlterSpawns;
@@ -20,5 +21,6 @@ public class NightmareMode implements ModInitializer {
 		Events.registerEvents();
 		CustomActivity.register();
 		AlterSpawns.alterSpawns();
+		Commands.registerCommands();
 	}
 }

@@ -127,7 +127,7 @@ public class ForgetTargetOrMineTask {
     }
 
     private static boolean isEmpty(BlockView world, BlockPos pos) {
-        return world.getBlockState(pos).canPathfindThrough(world, pos, NavigationType.LAND);
+        return world.getBlockState(pos).canPathfindThrough(NavigationType.LAND);
     }
 
     private static boolean cannotReachTarget(LivingEntity livingEntity, Optional<Long> optional) {

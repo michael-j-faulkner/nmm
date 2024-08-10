@@ -11,6 +11,8 @@ import com.google.common.collect.ImmutableList;
 
 import mjf.nmm.entities.ai.sensors.CustomMemoryModuleType;
 import mjf.nmm.entities.ai.sensors.CustomSensorType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ChargedProjectilesComponent;
 import net.minecraft.entity.CrossbowUser;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -23,9 +25,13 @@ import net.minecraft.entity.mob.AbstractPiglinEntity;
 import net.minecraft.entity.mob.PiglinEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.entity.projectile.ProjectileUtil;
+import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -67,34 +73,9 @@ public abstract class PiglinEntityMixin extends AbstractPiglinEntity implements 
     @Inject(at = @At("RETURN"), method = "createPiglinAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.35)
-            .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 12.0));
+			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.4)
+            .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 15.0)
+            .add(EntityAttributes.GENERIC_ARMOR, 20.0)
+            .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, 12.0));
 	}
-
-    private static final float ARROW_SPEED = 1.6f;
-    private static final double GRAV = 0.06; // Acutal is 0.08, but roughly accounting for drag 0.0784;
-    // Constants for trajectory equation
-    private static final double SPEED_SQUARED = ARROW_SPEED * ARROW_SPEED;
-    private static final double C1 = SPEED_SQUARED / GRAV;
-    private static final double C2 = 2.0 * GRAV / SPEED_SQUARED;
-    private static final double C3 = (GRAV * GRAV) / (SPEED_SQUARED * SPEED_SQUARED);
-
-    private double calcYVel(double deltaY, double horDistSqrd) {
-        return C1 * (1 - Math.sqrt(Math.max(0, 1 - C2 * deltaY - C3 * horDistSqrd)));
-    }
-
-    @Override
-    public void shoot(LivingEntity target, ItemStack crossbow, ProjectileEntity projectile, float multiShotSpray) {
-        double deltaX = target.getX() - projectile.getX();
-        double deltaY = target.getBodyY(0.3333333333333333) - projectile.getY();
-        double deltaZ = target.getZ() - projectile.getZ();
-        double horDistSqrd = deltaX * deltaX + deltaZ * deltaZ;
-        Vector3f vector3f = this.getProjectileLaunchVelocity(this, new Vec3d(deltaX, this.calcYVel(deltaY, horDistSqrd), deltaZ), multiShotSpray);
-        projectile.setVelocity(vector3f.x(), vector3f.y(), vector3f.z(), ARROW_SPEED, 1.0f);
-        this.playSound(SoundEvents.ITEM_CROSSBOW_SHOOT, 1.0f, 1.0f / (this.getRandom().nextFloat() * 0.4f + 0.8f));
-
-        if (this.getWorld() instanceof ServerWorld && projectile instanceof PersistentProjectileEntity) {
-            ((PersistentProjectileEntity)projectile).setDamage(8.0);
-        }
-    }
 }

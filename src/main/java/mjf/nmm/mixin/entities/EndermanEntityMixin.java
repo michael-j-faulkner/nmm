@@ -26,7 +26,7 @@ public abstract class EndermanEntityMixin extends HostileEntity implements Anger
     @Inject(at = @At("RETURN"), method = "createEndermanAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 16.0));
+			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 40.0));
 	}
 
     private int destroyLightCooldown = 0;
@@ -48,7 +48,7 @@ public abstract class EndermanEntityMixin extends HostileEntity implements Anger
     private static void destroyLightSource(World world, BlockPos pos) {
         if (world.getLuminance(pos) > 0) {
             if (world.getBlockState(pos).getHardness(world, pos) >= 0.0f)
-                world.breakBlock(pos, false);
+                world.breakBlock(pos, true);
             return;
         }
         ChunkLightingView blockLightView = world.getLightingProvider().get(LightType.BLOCK);

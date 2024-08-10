@@ -7,6 +7,8 @@ import org.spongepowered.asm.mixin.Overwrite;
 import mjf.nmm.NightmareMode;
 import mjf.nmm.entities.ScalingDifficulty;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
+import net.minecraft.enchantment.provider.EnchantmentProviders;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -14,10 +16,13 @@ import net.minecraft.entity.Targeter;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.EnchantmentTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
+import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 
 @Mixin(MobEntity.class)
@@ -52,12 +57,10 @@ public abstract class MobEntityMixin extends LivingEntity implements Targeter {
     @Overwrite
     public void initEquipment(Random random, LocalDifficulty localDifficulty) {
         double percentDifficulty = ScalingDifficulty.getPercentDifficulty((ServerWorld)this.getWorld(), this.getPos());
-        NightmareMode.LOGGER.info("Percent Difficulty: " + Double.toString(percentDifficulty));
         int armorLevel = 0;
         for (int i = 0; i < NUM_ARMOR_LEVELS; ++i) {
             armorLevel = i;
             double probStopping = MathHelper.lerp(percentDifficulty, LERP_CONSTANTS_EARLY_GAME[i], LERP_CONSTANTS_LATE_GAME[i]);
-            NightmareMode.LOGGER.info("Armor Level " + Integer.toString(i) + " Prob Stopping: " + Double.toString(probStopping));
             if (random.nextFloat() < probStopping) {
                 break;
             }
@@ -65,20 +68,16 @@ public abstract class MobEntityMixin extends LivingEntity implements Targeter {
         if (armorLevel == 0)
             return;
         --armorLevel;
-        NightmareMode.LOGGER.info("Final Armor Level " + Integer.toString(armorLevel));
 
         for (EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
-            if (equipmentSlot.getType() != EquipmentSlot.Type.ARMOR) 
+            if (equipmentSlot.getType() != EquipmentSlot.Type.HUMANOID_ARMOR) 
                 continue;
             
             // Add armor boots to head, with slight chance to stop partway
-            NightmareMode.LOGGER.info("About to add armor: " + equipmentSlot.toString());
             if (random.nextFloat() < 0.5 + 0.45 * percentDifficulty) {
-                NightmareMode.LOGGER.info("Probability succeeded for " + equipmentSlot.toString());
                 // Check if there's already an item set
                 ItemStack itemStack = this.getEquippedStack(equipmentSlot);
                 if (itemStack.isEmpty()) {
-                    NightmareMode.LOGGER.info("Item stack is empty, adding item with armor level: " + Integer.toString(armorLevel));
                     // Item to put in if not
                     Item item = MobEntity.getEquipmentForSlot(equipmentSlot, armorLevel);
                     if (item != null)
@@ -95,13 +94,16 @@ public abstract class MobEntityMixin extends LivingEntity implements Targeter {
      * @reason
      */
     @Overwrite
-    public void updateEnchantments(Random random, LocalDifficulty localDifficulty) {
-        double percentDifficulty = ScalingDifficulty.getPercentDifficulty((ServerWorld)this.getWorld(), this.getPos());
+    public void updateEnchantments(ServerWorldAccess world, Random random, LocalDifficulty localDifficulty) {
+        double percentDifficulty = ScalingDifficulty.getPercentDifficulty(world, this.getPos());
         if (random.nextFloat() < percentDifficulty) {
             for (EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
                 ItemStack itemStack = this.getEquippedStack(equipmentSlot);
                 if (!itemStack.isEmpty()) {
-                    this.equipStack(equipmentSlot, EnchantmentHelper.enchant(random, itemStack, (int)(5.0 + percentDifficulty * (15.0 + random.nextInt(15))), false));
+                    EnchantmentHelper.enchant(random, itemStack, (int)(5.0 + percentDifficulty * (15.0 + random.nextInt(15))), 
+                        world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntryList(EnchantmentTags.ON_MOB_SPAWN_EQUIPMENT)
+                        .orElseThrow().stream());
+                    this.equipStack(equipmentSlot, itemStack);
                 }
             }
         }

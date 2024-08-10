@@ -65,32 +65,45 @@ public class EvokerFangsGoal extends Goal {
     }
 
     protected int getInitialCooldown() {
-        return 10;
+        return 5;
     }
 
     protected int getSpellTicks() {
-        return 20;
+        return 5;
     }
 
     protected int startTimeDelay() {
-        return 40;
+        return 30;
     }
+
+    protected void conjureCicle(LivingEntity target, float theta, double minY, double maxY) {
+        for (int i = 0; i < 20; ++i) {
+            float r = this.evoker.getRandom().nextFloat() * 5;
+            float phi = theta + i * (float)Math.PI * 2.0f / 8.0f;
+            this.conjureFangs(target.getX() + r * MathHelper.cos(phi), target.getZ() + r * MathHelper.sin(phi), minY, maxY, phi, this.evoker.getRandom().nextInt(20));
+        }
+    }
+
 
     protected void castSpell() {
         LivingEntity target = this.evoker.getTarget();
-        double minY = this.evoker.getWorld().getBottomY();
-        double maxY = Math.max(target.getY(), this.evoker.getY()) + 5.0;
+        double minY = Math.min(target.getY(), this.evoker.getY()) - 1.0;
+        double maxY = Math.max(target.getY(), this.evoker.getY()) + 1.0;
         float theta = (float)MathHelper.atan2(target.getZ() - this.evoker.getZ(), target.getX() - this.evoker.getX());
-        if (this.evoker.squaredDistanceTo(target) < 9.0) {
+        if (this.evoker.squaredDistanceTo(target) < 25.0) {
             for (int i = 0; i < 5; ++i) {
                 float phi = theta + i * (float)Math.PI * 0.4f;
-                this.conjureFangs(this.evoker.getX() + MathHelper.cos(phi) * 1.5, this.evoker.getZ() + MathHelper.sin(phi) * 1.5, minY, maxY, phi, 0);
+                this.conjureFangs(this.evoker.getX() + MathHelper.cos(phi) * 1.5, this.evoker.getZ() + MathHelper.sin(phi) * 1.5, minY, maxY, phi, 1);
             }
             for (int i = 0; i < 8; ++i) {
                 float phi = theta + i * (float)Math.PI * 2.0f / 8.0f + 1.2566371f;
-                this.conjureFangs(this.evoker.getX() + MathHelper.cos(phi) * 2.5, this.evoker.getZ() + MathHelper.sin(phi) * 2.5, minY, maxY, phi, 3);
+                this.conjureFangs(this.evoker.getX() + MathHelper.cos(phi) * 2.5, this.evoker.getZ() + MathHelper.sin(phi) * 2.5, minY, maxY, phi, 2);
             }
-        } else {
+            for (int i = 0; i < 13; ++i) {
+                float phi = theta + i * (float)Math.PI * 0.153f;
+                this.conjureFangs(this.evoker.getX() + MathHelper.cos(phi) * 3.5, this.evoker.getZ() + MathHelper.sin(phi) * 3.5, minY, maxY, phi, 3);
+            }
+        } else if (this.evoker.squaredDistanceTo(target) < 1024.0) {
             switch (this.evoker.getRandom().nextInt(2)) {
             case 0:
                 for (int i = 0; i < 32; ++i) {
@@ -100,12 +113,10 @@ public class EvokerFangsGoal extends Goal {
                 }
                 break;
             case 1:
-                for (int i = 0; i < 20; ++i) {
-                    float r = this.evoker.getRandom().nextFloat() * 5;
-                    float phi = theta + i * (float)Math.PI * 2.0f / 8.0f;
-                    this.conjureFangs(target.getX() + r * MathHelper.cos(phi), target.getZ() + r * MathHelper.sin(phi), minY, maxY, phi, this.evoker.getRandom().nextInt(20));
-                }
+                this.conjureCicle(target, theta, minY, maxY);
             }
+        } else {
+            this.conjureCicle(target, theta, minY, maxY);
         }
     }
 

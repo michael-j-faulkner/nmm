@@ -57,14 +57,14 @@ public abstract class SpiderEntityMixin extends HostileEntity {
      * @reason
      */
     @Overwrite
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-        entityData = super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+        entityData = super.initialize(world, difficulty, spawnReason, entityData);
         Random random = world.getRandom();
 
         SkeletonEntity skeletonEntity;
         if (random.nextInt(100) == 0 && (skeletonEntity = EntityType.SKELETON.create(this.getWorld())) != null) {
             skeletonEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), 0.0f);
-            skeletonEntity.initialize(world, difficulty, spawnReason, null, null);
+            skeletonEntity.initialize(world, difficulty, spawnReason, null);
             skeletonEntity.startRiding(this);
         }
         double percentDifficulty = ScalingDifficulty.getPercentDifficulty(world, this.getPos());

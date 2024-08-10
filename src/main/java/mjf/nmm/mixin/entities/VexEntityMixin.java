@@ -14,6 +14,6 @@ public class VexEntityMixin {
     @Inject(at = @At("RETURN"), method = "createVexAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 10.0));
+			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 12.0));
 	}
 }

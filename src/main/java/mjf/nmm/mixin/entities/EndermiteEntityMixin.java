@@ -14,8 +14,8 @@ public class EndermiteEntityMixin {
     @Inject(at = @At("RETURN"), method = "createEndermiteAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.35)
+			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.45)
 			.add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0)
-			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 12.0));
+			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 20.0));
 	}
 }
