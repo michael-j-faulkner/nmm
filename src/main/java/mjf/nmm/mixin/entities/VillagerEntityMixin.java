@@ -1,9 +1,11 @@
 package mjf.nmm.mixin.entities;
 
-import java.lang.foreign.Linker.Option;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
+import java.util.function.Function;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,6 +17,8 @@ import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.block.Blocks;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.SuspiciousStewEffectsComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffects;
@@ -44,116 +48,103 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
     }
 
     public static class TradeFactory implements Factory {
-        private final Item buyItem1;
-        private final Optional<Item> buyItem2;
-        private final ItemStack sellItem;
-        private final int maxUses;
-        private final int experience;
-        private final float multiplier;
-		private final int buyItem1Min;
-		private final int buyItem1Max;
-		private final int buyItem2Min;
-		private final int buyItem2Max;
-		private final int sellItemMin;
-		private final int sellItemMax;
+        private Item buyItem1;
+        private Item buyItem2 = null;
+        private ItemStack sellItem;
+		private Function<Random, ItemStack> sellItemGenerator = null;
+        private int maxUses = 1;
+        private int experience = 1;
+        private float multiplier = 0.0f;
+		private int buyItem1Min = 1;
+		private int buyItem1Max = 1;
+		private int buyItem2Min = 1;
+		private int buyItem2Max = 1;
+		private int sellItemMin = 1;
+		private int sellItemMax = 1;
 
-		public TradeFactory(Item buyItem1,
-							Item sellItem,
-							int maxUses, int experience, float multiplier) {
-			this(buyItem1, 1, 
-				sellItem, 1, 
-				maxUses, experience, multiplier);
-		}
-		
-		public TradeFactory(Item buyItem1,
-							Item sellItem, int sellItemMin, int sellItemMax, 
-							int maxUses, int experience, float multiplier) {
-			this(buyItem1, 1, 1, 
-				sellItem, sellItemMin, sellItemMax, 
-				maxUses, experience, multiplier);
-		}
-		
-		public TradeFactory(Item buyItem1, int buyItem1Min, int buyItem1Max,
-							Item sellItem, 
-							int maxUses, int experience, float multiplier) {
-			this(buyItem1, buyItem1Min, buyItem1Max, 
-				sellItem, 1, 1, 
-				maxUses, experience, multiplier);
+		public TradeFactory buyItem1(Item item) {
+			this.buyItem1 = item;
+			return this;
 		}
 
-		
-		public TradeFactory(Item buyItem1, int buyItem1Count, 
-							Item sellItem, int sellItemCount, 
-							int maxUses, int experience, float multiplier) {
-			this(buyItem1, buyItem1Count,
-				Optional.empty(), 0,
-				sellItem, sellItemCount,
-				maxUses, experience, multiplier);
+		public TradeFactory buyItem2(Item item) {
+			this.buyItem2 = item;
+			return this;
 		}
 
-		public TradeFactory(Item buyItem1, int buyItem1Min, int buyItem1Max,
-							Item sellItem, int sellItemMin, int sellItemMax, 
-							int maxUses, int experience, float multiplier) {
-			this(buyItem1, buyItem1Min, buyItem1Max, 
-				Optional.empty(), 0, 0, 
-				sellItem, sellItemMin, sellItemMax, 
-				maxUses, experience, multiplier);
-		}
-		
-		public TradeFactory(Item buyItem1, int buyItem1Count, Optional<Item> buyItem2, int buyItem2Count, 
-							Item sellItem, int sellItemCount, int maxUses, int experience, float multiplier) {
-			this(buyItem1, buyItem1Count, buyItem1Count, 
-				buyItem2, buyItem2Count, buyItem2Count, 
-				sellItem, sellItemCount, sellItemCount, 
-				maxUses, experience, multiplier);
-		}
-		
-		public TradeFactory(Item buyItem1, int buyItem1Min, int buyItem1Max, Optional<Item> buyItem2, int buyItem2Min, int buyItem2Max, 
-							Item sellItem, int sellItemMin, int sellItemMax, int maxUses, int experience, float multiplier) {
-			this(buyItem1, buyItem1Min, buyItem1Max, 
-				buyItem2, buyItem2Min, buyItem2Max, 
-				new ItemStack(sellItem), sellItemMin, sellItemMax, 
-				maxUses, experience, multiplier);
+		public TradeFactory sellItem(Item item) {
+			this.sellItem = new ItemStack(item);
+			return this;
 		}
 
-		public TradeFactory(Item buyItem1, int buyItem1Min, int buyItem1Max, Optional<Item> buyItem2, int buyItem2Min, int buyItem2Max, 
-							ItemStack sellItem, int sellItemMin, int sellItemMax, int maxUses, int experience, float multiplier) {
-			this.buyItem1 = buyItem1;
-			this.buyItem2 = buyItem2;
-			this.sellItem = sellItem;
-			this.buyItem1Min = buyItem1Min;
-			this.buyItem1Max = buyItem1Max;
-			this.buyItem2Min = buyItem2Min;
-			this.buyItem2Max = buyItem2Max;
-			this.sellItemMin = sellItemMin;
-			this.sellItemMax = sellItemMax;
-			this.maxUses = maxUses;
+		public TradeFactory buyItem1Min(int count) {
+			this.buyItem1Min = count;
+			return this;
+		}
+
+		public TradeFactory buyItem1Max(int count) {
+			this.buyItem1Max = count;
+			return this;
+		}
+
+		public TradeFactory buyItem2Min(int count) {
+			this.buyItem2Min = count;
+			return this;
+		}
+
+		public TradeFactory buyItem2Max(int count) {
+			this.buyItem2Max = count;
+			return this;
+		}
+
+		public TradeFactory sellItemMin(int count) {
+			this.sellItemMin = count;
+			return this;
+		}
+
+		public TradeFactory sellItemMax(int count) {
+			this.sellItemMax = count;
+			return this;
+		}
+
+		public TradeFactory maxUses(int uses) {
+			this.maxUses = uses;
+			return this;
+		}
+
+		public TradeFactory experience(int experience) {
 			this.experience = experience;
+			return this;
+		}
+
+		public TradeFactory multiplier(float multiplier) {
 			this.multiplier = multiplier;
+			return this;
+		}
+
+		public TradeFactory sellItemGenerator(Function<Random, ItemStack> generator) {
+			this.sellItemGenerator = generator;
+			return this;
 		}
 
         @Override
         public TradeOffer create(Entity entity, Random random) {
-			ItemStack sellItem = this.sellItem.copy();
-			sellItem.setCount(random.nextBetween(this.sellItemMin, this.sellItemMax));
+			ItemStack sellItem;
+			if (this.sellItemGenerator != null)
+				sellItem = this.sellItemGenerator.apply(random);
+			else {
+				sellItem = this.sellItem.copy();
+				sellItem.setCount(random.nextBetween(this.sellItemMin, this.sellItemMax));
+			}
             return new TradeOffer(
 				new TradedItem(this.buyItem1, random.nextBetween(this.buyItem1Min, this.buyItem1Max)), 
-				this.buyItem2.isPresent() ? Optional.of(new TradedItem(this.buyItem2.get(), random.nextBetween(this.buyItem2Min, this.buyItem2Max))) : Optional.empty(), 
+				this.buyItem2 != null ? Optional.of(new TradedItem(this.buyItem2, random.nextBetween(this.buyItem2Min, this.buyItem2Max))) : Optional.empty(), 
 				sellItem, 
 				this.maxUses, 
 				this.experience, 
 				this.multiplier);
         }
     }
-
-	public class SuspiciousStewFactory extends TradeFactory {
-		public SuspiciousStewFactory(Item buyItem1, int buyItem1Min, int buyItem1Max,
-									 Optional<Item> buyItem2, int buyItem2Min, int buyItem2Max,
-									 int maxUses, int experience, float multiplier) {
-			ItemStack stew = new ItemStack(Items.SUSPICIOUS_STEW);
-			super(buyItem1, buyItem1Min, buyItem1Max, buyItem2, buyItem2Min, buyItem2Max, stew, 1, 1, maxUses, experience, multiplier);
-		}
-	}
 
     private static Int2ObjectMap<TradeOffers.Factory[]> copyToFastUtilMap(ImmutableMap<Integer, TradeOffers.Factory[]> map) {
 		return new Int2ObjectOpenHashMap<>(map);
@@ -168,36 +159,110 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 					ImmutableMap.of(
 						1,
 						new TradeOffers.Factory[]{
-							new TradeFactory(Items.COPPER_INGOT, 1, 4, Items.BREAD, 1, 8, 64, 1, 0.05f),
-							new TradeFactory(Items.COPPER_INGOT, 1, 4, Items.POTATO, 1, 8, 64, 1, 0.05f),
-							new TradeFactory(Items.COPPER_INGOT, 1, 4, Items.CARROT, 1, 8, 64, 1, 0.05f),
-							new TradeFactory(Items.COPPER_INGOT, 1, 4, Items.BEETROOT, 1, 8, 64, 1, 0.05f),
-							new TradeFactory(Items.COPPER_INGOT, 1, 4, Items.APPLE, 1, 8, 64, 1, 0.05f)
+							new TradeFactory()
+								.buyItem1(Items.COPPER_INGOT).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.BREAD).sellItemMax(8)
+								.maxUses(8).experience(1).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.COPPER_INGOT).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.POTATO).sellItemMax(8)
+								.maxUses(8).experience(1).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.COPPER_INGOT).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.CARROT).sellItemMax(8)
+								.maxUses(8).experience(1).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.COPPER_INGOT).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.BEETROOT).sellItemMax(8)
+								.maxUses(8).experience(1).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.COPPER_INGOT).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.APPLE).sellItemMax(8)
+								.maxUses(8).experience(1).multiplier(0.05f)
 						},
 						2,
 						new TradeOffers.Factory[]{
-							new TradeFactory(Items.IRON_INGOT, 1, 4, Items.BEETROOT_SOUP, 4, 5, 0.05f),
-							new TradeFactory(Items.IRON_INGOT, 1, 4, Items.MUSHROOM_STEW, 4, 5, 0.05f),
-							new TradeFactory(Items.IRON_INGOT, 1, 4, 
-											 Optional.empty(), 0, 0,
-											 new ItemStack(Items.SUSPICIOUS_STEW), 1, 4, 
-											 4, 5, 0.05f),
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
+								.sellItem(Items.BEETROOT_SOUP)
+								.maxUses(8).experience(5).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
+								.sellItem(Items.MUSHROOM_STEW)
+								.maxUses(8).experience(5).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
+								.sellItemGenerator((random) -> {
+									List<SuspiciousStewEffectsComponent.StewEffect> potentialEffects = Arrays.asList(
+										new SuspiciousStewEffectsComponent.StewEffect(StatusEffects.ABSORPTION, random.nextBetween(100, 600)),
+										new SuspiciousStewEffectsComponent.StewEffect(StatusEffects.BAD_OMEN, random.nextBetween(100, 600)),
+										new SuspiciousStewEffectsComponent.StewEffect(StatusEffects.BLINDNESS, random.nextBetween(100, 600)),
+										new SuspiciousStewEffectsComponent.StewEffect(StatusEffects.FIRE_RESISTANCE, random.nextBetween(100, 600)),
+										new SuspiciousStewEffectsComponent.StewEffect(StatusEffects.GLOWING, random.nextBetween(100, 600)),
+										new SuspiciousStewEffectsComponent.StewEffect(StatusEffects.HASTE, random.nextBetween(100, 600)),
+										new SuspiciousStewEffectsComponent.StewEffect(StatusEffects.HEALTH_BOOST, random.nextBetween(100, 600)),
+										new SuspiciousStewEffectsComponent.StewEffect(StatusEffects.INVISIBILITY, random.nextBetween(100, 600)),
+										new SuspiciousStewEffectsComponent.StewEffect(StatusEffects.JUMP_BOOST, random.nextBetween(100, 600)),
+										new SuspiciousStewEffectsComponent.StewEffect(StatusEffects.LEVITATION, random.nextBetween(100, 600)),
+										new SuspiciousStewEffectsComponent.StewEffect(StatusEffects.MINING_FATIGUE, random.nextBetween(100, 600)),
+										new SuspiciousStewEffectsComponent.StewEffect(StatusEffects.NAUSEA, random.nextBetween(100, 600)),
+										new SuspiciousStewEffectsComponent.StewEffect(StatusEffects.NIGHT_VISION, random.nextBetween(100, 600)),
+										new SuspiciousStewEffectsComponent.StewEffect(StatusEffects.POISON, random.nextBetween(100, 600)),
+										new SuspiciousStewEffectsComponent.StewEffect(StatusEffects.REGENERATION, random.nextBetween(100, 600)),
+										new SuspiciousStewEffectsComponent.StewEffect(StatusEffects.RESISTANCE, random.nextBetween(100, 600)),
+										new SuspiciousStewEffectsComponent.StewEffect(StatusEffects.SLOWNESS, random.nextBetween(100, 600)),
+										new SuspiciousStewEffectsComponent.StewEffect(StatusEffects.SPEED, random.nextBetween(100, 600)),
+										new SuspiciousStewEffectsComponent.StewEffect(StatusEffects.STRENGTH, random.nextBetween(100, 600)),
+										new SuspiciousStewEffectsComponent.StewEffect(StatusEffects.WEAKNESS, random.nextBetween(100, 600)),
+										new SuspiciousStewEffectsComponent.StewEffect(StatusEffects.WITHER, random.nextBetween(100, 600)));
+									Collections.shuffle(potentialEffects);
+									ItemStack stew = new ItemStack(Items.SUSPICIOUS_STEW);
+									stew.set(DataComponentTypes.SUSPICIOUS_STEW_EFFECTS, 
+										new SuspiciousStewEffectsComponent(potentialEffects.subList(0, 1 + random.nextInt(3))));
+									return stew;
+								})
+								.maxUses(8).experience(5).multiplier(0.05f)
 						},
 						3,
-						new TradeOffers.Factory[]{new TradeOffers.SellItemFactory(Items.COOKIE, 3, 18, 10), new TradeOffers.BuyItemFactory(Blocks.MELON, 4, 12, 20)},
+						new TradeOffers.Factory[]{
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(64)
+								.sellItem(Items.SWEET_BERRIES).sellItemMax(16)
+								.maxUses(16).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(64)
+								.sellItem(Items.MELON_SLICE).sellItemMax(16)
+								.maxUses(16).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(64)
+								.sellItem(Items.CAKE)
+								.maxUses(16).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(64)
+								.sellItem(Items.COOKIE).sellItemMax(16)
+								.maxUses(16).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(64)
+								.sellItem(Items.PUMPKIN_PIE).sellItemMax(8)
+								.maxUses(16).experience(10).multiplier(0.05f),
+						},
 						4,
 						new TradeOffers.Factory[]{
-							new TradeOffers.SellItemFactory(Blocks.CAKE, 1, 1, 12, 15),
-							new TradeOffers.SellSuspiciousStewFactory(StatusEffects.NIGHT_VISION, 100, 15),
-							new TradeOffers.SellSuspiciousStewFactory(StatusEffects.JUMP_BOOST, 160, 15),
-							new TradeOffers.SellSuspiciousStewFactory(StatusEffects.WEAKNESS, 140, 15),
-							new TradeOffers.SellSuspiciousStewFactory(StatusEffects.BLINDNESS, 120, 15),
-							new TradeOffers.SellSuspiciousStewFactory(StatusEffects.POISON, 280, 15),
-							new TradeOffers.SellSuspiciousStewFactory(StatusEffects.SATURATION, 7, 15)
+							new TradeFactory()
+								.buyItem1(Items.DIAMOND)
+								.sellItem(Items.GOLDEN_APPLE).sellItemMax(4)
+								.maxUses(4).experience(20).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.DIAMOND)
+								.sellItem(Items.GOLDEN_CARROT).sellItemMax(8)
+								.maxUses(4).experience(20).multiplier(0.05f),
 						},
 						5,
 						new TradeOffers.Factory[]{
-							new TradeOffers.SellItemFactory(Items.GOLDEN_CARROT, 3, 3, 30), new TradeOffers.SellItemFactory(Items.GLISTERING_MELON_SLICE, 4, 3, 30)
+							new TradeFactory()
+								.buyItem1(Items.EMERALD).buyItem1Max(8)
+								.sellItem(Items.ENCHANTED_GOLDEN_APPLE)
+								.maxUses(2),
 						}
 					)
 				)
