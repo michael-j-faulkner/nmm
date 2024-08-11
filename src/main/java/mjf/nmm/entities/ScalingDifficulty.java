@@ -6,10 +6,8 @@ import mjf.nmm.NightmareMode;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.ServerWorldAccess;
 
 public class ScalingDifficulty {

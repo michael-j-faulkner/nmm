@@ -5,10 +5,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.BreezeEntity;
 import net.minecraft.entity.projectile.AbstractWindChargeEntity;
 import net.minecraft.entity.projectile.BreezeWindChargeEntity;
-import net.minecraft.entity.projectile.WindChargeEntity;
 import net.minecraft.world.World;
 
 @Mixin(BreezeWindChargeEntity.class)

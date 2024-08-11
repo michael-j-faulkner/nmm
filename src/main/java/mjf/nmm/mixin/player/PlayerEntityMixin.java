@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.llamalad7.mixinextras.sugar.Local;
 
-import mjf.nmm.NightmareMode;
 import mjf.nmm.entities.ScalingDifficulty;
 import mjf.nmm.tags.Tags;
 import net.minecraft.entity.EntityType;
@@ -16,7 +15,6 @@ import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
 @Mixin(PlayerEntity.class)

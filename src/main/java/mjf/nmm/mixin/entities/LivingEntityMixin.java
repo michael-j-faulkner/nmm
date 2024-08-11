@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import mjf.nmm.NightmareMode;
 import mjf.nmm.entities.ScalingDifficulty;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.component.type.FoodComponent;
@@ -29,7 +28,6 @@ import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 

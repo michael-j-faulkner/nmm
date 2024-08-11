@@ -35,6 +35,9 @@ More frequent and with more illagers (now includes all illagers). They are persi
 ### Iron Golem
 Drops iron nuggets instead of ingots.
 
+### Villager
+Have had their trade's revamped.
+
 ### Zombie
 Movement Speed:  0.3
 Attack Damage: 4.0
@@ -208,28 +211,3 @@ Faster Levitation
 Attack Damage: 20.0
 Movement Speed: 0.45
 Knockback Resistance: 1.0
-
-# TODO
- - Endermen destroy lights
- - Witches Buff enemies
-
- - Slimes
- - Silverfish
- - Phantoms
- - Drowned
- - Guardians
- - Endermites
- - Shulkers
-
- - Piglins (+brute)
- - Zombie piglins
- - Ghasts
- - Blazes
- - Wither Skeletons
- - Magma Cubes
- - Hoglins
- - Zoglins
-
- - Wither
- - Enderdragon
- - Warden?

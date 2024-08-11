@@ -4,11 +4,8 @@ import java.util.Arrays;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
-import mjf.nmm.NightmareMode;
 import mjf.nmm.entities.ScalingDifficulty;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.enchantment.provider.EnchantmentProviders;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
