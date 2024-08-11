@@ -1,5 +1,6 @@
 package mjf.nmm.mixin.entities;
 
+import java.lang.foreign.Linker.Option;
 import java.util.Map;
 import java.util.Optional;
 
@@ -43,35 +44,116 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
     }
 
     public static class TradeFactory implements Factory {
-        private final TradedItem buyItem1;
-        private final Optional<TradedItem> buyItem2;
+        private final Item buyItem1;
+        private final Optional<Item> buyItem2;
         private final ItemStack sellItem;
         private final int maxUses;
         private final int experience;
         private final float multiplier;
+		private final int buyItem1Min;
+		private final int buyItem1Max;
+		private final int buyItem2Min;
+		private final int buyItem2Max;
+		private final int sellItemMin;
+		private final int sellItemMax;
 
-        public TradeFactory(TradedItem buyItem, ItemStack sellItem, int maxUses, int experience) {
-            this(buyItem, Optional.empty(), sellItem, maxUses, experience);
-        }
+		public TradeFactory(Item buyItem1,
+							Item sellItem,
+							int maxUses, int experience, float multiplier) {
+			this(buyItem1, 1, 
+				sellItem, 1, 
+				maxUses, experience, multiplier);
+		}
+		
+		public TradeFactory(Item buyItem1,
+							Item sellItem, int sellItemMin, int sellItemMax, 
+							int maxUses, int experience, float multiplier) {
+			this(buyItem1, 1, 1, 
+				sellItem, sellItemMin, sellItemMax, 
+				maxUses, experience, multiplier);
+		}
+		
+		public TradeFactory(Item buyItem1, int buyItem1Min, int buyItem1Max,
+							Item sellItem, 
+							int maxUses, int experience, float multiplier) {
+			this(buyItem1, buyItem1Min, buyItem1Max, 
+				sellItem, 1, 1, 
+				maxUses, experience, multiplier);
+		}
 
-        public TradeFactory(TradedItem buyItem1, Optional<TradedItem> buyItem2, ItemStack sellItem, int maxUses, int experience) {
-            this(buyItem1, buyItem2, sellItem, maxUses, experience, 0.01f);
-        }
+		
+		public TradeFactory(Item buyItem1, int buyItem1Count, 
+							Item sellItem, int sellItemCount, 
+							int maxUses, int experience, float multiplier) {
+			this(buyItem1, buyItem1Count,
+				Optional.empty(), 0,
+				sellItem, sellItemCount,
+				maxUses, experience, multiplier);
+		}
 
-        public TradeFactory(TradedItem buyItem1, Optional<TradedItem> buyItem2, ItemStack sellItem, int maxUses, int experience, float multiplier) {
-            this.buyItem1 = buyItem1;
-            this.buyItem2 = buyItem2;
-            this.sellItem = sellItem;
-            this.maxUses = maxUses;
-            this.experience = experience;
-            this.multiplier = multiplier;
-        }
+		public TradeFactory(Item buyItem1, int buyItem1Min, int buyItem1Max,
+							Item sellItem, int sellItemMin, int sellItemMax, 
+							int maxUses, int experience, float multiplier) {
+			this(buyItem1, buyItem1Min, buyItem1Max, 
+				Optional.empty(), 0, 0, 
+				sellItem, sellItemMin, sellItemMax, 
+				maxUses, experience, multiplier);
+		}
+		
+		public TradeFactory(Item buyItem1, int buyItem1Count, Optional<Item> buyItem2, int buyItem2Count, 
+							Item sellItem, int sellItemCount, int maxUses, int experience, float multiplier) {
+			this(buyItem1, buyItem1Count, buyItem1Count, 
+				buyItem2, buyItem2Count, buyItem2Count, 
+				sellItem, sellItemCount, sellItemCount, 
+				maxUses, experience, multiplier);
+		}
+		
+		public TradeFactory(Item buyItem1, int buyItem1Min, int buyItem1Max, Optional<Item> buyItem2, int buyItem2Min, int buyItem2Max, 
+							Item sellItem, int sellItemMin, int sellItemMax, int maxUses, int experience, float multiplier) {
+			this(buyItem1, buyItem1Min, buyItem1Max, 
+				buyItem2, buyItem2Min, buyItem2Max, 
+				new ItemStack(sellItem), sellItemMin, sellItemMax, 
+				maxUses, experience, multiplier);
+		}
+
+		public TradeFactory(Item buyItem1, int buyItem1Min, int buyItem1Max, Optional<Item> buyItem2, int buyItem2Min, int buyItem2Max, 
+							ItemStack sellItem, int sellItemMin, int sellItemMax, int maxUses, int experience, float multiplier) {
+			this.buyItem1 = buyItem1;
+			this.buyItem2 = buyItem2;
+			this.sellItem = sellItem;
+			this.buyItem1Min = buyItem1Min;
+			this.buyItem1Max = buyItem1Max;
+			this.buyItem2Min = buyItem2Min;
+			this.buyItem2Max = buyItem2Max;
+			this.sellItemMin = sellItemMin;
+			this.sellItemMax = sellItemMax;
+			this.maxUses = maxUses;
+			this.experience = experience;
+			this.multiplier = multiplier;
+		}
 
         @Override
         public TradeOffer create(Entity entity, Random random) {
-            return new TradeOffer(this.buyItem1, this.buyItem2, this.sellItem, this.maxUses, this.experience, this.multiplier);
+			ItemStack sellItem = this.sellItem.copy();
+			sellItem.setCount(random.nextBetween(this.sellItemMin, this.sellItemMax));
+            return new TradeOffer(
+				new TradedItem(this.buyItem1, random.nextBetween(this.buyItem1Min, this.buyItem1Max)), 
+				this.buyItem2.isPresent() ? Optional.of(new TradedItem(this.buyItem2.get(), random.nextBetween(this.buyItem2Min, this.buyItem2Max))) : Optional.empty(), 
+				sellItem, 
+				this.maxUses, 
+				this.experience, 
+				this.multiplier);
         }
     }
+
+	public class SuspiciousStewFactory extends TradeFactory {
+		public SuspiciousStewFactory(Item buyItem1, int buyItem1Min, int buyItem1Max,
+									 Optional<Item> buyItem2, int buyItem2Min, int buyItem2Max,
+									 int maxUses, int experience, float multiplier) {
+			ItemStack stew = new ItemStack(Items.SUSPICIOUS_STEW);
+			super(buyItem1, buyItem1Min, buyItem1Max, buyItem2, buyItem2Min, buyItem2Max, stew, 1, 1, maxUses, experience, multiplier);
+		}
+	}
 
     private static Int2ObjectMap<TradeOffers.Factory[]> copyToFastUtilMap(ImmutableMap<Integer, TradeOffers.Factory[]> map) {
 		return new Int2ObjectOpenHashMap<>(map);
@@ -86,17 +168,20 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 					ImmutableMap.of(
 						1,
 						new TradeOffers.Factory[]{
-							new TradeOffers.BuyItemFactory(Items.WHEAT, 20, 16, 2),
-							new TradeOffers.BuyItemFactory(Items.POTATO, 26, 16, 2),
-							new TradeOffers.BuyItemFactory(Items.CARROT, 22, 16, 2),
-							new TradeOffers.BuyItemFactory(Items.BEETROOT, 15, 16, 2),
-							new TradeOffers.SellItemFactory(Items.BREAD, 1, 6, 16, 1)
+							new TradeFactory(Items.COPPER_INGOT, 1, 4, Items.BREAD, 1, 8, 64, 1, 0.05f),
+							new TradeFactory(Items.COPPER_INGOT, 1, 4, Items.POTATO, 1, 8, 64, 1, 0.05f),
+							new TradeFactory(Items.COPPER_INGOT, 1, 4, Items.CARROT, 1, 8, 64, 1, 0.05f),
+							new TradeFactory(Items.COPPER_INGOT, 1, 4, Items.BEETROOT, 1, 8, 64, 1, 0.05f),
+							new TradeFactory(Items.COPPER_INGOT, 1, 4, Items.APPLE, 1, 8, 64, 1, 0.05f)
 						},
 						2,
 						new TradeOffers.Factory[]{
-							new TradeOffers.BuyItemFactory(Blocks.PUMPKIN, 6, 12, 10),
-							new TradeOffers.SellItemFactory(Items.PUMPKIN_PIE, 1, 4, 5),
-							new TradeOffers.SellItemFactory(Items.APPLE, 1, 4, 16, 5)
+							new TradeFactory(Items.IRON_INGOT, 1, 4, Items.BEETROOT_SOUP, 4, 5, 0.05f),
+							new TradeFactory(Items.IRON_INGOT, 1, 4, Items.MUSHROOM_STEW, 4, 5, 0.05f),
+							new TradeFactory(Items.IRON_INGOT, 1, 4, 
+											 Optional.empty(), 0, 0,
+											 new ItemStack(Items.SUSPICIOUS_STEW), 1, 4, 
+											 4, 5, 0.05f),
 						},
 						3,
 						new TradeOffers.Factory[]{new TradeOffers.SellItemFactory(Items.COOKIE, 3, 18, 10), new TradeOffers.BuyItemFactory(Blocks.MELON, 4, 12, 20)},
