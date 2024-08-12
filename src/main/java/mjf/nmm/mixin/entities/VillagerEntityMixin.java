@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,15 +20,23 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.block.Blocks;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.SuspiciousStewEffectsComponent;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentLevelEntry;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.map.MapDecorationTypes;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.EnchantmentTags;
 import net.minecraft.registry.tag.StructureTags;
 import net.minecraft.util.Util;
@@ -51,7 +60,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
         private Item buyItem1;
         private Item buyItem2 = null;
         private ItemStack sellItem;
-		private Function<Random, ItemStack> sellItemGenerator = null;
+		private BiFunction<Entity, Random, ItemStack> sellItemGenerator = null;
         private int maxUses = 1;
         private int experience = 1;
         private float multiplier = 0.0f;
@@ -74,6 +83,11 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 
 		public TradeFactory sellItem(Item item) {
 			this.sellItem = new ItemStack(item);
+			return this;
+		}
+		
+		public TradeFactory sellItem(ItemStack itemStack) {
+			this.sellItem = itemStack.copy();
 			return this;
 		}
 
@@ -122,7 +136,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 			return this;
 		}
 
-		public TradeFactory sellItemGenerator(Function<Random, ItemStack> generator) {
+		public TradeFactory sellItemGenerator(BiFunction<Entity, Random, ItemStack> generator) {
 			this.sellItemGenerator = generator;
 			return this;
 		}
@@ -131,7 +145,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
         public TradeOffer create(Entity entity, Random random) {
 			ItemStack sellItem;
 			if (this.sellItemGenerator != null)
-				sellItem = this.sellItemGenerator.apply(random);
+				sellItem = this.sellItemGenerator.apply(entity, random);
 			else {
 				sellItem = this.sellItem.copy();
 				sellItem.setCount(random.nextBetween(this.sellItemMin, this.sellItemMax));
@@ -178,10 +192,18 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 							new TradeFactory()
 								.buyItem1(Items.COPPER_INGOT).buyItem1Min(4).buyItem1Max(8)
 								.sellItem(Items.APPLE).sellItemMax(8)
-								.maxUses(8).experience(1).multiplier(0.05f)
+								.maxUses(8).experience(1).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.BONE_MEAL).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.COPPER_INGOT)
+								.maxUses(8).experience(2).multiplier(0.05f),
 						},
 						2,
 						new TradeOffers.Factory[]{
+							new TradeFactory()
+								.buyItem1(Items.BONE_MEAL).buyItem1Min(32).buyItem1Max(64)
+								.sellItem(Items.IRON_INGOT)
+								.maxUses(8).experience(5).multiplier(0.01f),
 							new TradeFactory()
 								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
 								.sellItem(Items.BEETROOT_SOUP)
@@ -192,7 +214,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.maxUses(8).experience(5).multiplier(0.05f),
 							new TradeFactory()
 								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
-								.sellItemGenerator((random) -> {
+								.sellItemGenerator((entity, random) -> {
 									List<SuspiciousStewEffectsComponent.StewEffect> potentialEffects = Arrays.asList(
 										new SuspiciousStewEffectsComponent.StewEffect(StatusEffects.ABSORPTION, random.nextBetween(100, 600)),
 										new SuspiciousStewEffectsComponent.StewEffect(StatusEffects.BAD_OMEN, random.nextBetween(100, 600)),
@@ -226,23 +248,23 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 						3,
 						new TradeOffers.Factory[]{
 							new TradeFactory()
-								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(64)
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
 								.sellItem(Items.SWEET_BERRIES).sellItemMax(16)
 								.maxUses(16).experience(10).multiplier(0.05f),
 							new TradeFactory()
-								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(64)
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
 								.sellItem(Items.MELON_SLICE).sellItemMax(16)
 								.maxUses(16).experience(10).multiplier(0.05f),
 							new TradeFactory()
-								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(64)
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
 								.sellItem(Items.CAKE)
 								.maxUses(16).experience(10).multiplier(0.05f),
 							new TradeFactory()
-								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(64)
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
 								.sellItem(Items.COOKIE).sellItemMax(16)
 								.maxUses(16).experience(10).multiplier(0.05f),
 							new TradeFactory()
-								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(64)
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
 								.sellItem(Items.PUMPKIN_PIE).sellItemMax(8)
 								.maxUses(16).experience(10).multiplier(0.05f),
 						},
@@ -260,9 +282,13 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 						5,
 						new TradeOffers.Factory[]{
 							new TradeFactory()
-								.buyItem1(Items.EMERALD).buyItem1Max(8)
+								.buyItem1(Items.EMERALD).buyItem1Min(8).buyItem1Max(16)
 								.sellItem(Items.ENCHANTED_GOLDEN_APPLE)
 								.maxUses(2),
+							new TradeFactory()
+								.buyItem1(Items.BONE_BLOCK).buyItem1Max(8)
+								.sellItem(Items.LAPIS_LAZULI).sellItemMax(8)
+								.maxUses(8).multiplier(0.01f),
 						}
 					)
 				)
@@ -273,40 +299,84 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 					ImmutableMap.of(
 						1,
 						new TradeOffers.Factory[]{
-							new TradeOffers.BuyItemFactory(Items.STRING, 20, 16, 2),
-							new TradeOffers.BuyItemFactory(Items.COAL, 10, 16, 2),
-							new TradeOffers.ProcessItemFactory(Items.COD, 6, 1, Items.COOKED_COD, 6, 16, 1, 0.05F),
-							new TradeOffers.SellItemFactory(Items.COD_BUCKET, 3, 1, 16, 1)
+							new TradeFactory()
+								.buyItem1(Items.COPPER_INGOT).buyItem1Max(4)
+								.sellItem(Items.WATER_BUCKET)
+								.maxUses(8).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.COPPER_INGOT).buyItem1Max(4)
+								.sellItem(Items.FISHING_ROD)
+								.maxUses(8).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.STRING).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.COPPER_INGOT)
+								.maxUses(8).multiplier(0.05f),
 						},
 						2,
 						new TradeOffers.Factory[]{
-							new TradeOffers.BuyItemFactory(Items.COD, 15, 16, 10),
-							new TradeOffers.ProcessItemFactory(Items.SALMON, 6, 1, Items.COOKED_SALMON, 6, 16, 5, 0.05F),
-							new TradeOffers.SellItemFactory(Items.CAMPFIRE, 2, 1, 5)
+							new TradeFactory()
+								.buyItem1(Items.STRING).buyItem1Min(8).buyItem1Max(16)
+								.sellItem(Items.IRON_INGOT)
+								.maxUses(8).experience(5).multiplier(0.01f),
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
+								.sellItem(Items.COOKED_COD).sellItemMax(4)
+								.maxUses(8).experience(5).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
+								.sellItem(Items.COOKED_SALMON).sellItemMax(4)
+								.maxUses(8).experience(5).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
+								.sellItem(Items.TROPICAL_FISH).sellItemMax(4)
+								.maxUses(8).experience(5).multiplier(0.05f),
 						},
 						3,
 						new TradeOffers.Factory[]{
-							new TradeOffers.BuyItemFactory(Items.SALMON, 13, 16, 20), new TradeOffers.SellEnchantedToolFactory(Items.FISHING_ROD, 3, 3, 10, 0.2F)
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.COD_BUCKET)
+								.maxUses(4).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.SALMON_BUCKET)
+								.maxUses(4).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.TROPICAL_FISH_BUCKET)
+								.maxUses(4).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.PUFFERFISH_BUCKET)
+								.maxUses(4).experience(10).multiplier(0.05f),
 						},
 						4,
-						new TradeOffers.Factory[]{new TradeOffers.BuyItemFactory(Items.TROPICAL_FISH, 6, 12, 30)},
+						new TradeOffers.Factory[]{
+							new TradeFactory()
+								.buyItem1(Items.DIAMOND).buyItem1Min(16).buyItem1Max(48)
+								.sellItemGenerator((entity, random) -> {
+									Optional<RegistryEntry.Reference<Enchantment>> lure = entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.LURE);
+									return lure.isPresent() ? EnchantedBookItem.forEnchantment(new EnchantmentLevelEntry(lure.get(), 3)) : Items.BOOK.getDefaultStack();
+								})
+								.maxUses(2).experience(40).multiplier(0.01f),
+							new TradeFactory()
+								.buyItem1(Items.DIAMOND).buyItem1Min(16).buyItem1Max(48)
+								.sellItemGenerator((entity, random) -> {
+									Optional<RegistryEntry.Reference<Enchantment>> luckOfTheSea = entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.LUCK_OF_THE_SEA);
+									return luckOfTheSea.isPresent() ? EnchantedBookItem.forEnchantment(new EnchantmentLevelEntry(luckOfTheSea.get(), 3)) : Items.BOOK.getDefaultStack();
+								})
+								.maxUses(2).experience(40).multiplier(0.01f),
+						},
 						5,
 						new TradeOffers.Factory[]{
-							new TradeOffers.BuyItemFactory(Items.PUFFERFISH, 4, 12, 30),
-							new TradeOffers.TypeAwareBuyForOneEmeraldFactory(
-								1,
-								12,
-								30,
-								ImmutableMap.<VillagerType, Item>builder()
-									.put(VillagerType.PLAINS, Items.OAK_BOAT)
-									.put(VillagerType.TAIGA, Items.SPRUCE_BOAT)
-									.put(VillagerType.SNOW, Items.SPRUCE_BOAT)
-									.put(VillagerType.DESERT, Items.JUNGLE_BOAT)
-									.put(VillagerType.JUNGLE, Items.JUNGLE_BOAT)
-									.put(VillagerType.SAVANNA, Items.ACACIA_BOAT)
-									.put(VillagerType.SWAMP, Items.DARK_OAK_BOAT)
-									.build()
-							)
+							new TradeFactory()
+								.buyItem1(Items.EMERALD).buyItem1Max(2)
+								.sellItem(Items.COBWEB).sellItemMin(32).sellItemMax(64)
+								.maxUses(2),
+							new TradeFactory()
+								.buyItem1(Items.STRING).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.LAPIS_LAZULI).sellItemMax(8)
+								.maxUses(8),
 						}
 					)
 				)
