@@ -608,9 +608,14 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 					ImmutableMap.of(
 						1,
 						new TradeOffers.Factory[]{
-							new TradeOffers.BuyItemFactory(Items.STICK, 32, 16, 2),
-							new TradeOffers.SellItemFactory(Items.ARROW, 1, 16, 1),
-							new TradeOffers.ProcessItemFactory(Blocks.GRAVEL, 10, 1, Items.FLINT, 10, 12, 1, 0.05F)
+							new TradeFactory()
+								.buyItem1(Items.COPPER_INGOT).buyItem1Max(4)
+								.sellItem(Items.ARROW).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(1).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.FEATHER).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.COPPER_INGOT)
+								.maxUses(8).experience(1).multiplier(0.05f),
 						},
 						2,
 						new TradeOffers.Factory[]{new TradeOffers.BuyItemFactory(Items.FLINT, 26, 12, 10), new TradeOffers.SellItemFactory(Items.BOW, 2, 1, 5)},
