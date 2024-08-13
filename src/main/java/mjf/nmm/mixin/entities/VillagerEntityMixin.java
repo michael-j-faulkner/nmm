@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -33,8 +32,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.map.MapDecorationTypes;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.EnchantmentTags;
@@ -47,7 +44,6 @@ import net.minecraft.village.TradedItem;
 import net.minecraft.village.TradeOffers.Factory;
 import net.minecraft.village.VillagerData;
 import net.minecraft.village.VillagerProfession;
-import net.minecraft.village.VillagerType;
 import net.minecraft.world.World;
 
 @Mixin(VillagerEntity.class)
@@ -387,103 +383,222 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 					ImmutableMap.of(
 						1,
 						new TradeOffers.Factory[]{
-							new TradeOffers.BuyItemFactory(Blocks.WHITE_WOOL, 18, 16, 2),
-							new TradeOffers.BuyItemFactory(Blocks.BROWN_WOOL, 18, 16, 2),
-							new TradeOffers.BuyItemFactory(Blocks.BLACK_WOOL, 18, 16, 2),
-							new TradeOffers.BuyItemFactory(Blocks.GRAY_WOOL, 18, 16, 2),
-							new TradeOffers.SellItemFactory(Items.SHEARS, 2, 1, 1)
+							new TradeFactory()
+								.buyItem1(Items.WHITE_DYE).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.COPPER_INGOT)
+								.maxUses(16).experience(2).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.ORANGE_DYE).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.COPPER_INGOT)
+								.maxUses(16).experience(2).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.MAGENTA_DYE).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.COPPER_INGOT)
+								.maxUses(16).experience(2).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LIGHT_BLUE_DYE).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.COPPER_INGOT)
+								.maxUses(16).experience(2).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.YELLOW_DYE).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.COPPER_INGOT)
+								.maxUses(16).experience(2).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LIME_DYE).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.COPPER_INGOT)
+								.maxUses(16).experience(2).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.PINK_DYE).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.COPPER_INGOT)
+								.maxUses(16).experience(2).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.GRAY_DYE).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.COPPER_INGOT)
+								.maxUses(16).experience(2).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LIGHT_GRAY_DYE).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.COPPER_INGOT)
+								.maxUses(16).experience(2).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.CYAN_DYE).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.COPPER_INGOT)
+								.maxUses(16).experience(2).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.PURPLE_DYE).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.COPPER_INGOT)
+								.maxUses(16).experience(2).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.BLUE_DYE).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.COPPER_INGOT)
+								.maxUses(16).experience(2).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.BROWN_DYE).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.COPPER_INGOT)
+								.maxUses(16).experience(2).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.GREEN_DYE).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.COPPER_INGOT)
+								.maxUses(16).experience(2).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.RED_DYE).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.COPPER_INGOT)
+								.maxUses(16).experience(2).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.BLACK_DYE).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.COPPER_INGOT)
+								.maxUses(16).experience(2).multiplier(0.05f),
 						},
 						2,
 						new TradeOffers.Factory[]{
-							new TradeOffers.BuyItemFactory(Items.WHITE_DYE, 12, 16, 10),
-							new TradeOffers.BuyItemFactory(Items.GRAY_DYE, 12, 16, 10),
-							new TradeOffers.BuyItemFactory(Items.BLACK_DYE, 12, 16, 10),
-							new TradeOffers.BuyItemFactory(Items.LIGHT_BLUE_DYE, 12, 16, 10),
-							new TradeOffers.BuyItemFactory(Items.LIME_DYE, 12, 16, 10),
-							new TradeOffers.SellItemFactory(Blocks.WHITE_WOOL, 1, 1, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.ORANGE_WOOL, 1, 1, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.MAGENTA_WOOL, 1, 1, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.LIGHT_BLUE_WOOL, 1, 1, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.YELLOW_WOOL, 1, 1, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.LIME_WOOL, 1, 1, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.PINK_WOOL, 1, 1, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.GRAY_WOOL, 1, 1, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.LIGHT_GRAY_WOOL, 1, 1, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.CYAN_WOOL, 1, 1, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.PURPLE_WOOL, 1, 1, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.BLUE_WOOL, 1, 1, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.BROWN_WOOL, 1, 1, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.GREEN_WOOL, 1, 1, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.RED_WOOL, 1, 1, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.BLACK_WOOL, 1, 1, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.WHITE_CARPET, 1, 4, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.ORANGE_CARPET, 1, 4, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.MAGENTA_CARPET, 1, 4, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.LIGHT_BLUE_CARPET, 1, 4, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.YELLOW_CARPET, 1, 4, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.LIME_CARPET, 1, 4, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.PINK_CARPET, 1, 4, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.GRAY_CARPET, 1, 4, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.LIGHT_GRAY_CARPET, 1, 4, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.CYAN_CARPET, 1, 4, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.PURPLE_CARPET, 1, 4, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.BLUE_CARPET, 1, 4, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.BROWN_CARPET, 1, 4, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.GREEN_CARPET, 1, 4, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.RED_CARPET, 1, 4, 16, 5),
-							new TradeOffers.SellItemFactory(Blocks.BLACK_CARPET, 1, 4, 16, 5)
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
+								.sellItem(Items.WHITE_WOOL).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(5).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
+								.sellItem(Items.ORANGE_WOOL).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(5).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
+								.sellItem(Items.MAGENTA_WOOL).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(5).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
+								.sellItem(Items.LIGHT_BLUE_WOOL).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(5).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
+								.sellItem(Items.YELLOW_WOOL).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(5).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
+								.sellItem(Items.LIME_WOOL).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(5).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
+								.sellItem(Items.PINK_WOOL).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(5).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
+								.sellItem(Items.GRAY_WOOL).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(5).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
+								.sellItem(Items.LIGHT_GRAY_WOOL).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(5).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
+								.sellItem(Items.CYAN_WOOL).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(5).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
+								.sellItem(Items.PURPLE_WOOL).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(5).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
+								.sellItem(Items.BLUE_WOOL).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(5).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
+								.sellItem(Items.BROWN_WOOL).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(5).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
+								.sellItem(Items.GREEN_WOOL).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(5).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
+								.sellItem(Items.RED_WOOL).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(5).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Max(4)
+								.sellItem(Items.BLACK_WOOL).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(5).multiplier(0.05f),
 						},
 						3,
 						new TradeOffers.Factory[]{
-							new TradeOffers.BuyItemFactory(Items.YELLOW_DYE, 12, 16, 20),
-							new TradeOffers.BuyItemFactory(Items.LIGHT_GRAY_DYE, 12, 16, 20),
-							new TradeOffers.BuyItemFactory(Items.ORANGE_DYE, 12, 16, 20),
-							new TradeOffers.BuyItemFactory(Items.RED_DYE, 12, 16, 20),
-							new TradeOffers.BuyItemFactory(Items.PINK_DYE, 12, 16, 20),
-							new TradeOffers.SellItemFactory(Blocks.WHITE_BED, 3, 1, 12, 10),
-							new TradeOffers.SellItemFactory(Blocks.YELLOW_BED, 3, 1, 12, 10),
-							new TradeOffers.SellItemFactory(Blocks.RED_BED, 3, 1, 12, 10),
-							new TradeOffers.SellItemFactory(Blocks.BLACK_BED, 3, 1, 12, 10),
-							new TradeOffers.SellItemFactory(Blocks.BLUE_BED, 3, 1, 12, 10),
-							new TradeOffers.SellItemFactory(Blocks.BROWN_BED, 3, 1, 12, 10),
-							new TradeOffers.SellItemFactory(Blocks.CYAN_BED, 3, 1, 12, 10),
-							new TradeOffers.SellItemFactory(Blocks.GRAY_BED, 3, 1, 12, 10),
-							new TradeOffers.SellItemFactory(Blocks.GREEN_BED, 3, 1, 12, 10),
-							new TradeOffers.SellItemFactory(Blocks.LIGHT_BLUE_BED, 3, 1, 12, 10),
-							new TradeOffers.SellItemFactory(Blocks.LIGHT_GRAY_BED, 3, 1, 12, 10),
-							new TradeOffers.SellItemFactory(Blocks.LIME_BED, 3, 1, 12, 10),
-							new TradeOffers.SellItemFactory(Blocks.MAGENTA_BED, 3, 1, 12, 10),
-							new TradeOffers.SellItemFactory(Blocks.ORANGE_BED, 3, 1, 12, 10),
-							new TradeOffers.SellItemFactory(Blocks.PINK_BED, 3, 1, 12, 10),
-							new TradeOffers.SellItemFactory(Blocks.PURPLE_BED, 3, 1, 12, 10)
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.WHITE_DYE).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.ORANGE_DYE).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.MAGENTA_DYE).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.LIGHT_BLUE_DYE).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.YELLOW_DYE).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.LIME_DYE).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.PINK_DYE).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.GRAY_DYE).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.LIGHT_GRAY_DYE).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.CYAN_DYE).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.PURPLE_DYE).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.BLUE_DYE).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.BROWN_DYE).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.GREEN_DYE).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.RED_DYE).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.BLACK_DYE).sellItemMin(4).sellItemMax(8)
+								.maxUses(8).experience(10).multiplier(0.05f),
 						},
 						4,
 						new TradeOffers.Factory[]{
-							new TradeOffers.BuyItemFactory(Items.BROWN_DYE, 12, 16, 30),
-							new TradeOffers.BuyItemFactory(Items.PURPLE_DYE, 12, 16, 30),
-							new TradeOffers.BuyItemFactory(Items.BLUE_DYE, 12, 16, 30),
-							new TradeOffers.BuyItemFactory(Items.GREEN_DYE, 12, 16, 30),
-							new TradeOffers.BuyItemFactory(Items.MAGENTA_DYE, 12, 16, 30),
-							new TradeOffers.BuyItemFactory(Items.CYAN_DYE, 12, 16, 30),
-							new TradeOffers.SellItemFactory(Items.WHITE_BANNER, 3, 1, 12, 15),
-							new TradeOffers.SellItemFactory(Items.BLUE_BANNER, 3, 1, 12, 15),
-							new TradeOffers.SellItemFactory(Items.LIGHT_BLUE_BANNER, 3, 1, 12, 15),
-							new TradeOffers.SellItemFactory(Items.RED_BANNER, 3, 1, 12, 15),
-							new TradeOffers.SellItemFactory(Items.PINK_BANNER, 3, 1, 12, 15),
-							new TradeOffers.SellItemFactory(Items.GREEN_BANNER, 3, 1, 12, 15),
-							new TradeOffers.SellItemFactory(Items.LIME_BANNER, 3, 1, 12, 15),
-							new TradeOffers.SellItemFactory(Items.GRAY_BANNER, 3, 1, 12, 15),
-							new TradeOffers.SellItemFactory(Items.BLACK_BANNER, 3, 1, 12, 15),
-							new TradeOffers.SellItemFactory(Items.PURPLE_BANNER, 3, 1, 12, 15),
-							new TradeOffers.SellItemFactory(Items.MAGENTA_BANNER, 3, 1, 12, 15),
-							new TradeOffers.SellItemFactory(Items.CYAN_BANNER, 3, 1, 12, 15),
-							new TradeOffers.SellItemFactory(Items.BROWN_BANNER, 3, 1, 12, 15),
-							new TradeOffers.SellItemFactory(Items.YELLOW_BANNER, 3, 1, 12, 15),
-							new TradeOffers.SellItemFactory(Items.ORANGE_BANNER, 3, 1, 12, 15),
-							new TradeOffers.SellItemFactory(Items.LIGHT_GRAY_BANNER, 3, 1, 12, 15)
+							new TradeFactory()
+								.buyItem1(Items.DIAMOND).buyItem1Min(16).buyItem1Max(48)
+								.sellItemGenerator((entity, random) -> {
+									Optional<RegistryEntry.Reference<Enchantment>> luckOfTheSea = entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.LUCK_OF_THE_SEA);
+									return luckOfTheSea.isPresent() ? EnchantedBookItem.forEnchantment(new EnchantmentLevelEntry(luckOfTheSea.get(), 3)) : Items.BOOK.getDefaultStack();
+								})
+								.maxUses(2).experience(40).multiplier(0.01f),
 						},
 						5,
-						new TradeOffers.Factory[]{new TradeOffers.SellItemFactory(Items.PAINTING, 2, 3, 30)}
+						new TradeOffers.Factory[]{
+							new TradeFactory()
+								.buyItem1(Items.EMERALD).buyItem1Max(8)
+								.sellItem(Items.BELL)
+								.maxUses(2).multiplier(0.01f),
+						}
 					)
 				)
 			);
