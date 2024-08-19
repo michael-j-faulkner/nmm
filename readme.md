@@ -1,3 +1,6 @@
+# TODO
+ - Update villager enchanted book trades
+
 # Nightmare Mode
 This server side mod aims to spice up the survival experience! Monsters have been giving scaling stats as well as some unique abilities in order to make survival a challenge at all parts of the game! Will you be able to survive?
 

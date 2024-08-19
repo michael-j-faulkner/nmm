@@ -1,11 +1,14 @@
 package mjf.nmm.mixin.entities;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,8 +19,12 @@ import com.google.common.collect.Maps;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.block.Blocks;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.FireworkExplosionComponent;
+import net.minecraft.component.type.FireworksComponent;
+import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.component.type.SuspiciousStewEffectsComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
@@ -32,6 +39,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.map.MapDecorationTypes;
+import net.minecraft.potion.Potion;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.EnchantmentTags;
@@ -144,8 +153,8 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 				sellItem = this.sellItemGenerator.apply(entity, random);
 			else {
 				sellItem = this.sellItem.copy();
-				sellItem.setCount(random.nextBetween(this.sellItemMin, this.sellItemMax));
 			}
+			sellItem.setCount(random.nextBetween(this.sellItemMin, this.sellItemMax));
             return new TradeOffer(
 				new TradedItem(this.buyItem1, random.nextBetween(this.buyItem1Min, this.buyItem1Max)), 
 				this.buyItem2 != null ? Optional.of(new TradedItem(this.buyItem2, random.nextBetween(this.buyItem2Min, this.buyItem2Max))) : Optional.empty(), 
@@ -351,17 +360,23 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 							new TradeFactory()
 								.buyItem1(Items.DIAMOND).buyItem1Min(16).buyItem1Max(48)
 								.sellItemGenerator((entity, random) -> {
-									Optional<RegistryEntry.Reference<Enchantment>> lure = entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.LURE);
-									return lure.isPresent() ? EnchantedBookItem.forEnchantment(new EnchantmentLevelEntry(lure.get(), 3)) : Items.BOOK.getDefaultStack();
+									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
+										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										.getEntry(Enchantments.LURE);
+									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
+										new EnchantmentLevelEntry(enchantment.get(), 3)) : Items.BOOK.getDefaultStack();
 								})
 								.maxUses(2).experience(40).multiplier(0.01f),
-							new TradeFactory()
-								.buyItem1(Items.DIAMOND).buyItem1Min(16).buyItem1Max(48)
-								.sellItemGenerator((entity, random) -> {
-									Optional<RegistryEntry.Reference<Enchantment>> luckOfTheSea = entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.LUCK_OF_THE_SEA);
-									return luckOfTheSea.isPresent() ? EnchantedBookItem.forEnchantment(new EnchantmentLevelEntry(luckOfTheSea.get(), 3)) : Items.BOOK.getDefaultStack();
-								})
-								.maxUses(2).experience(40).multiplier(0.01f),
+								new TradeFactory()
+									.buyItem1(Items.DIAMOND).buyItem1Min(16).buyItem1Max(48)
+									.sellItemGenerator((entity, random) -> {
+										Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
+											entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+											.getEntry(Enchantments.LUCK_OF_THE_SEA);
+										return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
+											new EnchantmentLevelEntry(enchantment.get(), 3)) : Items.BOOK.getDefaultStack();
+									})
+									.maxUses(2).experience(40).multiplier(0.01f),
 						},
 						5,
 						new TradeOffers.Factory[]{
@@ -587,8 +602,11 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 							new TradeFactory()
 								.buyItem1(Items.DIAMOND).buyItem1Min(16).buyItem1Max(48)
 								.sellItemGenerator((entity, random) -> {
-									Optional<RegistryEntry.Reference<Enchantment>> luckOfTheSea = entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.LUCK_OF_THE_SEA);
-									return luckOfTheSea.isPresent() ? EnchantedBookItem.forEnchantment(new EnchantmentLevelEntry(luckOfTheSea.get(), 3)) : Items.BOOK.getDefaultStack();
+									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
+										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										.getEntry(Enchantments.SILK_TOUCH);
+									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
+										new EnchantmentLevelEntry(enchantment.get(), 1)) : Items.BOOK.getDefaultStack();
 								})
 								.maxUses(2).experience(40).multiplier(0.01f),
 						},
@@ -618,16 +636,81 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.maxUses(8).experience(1).multiplier(0.05f),
 						},
 						2,
-						new TradeOffers.Factory[]{new TradeOffers.BuyItemFactory(Items.FLINT, 26, 12, 10), new TradeOffers.SellItemFactory(Items.BOW, 2, 1, 5)},
+						new TradeOffers.Factory[]{
+							new TradeFactory()
+								.buyItem1(Items.FLINT).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.IRON_INGOT)
+								.maxUses(16).experience(5).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.ARROW).sellItemMin(8).sellItemMax(16)
+								.maxUses(8).experience(5).multiplier(0.02f),
+						},
 						3,
-						new TradeOffers.Factory[]{new TradeOffers.BuyItemFactory(Items.STRING, 14, 16, 20), new TradeOffers.SellItemFactory(Items.CROSSBOW, 3, 1, 10)},
+						new TradeOffers.Factory[]{
+							new TradeFactory()
+								.buyItem1(Items.GUNPOWDER).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.LAPIS_LAZULI).sellItemMin(8).sellItemMax(16)
+								.maxUses(8).experience(10).multiplier(0.02f),
+						},
 						4,
-						new TradeOffers.Factory[]{new TradeOffers.BuyItemFactory(Items.FEATHER, 24, 16, 30), new TradeOffers.SellEnchantedToolFactory(Items.BOW, 2, 3, 15)},
+						new TradeOffers.Factory[]{
+							new TradeFactory()
+								.buyItem1(Items.DIAMOND).buyItem1Min(16).buyItem1Max(48)
+								.sellItemGenerator((entity, random) -> {
+									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
+										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										.getEntry(Enchantments.POWER);
+									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
+										new EnchantmentLevelEntry(enchantment.get(), 5)) : Items.BOOK.getDefaultStack();
+								})
+								.maxUses(2).experience(40).multiplier(0.01f),
+							new TradeFactory()
+								.buyItem1(Items.DIAMOND).buyItem1Min(16).buyItem1Max(48)
+								.sellItemGenerator((entity, random) -> {
+									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
+										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										.getEntry(Enchantments.POWER);
+									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
+										new EnchantmentLevelEntry(enchantment.get(), 5)) : Items.BOOK.getDefaultStack();
+								})
+								.maxUses(2).experience(40).multiplier(0.01f),
+						},
 						5,
 						new TradeOffers.Factory[]{
-							new TradeOffers.BuyItemFactory(Items.TRIPWIRE_HOOK, 8, 12, 30),
-							new TradeOffers.SellEnchantedToolFactory(Items.CROSSBOW, 3, 3, 15),
-							new TradeOffers.SellPotionHoldingItemFactory(Items.ARROW, 5, Items.TIPPED_ARROW, 5, 2, 12, 30)
+							new TradeFactory()
+								.buyItem1(Items.EMERALD)
+								.sellItemMax(8)
+								.sellItemGenerator((entity, random) -> {
+									List<FireworkExplosionComponent> explosionList = new ArrayList<>();
+									for (int i = 0; i < 8; ++i) {
+										explosionList.add(new FireworkExplosionComponent(
+											FireworkExplosionComponent.Type.BURST, 
+											IntList.of(random.nextInt(256) << 16, random.nextInt(256) << 8, random.nextInt(256)), 
+											IntList.of(random.nextInt(256) << 16, random.nextInt(256) << 8, random.nextInt(256)), 
+											false, 
+											false));
+									}
+
+									ItemStack rocket = Items.FIREWORK_ROCKET.getDefaultStack();
+									rocket.set(DataComponentTypes.FIREWORKS, new FireworksComponent(1 + random.nextInt(3),  explosionList));
+									return rocket;
+								})
+								.maxUses(8),
+							new TradeFactory()
+								.buyItem1(Items.EMERALD)
+								.sellItemMin(8).sellItemMax(16)
+								.sellItemGenerator((entity, random) -> {
+									List<RegistryEntry<Potion>> list = Registries.POTION.streamEntries().filter((entry) -> {
+										return !(entry.value()).getEffects().isEmpty() && entity.getWorld().getBrewingRecipeRegistry().isBrewable(entry);
+									}).collect(Collectors.toList());
+									RegistryEntry<Potion> potion = Util.getRandom(list, random);
+
+									ItemStack arrow = Items.TIPPED_ARROW.getDefaultStack();
+									arrow.set(DataComponentTypes.POTION_CONTENTS, new PotionContentsComponent(potion));
+									return arrow;
+								})
+								.maxUses(8),
 						}
 					)
 				)
