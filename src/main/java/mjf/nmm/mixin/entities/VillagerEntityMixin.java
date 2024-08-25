@@ -35,17 +35,22 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.EnchantedBookItem;
+import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.map.MapDecorationTypes;
+import net.minecraft.item.map.MapState;
 import net.minecraft.potion.Potion;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.EnchantmentTags;
 import net.minecraft.registry.tag.StructureTags;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOffers;
@@ -290,10 +295,6 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.EMERALD).buyItem1Min(8).buyItem1Max(16)
 								.sellItem(Items.ENCHANTED_GOLDEN_APPLE)
 								.maxUses(2),
-							new TradeFactory()
-								.buyItem1(Items.BONE_BLOCK).buyItem1Max(8)
-								.sellItem(Items.LAPIS_LAZULI).sellItemMax(8)
-								.maxUses(8).multiplier(0.01f),
 						}
 					)
 				)
@@ -399,67 +400,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 						1,
 						new TradeOffers.Factory[]{
 							new TradeFactory()
-								.buyItem1(Items.WHITE_DYE).buyItem1Min(4).buyItem1Max(8)
-								.sellItem(Items.COPPER_INGOT)
-								.maxUses(16).experience(2).multiplier(0.05f),
-							new TradeFactory()
-								.buyItem1(Items.ORANGE_DYE).buyItem1Min(4).buyItem1Max(8)
-								.sellItem(Items.COPPER_INGOT)
-								.maxUses(16).experience(2).multiplier(0.05f),
-							new TradeFactory()
-								.buyItem1(Items.MAGENTA_DYE).buyItem1Min(4).buyItem1Max(8)
-								.sellItem(Items.COPPER_INGOT)
-								.maxUses(16).experience(2).multiplier(0.05f),
-							new TradeFactory()
-								.buyItem1(Items.LIGHT_BLUE_DYE).buyItem1Min(4).buyItem1Max(8)
-								.sellItem(Items.COPPER_INGOT)
-								.maxUses(16).experience(2).multiplier(0.05f),
-							new TradeFactory()
-								.buyItem1(Items.YELLOW_DYE).buyItem1Min(4).buyItem1Max(8)
-								.sellItem(Items.COPPER_INGOT)
-								.maxUses(16).experience(2).multiplier(0.05f),
-							new TradeFactory()
-								.buyItem1(Items.LIME_DYE).buyItem1Min(4).buyItem1Max(8)
-								.sellItem(Items.COPPER_INGOT)
-								.maxUses(16).experience(2).multiplier(0.05f),
-							new TradeFactory()
-								.buyItem1(Items.PINK_DYE).buyItem1Min(4).buyItem1Max(8)
-								.sellItem(Items.COPPER_INGOT)
-								.maxUses(16).experience(2).multiplier(0.05f),
-							new TradeFactory()
-								.buyItem1(Items.GRAY_DYE).buyItem1Min(4).buyItem1Max(8)
-								.sellItem(Items.COPPER_INGOT)
-								.maxUses(16).experience(2).multiplier(0.05f),
-							new TradeFactory()
-								.buyItem1(Items.LIGHT_GRAY_DYE).buyItem1Min(4).buyItem1Max(8)
-								.sellItem(Items.COPPER_INGOT)
-								.maxUses(16).experience(2).multiplier(0.05f),
-							new TradeFactory()
-								.buyItem1(Items.CYAN_DYE).buyItem1Min(4).buyItem1Max(8)
-								.sellItem(Items.COPPER_INGOT)
-								.maxUses(16).experience(2).multiplier(0.05f),
-							new TradeFactory()
-								.buyItem1(Items.PURPLE_DYE).buyItem1Min(4).buyItem1Max(8)
-								.sellItem(Items.COPPER_INGOT)
-								.maxUses(16).experience(2).multiplier(0.05f),
-							new TradeFactory()
-								.buyItem1(Items.BLUE_DYE).buyItem1Min(4).buyItem1Max(8)
-								.sellItem(Items.COPPER_INGOT)
-								.maxUses(16).experience(2).multiplier(0.05f),
-							new TradeFactory()
-								.buyItem1(Items.BROWN_DYE).buyItem1Min(4).buyItem1Max(8)
-								.sellItem(Items.COPPER_INGOT)
-								.maxUses(16).experience(2).multiplier(0.05f),
-							new TradeFactory()
-								.buyItem1(Items.GREEN_DYE).buyItem1Min(4).buyItem1Max(8)
-								.sellItem(Items.COPPER_INGOT)
-								.maxUses(16).experience(2).multiplier(0.05f),
-							new TradeFactory()
-								.buyItem1(Items.RED_DYE).buyItem1Min(4).buyItem1Max(8)
-								.sellItem(Items.COPPER_INGOT)
-								.maxUses(16).experience(2).multiplier(0.05f),
-							new TradeFactory()
-								.buyItem1(Items.BLACK_DYE).buyItem1Min(4).buyItem1Max(8)
+								.buyItem1(Items.STRING).buyItem1Min(4).buyItem1Max(8)
 								.sellItem(Items.COPPER_INGOT)
 								.maxUses(16).experience(2).multiplier(0.05f),
 						},
@@ -722,37 +663,61 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 						.put(
 							1,
 							new TradeOffers.Factory[]{
-								new TradeOffers.BuyItemFactory(Items.PAPER, 24, 16, 2),
-								new TradeOffers.EnchantBookFactory(1, EnchantmentTags.TRADEABLE),
-								new TradeOffers.SellItemFactory(Blocks.BOOKSHELF, 9, 1, 12, 1)
+								new TradeFactory()
+									.buyItem1(Items.PAPER).buyItem1Min(16).buyItem1Max(32)
+									.sellItem(Items.COPPER_INGOT)
+									.maxUses(12).experience(2).multiplier(0.05f),
+								new TradeFactory()
+									.buyItem1(Items.COPPER_INGOT).buyItem1Min(4).buyItem1Max(8)
+									.sellItem(Items.BOOK)
+									.maxUses(12).experience(2).multiplier(0.05f),
 							}
 						)
 						.put(
 							2,
 							new TradeOffers.Factory[]{
-								new TradeOffers.BuyItemFactory(Items.BOOK, 4, 12, 10),
-								new TradeOffers.EnchantBookFactory(5, EnchantmentTags.TRADEABLE),
-								new TradeOffers.SellItemFactory(Items.LANTERN, 1, 1, 5)
+								new TradeFactory()
+									.buyItem1(Items.BOOK)
+									.sellItem(Items.IRON_INGOT).sellItemMax(2)
+									.maxUses(8).experience(5).multiplier(0.05f),
+								new TradeFactory()
+									.buyItem1(Items.FEATHER).buyItem1Min(4).buyItem1Max(8)
+									.sellItem(Items.IRON_INGOT).sellItemMax(2)
+									.maxUses(8).experience(5).multiplier(0.05f),
 							}
 						)
 						.put(
 							3,
 							new TradeOffers.Factory[]{
-								new TradeOffers.BuyItemFactory(Items.INK_SAC, 5, 12, 20),
-								new TradeOffers.EnchantBookFactory(10, EnchantmentTags.TRADEABLE),
-								new TradeOffers.SellItemFactory(Items.GLASS, 1, 4, 10)
+								new TradeFactory()
+									.buyItem1(Items.INK_SAC).buyItem1Min(4).buyItem1Max(8)
+									.sellItem(Items.LAPIS_LAZULI).sellItemMin(4).sellItemMax(8)
+									.maxUses(8).experience(10).multiplier(0.05f),
 							}
 						)
 						.put(
 							4,
 							new TradeOffers.Factory[]{
-								new TradeOffers.BuyItemFactory(Items.WRITABLE_BOOK, 2, 12, 30),
-								new TradeOffers.EnchantBookFactory(15, EnchantmentTags.TRADEABLE),
-								new TradeOffers.SellItemFactory(Items.CLOCK, 5, 1, 15),
-								new TradeOffers.SellItemFactory(Items.COMPASS, 4, 1, 15)
+								new TradeFactory()
+									.buyItem1(Items.DIAMOND).buyItem1Min(16).buyItem1Max(48)
+									.sellItemGenerator((entity, random) -> {
+										Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
+											entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+											.getEntry(Enchantments.POWER);
+										return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
+											new EnchantmentLevelEntry(enchantment.get(), 5)) : Items.BOOK.getDefaultStack();
+									})
+									.maxUses(2).experience(40).multiplier(0.01f),
 							}
 						)
-						.put(5, new TradeOffers.Factory[]{new TradeOffers.SellItemFactory(Items.NAME_TAG, 20, 1, 30)})
+						.put(5, 
+							new TradeOffers.Factory[]{
+								new TradeFactory()
+									.buyItem1(Items.EMERALD)
+									.sellItem(Items.NAME_TAG)
+									.maxUses(4),
+							}
+						)
 						.build()
 				)
 			);
@@ -761,40 +726,94 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 				copyToFastUtilMap(
 					ImmutableMap.of(
 						1,
-						new TradeOffers.Factory[]{new TradeOffers.BuyItemFactory(Items.PAPER, 24, 16, 2), new TradeOffers.SellItemFactory(Items.MAP, 7, 1, 1)},
+						new TradeOffers.Factory[]{
+							new TradeFactory()
+								.buyItem1(Items.PAPER).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.COPPER_INGOT)
+								.maxUses(12).experience(2).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.COPPER_INGOT).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.COMPASS)
+								.maxUses(4).experience(2).multiplier(0.05f),
+						},
 						2,
 						new TradeOffers.Factory[]{
-							new TradeOffers.BuyItemFactory(Items.GLASS_PANE, 11, 16, 10),
-							new TradeOffers.SellMapFactory(13, StructureTags.ON_OCEAN_EXPLORER_MAPS, "filled_map.monument", MapDecorationTypes.MONUMENT, 12, 5)
+							new TradeFactory()
+								.buyItem1(Items.IRON_INGOT).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.CLOCK)
+								.maxUses(4).experience(5).multiplier(0.05f),
 						},
 						3,
 						new TradeOffers.Factory[]{
-							new TradeOffers.BuyItemFactory(Items.COMPASS, 1, 12, 20),
-							new TradeOffers.SellMapFactory(14, StructureTags.ON_WOODLAND_EXPLORER_MAPS, "filled_map.mansion", MapDecorationTypes.MANSION, 12, 10),
-							new TradeOffers.SellMapFactory(12, StructureTags.ON_TRIAL_CHAMBERS_MAPS, "filled_map.trial_chambers", MapDecorationTypes.TRIAL_CHAMBERS, 12, 10)
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(48).buyItem1Max(64)
+								.sellItemGenerator((entity, random) -> {
+									if (entity.getWorld() instanceof ServerWorld serverWorld) {
+										BlockPos blockPos = serverWorld.locateStructure(StructureTags.ON_OCEAN_EXPLORER_MAPS, entity.getBlockPos(), 100, true);
+										if (blockPos != null) {
+											ItemStack mapItem = FilledMapItem.createMap(serverWorld, blockPos.getX(), blockPos.getZ(), (byte)2, true, true);
+											FilledMapItem.fillExplorationMap(serverWorld, mapItem);
+											MapState.addDecorationsNbt(mapItem, blockPos, "+", MapDecorationTypes.MONUMENT);
+											mapItem.set(DataComponentTypes.ITEM_NAME, Text.translatable("filled_map.monument"));
+											return mapItem;
+										}
+									}
+									return Items.MAP.getDefaultStack();
+								})
+								.maxUses(1).experience(20).multiplier(0.01f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(48).buyItem1Max(64)
+								.sellItemGenerator((entity, random) -> {
+									if (entity.getWorld() instanceof ServerWorld serverWorld) {
+										BlockPos blockPos = serverWorld.locateStructure(StructureTags.ON_WOODLAND_EXPLORER_MAPS, entity.getBlockPos(), 100, true);
+										if (blockPos != null) {
+											ItemStack mapItem = FilledMapItem.createMap(serverWorld, blockPos.getX(), blockPos.getZ(), (byte)2, true, true);
+											FilledMapItem.fillExplorationMap(serverWorld, mapItem);
+											MapState.addDecorationsNbt(mapItem, blockPos, "+", MapDecorationTypes.MANSION);
+											mapItem.set(DataComponentTypes.ITEM_NAME, Text.translatable("filled_map.mansion"));
+											return mapItem;
+										}
+									}
+									return Items.MAP.getDefaultStack();
+								})
+								.maxUses(1).experience(20).multiplier(0.01f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(48).buyItem1Max(64)
+								.sellItemGenerator((entity, random) -> {
+									if (entity.getWorld() instanceof ServerWorld serverWorld) {
+										BlockPos blockPos = serverWorld.locateStructure(StructureTags.ON_TRIAL_CHAMBERS_MAPS, entity.getBlockPos(), 100, true);
+										if (blockPos != null) {
+											ItemStack mapItem = FilledMapItem.createMap(serverWorld, blockPos.getX(), blockPos.getZ(), (byte)2, true, true);
+											FilledMapItem.fillExplorationMap(serverWorld, mapItem);
+											MapState.addDecorationsNbt(mapItem, blockPos, "+", MapDecorationTypes.TRIAL_CHAMBERS);
+											mapItem.set(DataComponentTypes.ITEM_NAME, Text.translatable("filled_map.trial_chambers"));
+											return mapItem;
+										}
+									}
+									return Items.MAP.getDefaultStack();
+								})
+								.maxUses(1).experience(20).multiplier(0.01f),
 						},
 						4,
 						new TradeOffers.Factory[]{
-							new TradeOffers.SellItemFactory(Items.ITEM_FRAME, 7, 1, 15),
-							new TradeOffers.SellItemFactory(Items.WHITE_BANNER, 3, 1, 15),
-							new TradeOffers.SellItemFactory(Items.BLUE_BANNER, 3, 1, 15),
-							new TradeOffers.SellItemFactory(Items.LIGHT_BLUE_BANNER, 3, 1, 15),
-							new TradeOffers.SellItemFactory(Items.RED_BANNER, 3, 1, 15),
-							new TradeOffers.SellItemFactory(Items.PINK_BANNER, 3, 1, 15),
-							new TradeOffers.SellItemFactory(Items.GREEN_BANNER, 3, 1, 15),
-							new TradeOffers.SellItemFactory(Items.LIME_BANNER, 3, 1, 15),
-							new TradeOffers.SellItemFactory(Items.GRAY_BANNER, 3, 1, 15),
-							new TradeOffers.SellItemFactory(Items.BLACK_BANNER, 3, 1, 15),
-							new TradeOffers.SellItemFactory(Items.PURPLE_BANNER, 3, 1, 15),
-							new TradeOffers.SellItemFactory(Items.MAGENTA_BANNER, 3, 1, 15),
-							new TradeOffers.SellItemFactory(Items.CYAN_BANNER, 3, 1, 15),
-							new TradeOffers.SellItemFactory(Items.BROWN_BANNER, 3, 1, 15),
-							new TradeOffers.SellItemFactory(Items.YELLOW_BANNER, 3, 1, 15),
-							new TradeOffers.SellItemFactory(Items.ORANGE_BANNER, 3, 1, 15),
-							new TradeOffers.SellItemFactory(Items.LIGHT_GRAY_BANNER, 3, 1, 15)
+							new TradeFactory()
+								.buyItem1(Items.DIAMOND).buyItem1Min(16).buyItem1Max(48)
+								.sellItemGenerator((entity, random) -> {
+									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
+										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										.getEntry(Enchantments.POWER);
+									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
+										new EnchantmentLevelEntry(enchantment.get(), 5)) : Items.BOOK.getDefaultStack();
+								})
+								.maxUses(2).experience(40).multiplier(0.01f),
 						},
 						5,
-						new TradeOffers.Factory[]{new TradeOffers.SellItemFactory(Items.GLOBE_BANNER_PATTERN, 8, 1, 30)}
+						new TradeOffers.Factory[]{
+							new TradeFactory()
+								.buyItem1(Items.EMERALD).buyItem1Min(4).buyItem1Max(8)
+								.sellItem(Items.GLOBE_BANNER_PATTERN)
+								.maxUses(2),
+						}
 					)
 				)
 			);
@@ -803,20 +822,45 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 				copyToFastUtilMap(
 					ImmutableMap.of(
 						1,
-						new TradeOffers.Factory[]{new TradeOffers.BuyItemFactory(Items.ROTTEN_FLESH, 32, 16, 2), new TradeOffers.SellItemFactory(Items.REDSTONE, 1, 2, 1)},
+						new TradeOffers.Factory[]{
+							new TradeFactory()
+								.buyItem1(Items.ROTTEN_FLESH).buyItem1Min(16).buyItem1Max(24)
+								.sellItem(Items.COPPER_INGOT)
+								.maxUses(16).experience(2).multiplier(0.05f),
+						},
 						2,
-						new TradeOffers.Factory[]{new TradeOffers.BuyItemFactory(Items.GOLD_INGOT, 3, 12, 10), new TradeOffers.SellItemFactory(Items.LAPIS_LAZULI, 1, 1, 5)},
+						new TradeOffers.Factory[]{
+							new TradeFactory()
+								.buyItem1(Items.SPIDER_EYE).buyItem1Max(4)
+								.sellItem(Items.IRON_INGOT)
+								.maxUses(16).experience(5).multiplier(0.05f),
+						},
 						3,
-						new TradeOffers.Factory[]{new TradeOffers.BuyItemFactory(Items.RABBIT_FOOT, 2, 12, 20), new TradeOffers.SellItemFactory(Blocks.GLOWSTONE, 4, 1, 12, 10)},
+						new TradeOffers.Factory[]{
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(16).buyItem1Max(32)
+								.sellItem(Items.EXPERIENCE_BOTTLE).sellItemMin(4).sellItemMax(8)
+								.maxUses(16).experience(10).multiplier(0.05f),
+						},
 						4,
 						new TradeOffers.Factory[]{
-							new TradeOffers.BuyItemFactory(Items.TURTLE_SCUTE, 4, 12, 30),
-							new TradeOffers.BuyItemFactory(Items.GLASS_BOTTLE, 9, 12, 30),
-							new TradeOffers.SellItemFactory(Items.ENDER_PEARL, 5, 1, 15)
+							new TradeFactory()
+								.buyItem1(Items.DIAMOND).buyItem1Min(16).buyItem1Max(48)
+								.sellItemGenerator((entity, random) -> {
+									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
+										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										.getEntry(Enchantments.POWER);
+									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
+										new EnchantmentLevelEntry(enchantment.get(), 5)) : Items.BOOK.getDefaultStack();
+								})
+								.maxUses(2).experience(40).multiplier(0.01f),
 						},
 						5,
 						new TradeOffers.Factory[]{
-							new TradeOffers.BuyItemFactory(Items.NETHER_WART, 22, 12, 30), new TradeOffers.SellItemFactory(Items.EXPERIENCE_BOTTLE, 3, 1, 30)
+							new TradeFactory()
+								.buyItem1(Items.EMERALD).buyItem1Max(4)
+								.sellItem(Items.ENDER_PEARL).sellItemMax(2)
+								.maxUses(4)
 						}
 					)
 				)
@@ -827,36 +871,76 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 					ImmutableMap.of(
 						1,
 						new TradeOffers.Factory[]{
-							new TradeOffers.BuyItemFactory(Items.COAL, 15, 16, 2),
-							new TradeOffers.SellItemFactory(new ItemStack(Items.IRON_LEGGINGS), 7, 1, 12, 1, 0.2F),
-							new TradeOffers.SellItemFactory(new ItemStack(Items.IRON_BOOTS), 4, 1, 12, 1, 0.2F),
-							new TradeOffers.SellItemFactory(new ItemStack(Items.IRON_HELMET), 5, 1, 12, 1, 0.2F),
-							new TradeOffers.SellItemFactory(new ItemStack(Items.IRON_CHESTPLATE), 9, 1, 12, 1, 0.2F)
+							new TradeFactory()
+								.buyItem1(Items.COPPER_INGOT).buyItem1Min(2).buyItem1Max(4)
+								.sellItem(Items.SHIELD)
+								.maxUses(16).experience(2).multiplier(0.05f),
+						new TradeFactory()
+							.buyItem1(Items.COAL).buyItem1Min(4).buyItem1Max(8)
+							.sellItem(Items.COPPER_INGOT)
+							.maxUses(16).experience(2).multiplier(0.05f),
 						},
 						2,
 						new TradeOffers.Factory[]{
-							new TradeOffers.BuyItemFactory(Items.IRON_INGOT, 4, 12, 10),
-							new TradeOffers.SellItemFactory(new ItemStack(Items.BELL), 36, 1, 12, 5, 0.2F),
-							new TradeOffers.SellItemFactory(new ItemStack(Items.CHAINMAIL_BOOTS), 1, 1, 12, 5, 0.2F),
-							new TradeOffers.SellItemFactory(new ItemStack(Items.CHAINMAIL_LEGGINGS), 3, 1, 12, 5, 0.2F)
+							new TradeFactory()
+								.buyItem1(Items.RAW_COPPER).buyItem1Min(2).buyItem1Max(4)
+								.sellItem(Items.IRON_INGOT)
+								.maxUses(16).experience(5).multiplier(0.01f),
+							new TradeFactory()
+								.buyItem1(Items.RAW_IRON).buyItem1Min(2).buyItem1Max(4)
+								.sellItem(Items.IRON_INGOT)
+								.maxUses(16).experience(5).multiplier(0.02f),
 						},
 						3,
 						new TradeOffers.Factory[]{
-							new TradeOffers.BuyItemFactory(Items.LAVA_BUCKET, 1, 12, 20),
-							new TradeOffers.BuyItemFactory(Items.DIAMOND, 1, 12, 20),
-							new TradeOffers.SellItemFactory(new ItemStack(Items.CHAINMAIL_HELMET), 1, 1, 12, 10, 0.2F),
-							new TradeOffers.SellItemFactory(new ItemStack(Items.CHAINMAIL_CHESTPLATE), 4, 1, 12, 10, 0.2F),
-							new TradeOffers.SellItemFactory(new ItemStack(Items.SHIELD), 5, 1, 12, 10, 0.2F)
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(48).buyItem1Max(64)
+								.sellItem(Items.CHAINMAIL_BOOTS)
+								.maxUses(4).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(48).buyItem1Max(64)
+								.sellItem(Items.CHAINMAIL_LEGGINGS)
+								.maxUses(4).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(48).buyItem1Max(64)
+								.sellItem(Items.CHAINMAIL_CHESTPLATE)
+								.maxUses(4).experience(10).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.LAPIS_LAZULI).buyItem1Min(48).buyItem1Max(64)
+								.sellItem(Items.CHAINMAIL_HELMET)
+								.maxUses(4).experience(10).multiplier(0.05f),
 						},
 						4,
 						new TradeOffers.Factory[]{
-							new TradeOffers.SellEnchantedToolFactory(Items.DIAMOND_LEGGINGS, 14, 3, 15, 0.2F),
-							new TradeOffers.SellEnchantedToolFactory(Items.DIAMOND_BOOTS, 8, 3, 15, 0.2F)
+							new TradeFactory()
+								.buyItem1(Items.DIAMOND).buyItem1Min(16).buyItem1Max(48)
+								.sellItemGenerator((entity, random) -> {
+									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
+										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										.getEntry(Enchantments.POWER);
+									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
+										new EnchantmentLevelEntry(enchantment.get(), 5)) : Items.BOOK.getDefaultStack();
+								})
+								.maxUses(2).experience(40).multiplier(0.01f),
 						},
 						5,
 						new TradeOffers.Factory[]{
-							new TradeOffers.SellEnchantedToolFactory(Items.DIAMOND_HELMET, 8, 3, 30, 0.2F),
-							new TradeOffers.SellEnchantedToolFactory(Items.DIAMOND_CHESTPLATE, 16, 3, 30, 0.2F)
+							new TradeFactory()
+								.buyItem1(Items.EMERALD).buyItem1Max(4)
+								.sellItem(Items.DIAMOND_HELMET)
+								.maxUses(2).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.EMERALD).buyItem1Max(4)
+								.sellItem(Items.DIAMOND_CHESTPLATE)
+								.maxUses(2).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.EMERALD).buyItem1Max(4)
+								.sellItem(Items.DIAMOND_LEGGINGS)
+								.maxUses(2).multiplier(0.05f),
+							new TradeFactory()
+								.buyItem1(Items.EMERALD).buyItem1Max(4)
+								.sellItem(Items.DIAMOND_BOOTS)
+								.maxUses(2).multiplier(0.05f),
 						}
 					)
 				)
