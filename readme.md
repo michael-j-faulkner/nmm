@@ -6,11 +6,6 @@ This server side mod aims to spice up the survival experience! Monsters have bee
 
 A summary of the changes are listed below:
 
-## Table of Contents
-[Player](#player)  
-[Permanent Damage](#permanent-damage)  
-[Zombie](#zombie)  
-
 ## Change Summary
 
 ### Difficulty
