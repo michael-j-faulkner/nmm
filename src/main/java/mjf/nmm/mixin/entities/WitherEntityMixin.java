@@ -1,8 +1,6 @@
 package mjf.nmm.mixin.entities;
 
 import java.util.List;
-import java.util.function.Predicate;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,7 +13,6 @@ import net.minecraft.entity.boss.ServerBossBar;
 import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.WitherSkeletonEntity;
-import net.minecraft.registry.tag.EntityTypeTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -51,31 +48,29 @@ public abstract class WitherEntityMixin extends HostileEntity {
     @Shadow
     private int blockBreakingCooldown;
     @Shadow
-    private static final Predicate<LivingEntity> CAN_ATTACK_PREDICATE = entity -> !entity.getType().isIn(EntityTypeTags.UNDEAD) && entity.isMobOrPlayer();
-    @Shadow
-    private static final TargetPredicate HEAD_TARGET_PREDICATE = TargetPredicate.createAttackable().setBaseMaxDistance(32.0).setPredicate(CAN_ATTACK_PREDICATE).ignoreVisibility();
+    private static final TargetPredicate HEAD_TARGET_PREDICATE = TargetPredicate.createAttackable().setBaseMaxDistance(32.0).ignoreVisibility();
 
     /**
      * @author
      * @reason
      */
     @Overwrite
-    public void mobTick() {
+    public void mobTick(ServerWorld world) {
         // Prespawn logic
         if (this.getInvulnerableTimer() > 0) {
             int timeRemaining = this.getInvulnerableTimer() - 1;
             this.bossBar.setPercent(1.0f - (float)timeRemaining / 220.0f);
             if (timeRemaining <= 0) {
-                this.getWorld().createExplosion((Entity)this, this.getX(), this.getEyeY(), this.getZ(), 12.0f, true, World.ExplosionSourceType.MOB);
+                world.createExplosion((Entity)this, this.getX(), this.getEyeY(), this.getZ(), 12.0f, true, World.ExplosionSourceType.MOB);
                 if (!this.isSilent()) {
-                    this.getWorld().syncGlobalEvent(WorldEvents.WITHER_SPAWNS, this.getBlockPos(), 0);
+                    world.syncGlobalEvent(WorldEvents.WITHER_SPAWNS, this.getBlockPos(), 0);
                 }
                 for (int i = 0; i < 4; ++i) {
-                    WitherSkeletonEntity witherSkeleton = EntityType.WITHER_SKELETON.create(this.getWorld());
-                    if (witherSkeleton != null && this.getWorld() instanceof ServerWorld) {
+                    WitherSkeletonEntity witherSkeleton = EntityType.WITHER_SKELETON.create(world, SpawnReason.REINFORCEMENT);
+                    if (witherSkeleton != null && world instanceof ServerWorld) {
                         witherSkeleton.updatePositionAndAngles(this.getX(), this.getY(), this.getZ(), 360 * this.getRandom().nextFloat(), 0);
-                        witherSkeleton.initialize((ServerWorld)this.getWorld(), this.getWorld().getLocalDifficulty(this.getBlockPos()), SpawnReason.NATURAL, null);
-                        this.getWorld().spawnEntity(witherSkeleton);
+                        witherSkeleton.initialize((ServerWorld)world, world.getLocalDifficulty(this.getBlockPos()), SpawnReason.NATURAL, null);
+                        world.spawnEntity(witherSkeleton);
                     }
                 }
             }
@@ -87,7 +82,7 @@ public abstract class WitherEntityMixin extends HostileEntity {
         }
 
         // Postspawn logic
-        super.mobTick();
+        super.mobTick(world);
         for (int i = 0; i < 2; ++i) {
             if (this.age < this.skullCooldowns[i]) 
                 continue;
@@ -107,7 +102,7 @@ public abstract class WitherEntityMixin extends HostileEntity {
             // Regular Skull Logic
             int skullTargetId;
             if ((skullTargetId = this.getTrackedEntityId(i + 1)) > 0) {
-                LivingEntity target = (LivingEntity)this.getWorld().getEntityById(skullTargetId);
+                LivingEntity target = (LivingEntity)world.getEntityById(skullTargetId);
                 if (target == null || !this.canTarget(target) || this.squaredDistanceTo(target) > 1024.0 || !this.canSee(target)) {
                     this.setTrackedEntityId(i, 0);
                     continue;
@@ -118,7 +113,7 @@ public abstract class WitherEntityMixin extends HostileEntity {
             }
 
             // Update Targets
-            List<LivingEntity> list = this.getWorld().getTargets(LivingEntity.class, HEAD_TARGET_PREDICATE, this, this.getBoundingBox().expand(32.0, 16.0, 32.0));
+            List<LivingEntity> list = world.getTargets(LivingEntity.class, HEAD_TARGET_PREDICATE, this, this.getBoundingBox().expand(32.0, 16.0, 32.0));
             if (list.isEmpty()) continue;
             LivingEntity newTarget = list.get(this.random.nextInt(list.size()));
             this.setTrackedEntityId(i, newTarget.getId());
@@ -134,7 +129,7 @@ public abstract class WitherEntityMixin extends HostileEntity {
         // Break Blocks
         if (this.blockBreakingCooldown > 0) {
             --this.blockBreakingCooldown;
-            if (this.blockBreakingCooldown == 0 && this.getWorld().getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) {
+            if (this.blockBreakingCooldown == 0 && world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) {
                 int x = MathHelper.floor(this.getX());
                 int y = MathHelper.floor(this.getY());
                 int z = MathHelper.floor(this.getZ());
@@ -143,15 +138,15 @@ public abstract class WitherEntityMixin extends HostileEntity {
                     for (int j = -1; j <= 3; ++j) {
                         for (int k = -1; k <= 1; ++k) {
                             BlockPos blockPos = new BlockPos(x + i, y + j, z + k);
-                            if (!WitherEntity.canDestroy(this.getWorld().getBlockState(blockPos))) 
+                            if (!WitherEntity.canDestroy(world.getBlockState(blockPos))) 
                                 continue;
-                            if (this.getWorld().breakBlock(blockPos, true, this))
+                            if (world.breakBlock(blockPos, true, this))
                                 successfullyBrokeBlock = true;
                         }
                     }
                 }
                 if (successfullyBrokeBlock) {
-                    this.getWorld().syncWorldEvent(null, WorldEvents.WITHER_BREAKS_BLOCK, this.getBlockPos(), 0);
+                    world.syncWorldEvent(null, WorldEvents.WITHER_BREAKS_BLOCK, this.getBlockPos(), 0);
                 }
             }
         }

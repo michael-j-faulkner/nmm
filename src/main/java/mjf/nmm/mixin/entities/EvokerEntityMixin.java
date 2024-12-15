@@ -20,6 +20,7 @@ import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.mob.EvokerEntity;
 import net.minecraft.entity.mob.SpellcastingIllagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 
 @Mixin(EvokerEntity.class)
@@ -57,7 +58,7 @@ public abstract class EvokerEntityMixin extends SpellcastingIllagerEntity implem
     }
 
     @Override
-    public boolean isInvulnerableTo(DamageSource damageSource) {
-        return super.isInvulnerableTo(damageSource) || damageSource.isOf(DamageTypes.ARROW);
+    public boolean isInvulnerableTo(ServerWorld world, DamageSource damageSource) {
+        return super.isInvulnerableTo(world, damageSource) || damageSource.isOf(DamageTypes.ARROW);
     }
 }

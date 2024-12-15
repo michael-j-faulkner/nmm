@@ -12,6 +12,7 @@ import net.minecraft.entity.boss.dragon.phase.AbstractPhase;
 import net.minecraft.entity.boss.dragon.phase.HoldingPatternPhase;
 import net.minecraft.entity.boss.dragon.phase.PhaseType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Heightmap;
@@ -41,9 +42,10 @@ public abstract class HoldingPatternPhaseMixin extends AbstractPhase {
     private void tick(HoldingPatternPhase phase) {
         // Check if we should change phases
         if (this.path != null && this.path.isFinished()) {
-            BlockPos origin = this.dragon.getWorld().getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, new BlockPos(EndPortalFeature.offsetOrigin(this.dragon.getFightOrigin())));
+            ServerWorld world = this.dragon.getServer().getWorld(this.dragon.getWorld().getRegistryKey());
+            BlockPos origin = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, new BlockPos(EndPortalFeature.offsetOrigin(this.dragon.getFightOrigin())));
             int remainingCrystals = this.dragon.getFight() == null ? 0 : this.dragon.getFight().getAliveEndCrystals();
-            PlayerEntity nearestPlayer = this.dragon.getWorld().getClosestPlayer(PLAYERS_IN_RANGE_PREDICATE, this.dragon, origin.getX(), origin.getY(), origin.getZ());
+            PlayerEntity nearestPlayer = world.getClosestPlayer((double)origin.getX(), (double)origin.getY(), (double)origin.getZ(), 256.0, target -> PLAYERS_IN_RANGE_PREDICATE.test(world, this.dragon, (PlayerEntity)target));
             if (nearestPlayer != null && this.dragon.getRandom().nextInt(11 - remainingCrystals) == 0) {
                 this.dragon.getPhaseManager().setPhase(PhaseType.CHARGING_PLAYER);
                 this.dragon.getPhaseManager().create(PhaseType.CHARGING_PLAYER).setPathTarget(nearestPlayer.getPos());

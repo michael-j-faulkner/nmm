@@ -118,9 +118,10 @@ public abstract class ZombieEntityMixin extends HostileEntity {
         return (Brain<ZombieEntity>) super.getBrain();
     }
 
-    protected void mobTick() {
-        this.getBrain().tick((ServerWorld)this.getWorld(), (ZombieEntity) (Object) this);
+    @Override
+    protected void mobTick(ServerWorld world) {
+        this.getBrain().tick(world, (ZombieEntity) (Object) this);
 		ZombieBrain.updateActivities(this.getBrain());
-		super.mobTick();
+		super.mobTick(world);
     }
 }

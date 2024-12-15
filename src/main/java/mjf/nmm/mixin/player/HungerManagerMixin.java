@@ -5,7 +5,8 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 import net.minecraft.entity.player.HungerManager;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
 
@@ -19,8 +20,6 @@ public abstract class HungerManagerMixin {
     private float exhaustion;
     @Shadow
     private int foodTickTimer;
-    @Shadow
-    private int prevFoodLevel = 20;
 
     @Shadow
     public abstract void addExhaustion(float exhaustion);
@@ -31,9 +30,9 @@ public abstract class HungerManagerMixin {
      * @author
      */
     @Overwrite
-    public void update(PlayerEntity player) {
+    public void update(ServerPlayerEntity player) {
         Difficulty difficulty = player.getWorld().getDifficulty();
-        this.prevFoodLevel = this.foodLevel;
+        ServerWorld serverWorld = player.getServer().getWorld(player.getWorld().getRegistryKey());
         if (this.exhaustion > 4.0f) {
             this.exhaustion -= 4.0f;
             if (this.saturationLevel > 0.0f) {
@@ -42,7 +41,7 @@ public abstract class HungerManagerMixin {
                 this.foodLevel = Math.max(this.foodLevel - 1, 0);
             }
         }
-        if (player.getWorld().getGameRules().getBoolean(GameRules.NATURAL_REGENERATION) && this.foodLevel >= 18 && player.canFoodHeal()) {
+        if (serverWorld.getGameRules().getBoolean(GameRules.NATURAL_REGENERATION) && this.foodLevel >= 18 && player.canFoodHeal()) {
             ++this.foodTickTimer;
             if (this.foodTickTimer >= 600) {
                 player.heal(1.0f);
@@ -52,9 +51,7 @@ public abstract class HungerManagerMixin {
         } else if (this.foodLevel <= 0) {
             ++this.foodTickTimer;
             if (this.foodTickTimer >= 80) {
-                if (player.getHealth() > 10.0f || difficulty == Difficulty.HARD || player.getHealth() > 1.0f && difficulty == Difficulty.NORMAL) {
-                    player.clientDamage(player.getDamageSources().starve(), 1.0f);
-                }
+                player.damage(serverWorld, player.getDamageSources().starve(), 1.0f);
                 this.foodTickTimer = 0;
             }
         } else {

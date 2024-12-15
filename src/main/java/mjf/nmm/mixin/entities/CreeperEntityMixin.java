@@ -98,11 +98,12 @@ public abstract class CreeperEntityMixin extends HostileEntity {
 
 	protected int lookForCatTimer = 0;
 
-    protected void mobTick() {
+	@Override
+    protected void mobTick(ServerWorld world) {
 		Brain<CreeperEntity> brain = this.getBrain();
         brain.tick((ServerWorld)this.getWorld(), (CreeperEntity) (Object) this);
 		CreeperBrain.updateActivities(this.getBrain());
-		super.mobTick();
+		super.mobTick(world);
 
 		if (this.lookForCatTimer > 0) {
 			--this.lookForCatTimer;

@@ -53,6 +53,7 @@
 		"entities/ZombieEntityMixin",
 		"entities/ZombifiedPiglinEntityMixin",
 		"items/CrossbowItemMixin",
+		"items/ItemMixin",
 		"player/HungerManagerMixin",
 		"player/PlayerEntityMixin", 
 		"player/PlayerManagerMixin", 

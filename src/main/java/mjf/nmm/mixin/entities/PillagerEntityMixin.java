@@ -34,7 +34,7 @@ public abstract class PillagerEntityMixin extends IllagerEntity implements Cross
         return 30.0f;
     }
     
-    @ModifyArg(method = "initGoals", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/raid/RaiderEntity$PatrolApproachGoal;<init>(Lnet/minecraft/entity/raid/RaiderEntity;Lnet/minecraft/entity/mob/IllagerEntity;F)V"))
+    @ModifyArg(method = "initGoals", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/raid/RaiderEntity$PatrolApproachGoal;<init>(Lnet/minecraft/entity/mob/IllagerEntity;F)V"))
     private float patrolAggroRange(float f) {
         return 64.0f;
     }

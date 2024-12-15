@@ -45,7 +45,7 @@ public class NightmareModeDataGenerator implements DataGeneratorEntrypoint {
 
 		@Override
 		public void accept(BiConsumer<RegistryKey<LootTable>, Builder> lootTableBiConsumer) {
-			lootTableBiConsumer.accept(EntityType.IRON_GOLEM.getLootTableKey(), LootTable.builder()
+			lootTableBiConsumer.accept(EntityType.IRON_GOLEM.getLootTableKey().get(), LootTable.builder()
 				.pool(LootPool.builder().rolls(ConstantLootNumberProvider.create(1.0f))
 					.with(ItemEntry.builder(Items.IRON_NUGGET).apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(3, 5))))
 					.with(ItemEntry.builder(Items.POPPY).apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0, 2))))
@@ -53,7 +53,7 @@ public class NightmareModeDataGenerator implements DataGeneratorEntrypoint {
 			);
 
 			try {
-				lootTableBiConsumer.accept(EntityType.SPIDER.getLootTableKey(), LootTable.builder()
+				lootTableBiConsumer.accept(EntityType.SPIDER.getLootTableKey().get(), LootTable.builder()
 					.pool(LootPool.builder().rolls(ConstantLootNumberProvider.create(1.0f))
 						.with(ItemEntry.builder(Items.STRING).apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(0, 2)))
 							.apply(EnchantedCountIncreaseLootFunction.builder(this.regLookup.get(), UniformLootNumberProvider.create(0, 1))))

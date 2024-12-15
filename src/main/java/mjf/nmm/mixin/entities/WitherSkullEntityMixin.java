@@ -32,7 +32,7 @@ public abstract class WitherSkullEntityMixin extends ExplosiveProjectileEntity {
         if (this.getWorld() instanceof ServerWorld) {
             if (this.isCharged()) {
                 this.getWorld().createExplosion((Entity)this, this.getX(), this.getY(), this.getZ(), 8.0f, true, World.ExplosionSourceType.MOB);
-                WitherSkeletonEntity witherSkeleton = EntityType.WITHER_SKELETON.create(this.getWorld());
+                WitherSkeletonEntity witherSkeleton = EntityType.WITHER_SKELETON.create(this.getWorld(), SpawnReason.REINFORCEMENT);
                 if (witherSkeleton != null) {
                     witherSkeleton.updatePositionAndAngles(this.getX(), this.getY(), this.getZ(), 360 * this.getWorld().getRandom().nextFloat(), 0);
                     witherSkeleton.initialize((ServerWorld)this.getWorld(), this.getWorld().getLocalDifficulty(this.getBlockPos()), SpawnReason.NATURAL, null);

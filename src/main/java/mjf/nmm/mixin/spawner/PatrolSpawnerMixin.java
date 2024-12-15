@@ -98,37 +98,37 @@ public class PatrolSpawnerMixin implements SpecialSpawner {
                 || !PatrolEntity.canSpawn(EntityType.PILLAGER, world, SpawnReason.PATROL, pos, random)) {
                 return false;
             }
-            patrolEntity = EntityType.PILLAGER.create(world);
+            patrolEntity = EntityType.PILLAGER.create(world, SpawnReason.PATROL);
             break;
         case 3: case 4: case 5:
             if (!SpawnHelper.isClearForSpawn(world, pos, blockState, blockState.getFluidState(), EntityType.VINDICATOR)
                 || !PatrolEntity.canSpawn(EntityType.VINDICATOR, world, SpawnReason.PATROL, pos, random)) {
                 return false;
             }
-            patrolEntity = EntityType.VINDICATOR.create(world);
+            patrolEntity = EntityType.VINDICATOR.create(world, SpawnReason.PATROL);
             break;
         case 6: case 7:
             if (!SpawnHelper.isClearForSpawn(world, pos, blockState, blockState.getFluidState(), EntityType.WITCH)
                 || !PatrolEntity.canSpawn(EntityType.WITCH, world, SpawnReason.PATROL, pos, random)) {
                 return false;
             }
-            patrolEntity = EntityType.WITCH.create(world);
+            patrolEntity = EntityType.WITCH.create(world, SpawnReason.PATROL);
             break;
         case 8:
             if (!SpawnHelper.isClearForSpawn(world, pos, blockState, blockState.getFluidState(), EntityType.EVOKER)
                 || !PatrolEntity.canSpawn(EntityType.EVOKER, world, SpawnReason.PATROL, pos, random)) {
                 return false;
             }
-            patrolEntity = EntityType.EVOKER.create(world);
+            patrolEntity = EntityType.EVOKER.create(world, SpawnReason.PATROL);
             break;
         case 9:
             if (!SpawnHelper.isClearForSpawn(world, pos, blockState, blockState.getFluidState(), EntityType.RAVAGER)
                 || !PatrolEntity.canSpawn(EntityType.RAVAGER, world, SpawnReason.PATROL, pos, random)) {
                 return false;
             }
-            patrolEntity = EntityType.RAVAGER.create(world);
+            patrolEntity = EntityType.RAVAGER.create(world, SpawnReason.PATROL);
             if (random.nextBoolean()) {
-                PillagerEntity pillager = EntityType.PILLAGER.create(world);
+                PillagerEntity pillager = EntityType.PILLAGER.create(world, SpawnReason.PATROL);
                 if (pillager != null) {
                     pillager.setPersistent();
                     pillager.setPosition((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());
@@ -136,7 +136,7 @@ public class PatrolSpawnerMixin implements SpecialSpawner {
                     pillager.startRiding(patrolEntity);
                 }
             } else {
-                EvokerEntity evoker = EntityType.EVOKER.create(world);
+                EvokerEntity evoker = EntityType.EVOKER.create(world, SpawnReason.PATROL);
                 if (evoker != null) {
                     evoker.setPersistent();
                     evoker.setPosition((double)pos.getX(), (double)pos.getY(), (double)pos.getZ());

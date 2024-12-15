@@ -14,6 +14,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.entity.mob.ZombifiedPiglinEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 
 @Mixin(ZombifiedPiglinEntity.class)
@@ -32,8 +33,8 @@ public abstract class ZombifiedPiglinEntityMixin extends ZombieEntity {
 	}
 
     // Remove new AI that zombies have
-    @Redirect(method = "mobTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/ZombieEntity;mobTick()V"))
-    private void deleteZombieAI(ZombieEntity zombie) {
+    @Redirect(method = "mobTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/ZombieEntity;mobTick(Lnet/minecraft/server/world/ServerWorld;)V"))
+    private void deleteZombieAI(ZombieEntity zombie, ServerWorld world) {
     }
 
     // Re add old ones

@@ -1,6 +1,7 @@
 package mjf.nmm.mixin.entities;
 
 import java.util.Arrays;
+import java.util.stream.StreamSupport;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -98,8 +99,7 @@ public abstract class MobEntityMixin extends LivingEntity implements Targeter {
                 ItemStack itemStack = this.getEquippedStack(equipmentSlot);
                 if (!itemStack.isEmpty()) {
                     EnchantmentHelper.enchant(random, itemStack, (int)(5.0 + percentDifficulty * (15.0 + random.nextInt(15))), 
-                        world.getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getEntryList(EnchantmentTags.ON_MOB_SPAWN_EQUIPMENT)
-                        .orElseThrow().stream());
+                        StreamSupport.stream(world.getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).iterateEntries(EnchantmentTags.ON_MOB_SPAWN_EQUIPMENT).spliterator(), false));
                     this.equipStack(equipmentSlot, itemStack);
                 }
             }

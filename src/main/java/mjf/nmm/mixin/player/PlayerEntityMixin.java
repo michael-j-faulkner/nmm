@@ -15,6 +15,7 @@ import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 
 @Mixin(PlayerEntity.class)
@@ -24,7 +25,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     }
 
     @Inject(at = @At("TAIL"), method = "applyDamage")
-    private void permanentDamage(DamageSource source, float amount, CallbackInfo ci, @Local(name = "amount") float finalAmount) {
+    private void permanentDamage(ServerWorld world, DamageSource source, float amount, CallbackInfo ci, @Local(name = "amount") float finalAmount) {
         if (source.isIn(Tags.PERMANENT_DAMAGE)) {
             double currentModifierAmount = this.getAttributeValue(EntityAttributes.MAX_HEALTH) - 20.0;
             this.getAttributeInstance(EntityAttributes.MAX_HEALTH).overwritePersistentModifier(new EntityAttributeModifier(ScalingDifficulty.PERMANENT_DAMAGE_IDENTIFIER, currentModifierAmount - finalAmount, EntityAttributeModifier.Operation.ADD_VALUE));

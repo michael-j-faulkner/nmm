@@ -29,7 +29,7 @@ public abstract class BreezeWindChargeEntityMixin extends AbstractWindChargeEnti
                     "Lnet/minecraft/particle/ParticleEffect;" + 
                     "Lnet/minecraft/particle/ParticleEffect;" + 
                     "Lnet/minecraft/registry/entry/RegistryEntry;)" + 
-                    "Lnet/minecraft/world/explosion/Explosion;"
+                    "V"
         )
     )
     public float modifyPower(float power) {

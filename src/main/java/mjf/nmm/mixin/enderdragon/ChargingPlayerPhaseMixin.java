@@ -8,6 +8,7 @@ import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.boss.dragon.phase.AbstractPhase;
 import net.minecraft.entity.boss.dragon.phase.ChargingPlayerPhase;
 import net.minecraft.entity.boss.dragon.phase.PhaseType;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 
 @Mixin(ChargingPlayerPhase.class)
@@ -34,7 +35,7 @@ public abstract class ChargingPlayerPhaseMixin extends AbstractPhase {
      * @reason
      */
     @Overwrite
-    public void serverTick() {
+    public void serverTick(ServerWorld world) {
         if (this.pathTarget == null) {
             this.dragon.getPhaseManager().setPhase(PhaseType.HOLDING_PATTERN);
             return;

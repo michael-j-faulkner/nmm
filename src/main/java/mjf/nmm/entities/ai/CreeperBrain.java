@@ -27,6 +27,7 @@ import net.minecraft.entity.ai.brain.task.UpdateLookControlTask;
 import net.minecraft.entity.ai.brain.task.WaitTask;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.CreeperEntity;
+import net.minecraft.server.world.ServerWorld;
 
 public class CreeperBrain {
 	public static final ImmutableList<SensorType<? extends Sensor<? super CreeperEntity>>> SENSORS = ImmutableList.of(
@@ -88,7 +89,7 @@ public class CreeperBrain {
 		brain.resetPossibleActivities(ImmutableList.of(Activity.AVOID, Activity.FIGHT, Activity.IDLE));
     }
 
-    private static Optional<? extends LivingEntity> getTarget(CreeperEntity creeper) {
+    private static Optional<? extends LivingEntity> getTarget(ServerWorld world, CreeperEntity creeper) {
         return creeper.getBrain().getOptionalRegisteredMemory(MemoryModuleType.NEAREST_VISIBLE_TARGETABLE_PLAYER);
     }
 }

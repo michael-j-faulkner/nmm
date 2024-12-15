@@ -20,6 +20,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.SkeletonEntity;
 import net.minecraft.entity.mob.SpiderEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
@@ -39,8 +40,8 @@ public abstract class SpiderEntityMixin extends HostileEntity {
 	}
     
     @Override
-    public boolean tryAttack(Entity target) {
-        if (super.tryAttack(target)) {
+    public boolean tryAttack(ServerWorld world, Entity target) {
+        if (super.tryAttack(world, target)) {
             if (this.getWorld().getBlockState(target.getBlockPos()).getHardness(target.getWorld(), target.getBlockPos()) >= 0.0f 
                     && !this.getWorld().getBlockState(this.getBlockPos()).isOf(Blocks.COBWEB)) {
                 this.getWorld().breakBlock(target.getBlockPos(), true);
@@ -61,7 +62,7 @@ public abstract class SpiderEntityMixin extends HostileEntity {
         Random random = world.getRandom();
 
         SkeletonEntity skeletonEntity;
-        if (random.nextInt(100) == 0 && (skeletonEntity = EntityType.SKELETON.create(this.getWorld())) != null) {
+        if (random.nextInt(100) == 0 && (skeletonEntity = EntityType.SKELETON.create(this.getWorld(), SpawnReason.JOCKEY)) != null) {
             skeletonEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), 0.0f);
             skeletonEntity.initialize(world, difficulty, spawnReason, null);
             skeletonEntity.startRiding(this);

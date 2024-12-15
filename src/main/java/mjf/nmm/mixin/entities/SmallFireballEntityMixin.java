@@ -18,7 +18,7 @@ public abstract class SmallFireballEntityMixin extends AbstractFireballEntity {
         super(entityType, world);
     }
 
-    @ModifyArg(method = "onEntityHit", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"))
+    @ModifyArg(method = "onEntityHit", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/damage/DamageSource;F)Z"))
     public float modifyDamage(float damage) {
         return 15.0f;
     }

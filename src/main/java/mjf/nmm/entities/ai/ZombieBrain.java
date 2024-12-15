@@ -31,6 +31,7 @@ import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.passive.TurtleEntity;
+import net.minecraft.server.world.ServerWorld;
 
 public class ZombieBrain {
     public static final ImmutableList<SensorType<? extends Sensor<? super ZombieEntity>>> SENSORS = ImmutableList.of(
@@ -83,7 +84,7 @@ public class ZombieBrain {
 		brain.resetPossibleActivities(ImmutableList.of(Activity.FIGHT, Activity.IDLE));
     }
 
-    private static Optional<? extends LivingEntity> getTarget(ZombieEntity zombie) {
+    private static Optional<? extends LivingEntity> getTarget(ServerWorld world, ZombieEntity zombie) {
         Optional<? extends LivingEntity> target = zombie.getBrain().getOptionalRegisteredMemory(MemoryModuleType.NEAREST_VISIBLE_TARGETABLE_PLAYER);
         if (target.isPresent())
             return target;
