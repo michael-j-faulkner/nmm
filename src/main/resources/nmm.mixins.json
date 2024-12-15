@@ -15,6 +15,7 @@
 		"entities/BlazeEntityMixin",
 		"entities/BreezeWindChargeEntityMixin",
 		"entities/CaveSpiderEntityMixin",
+		"entities/CreakingEntityMixin",
 		"entities/CreeperEntityMixin",
 		"entities/ElderGuardianEntityMixin",
 		"entities/EndermanEntityMixin",
