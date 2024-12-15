@@ -152,8 +152,16 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 		
 		trades.put(VillagerProfession.ARMORER, 
 			new Int2ObjectOpenHashMap<>(Map.of(
-				0, new TradeOffers.Factory[] {
-					new TradeFactory().buyItem1(Items.IRON_HOE),
+				1, new TradeOffers.Factory[] {
+					
+				}
+			))
+		);
+
+		trades.put(VillagerProfession.BUTCHER, 
+			new Int2ObjectOpenHashMap<>(Map.of(
+				1, new TradeOffers.Factory[] {
+
 				}
 			))
 		);
