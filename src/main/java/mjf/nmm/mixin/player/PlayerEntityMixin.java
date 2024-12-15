@@ -26,8 +26,8 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     @Inject(at = @At("TAIL"), method = "applyDamage")
     private void permanentDamage(DamageSource source, float amount, CallbackInfo ci, @Local(name = "amount") float finalAmount) {
         if (source.isIn(Tags.PERMANENT_DAMAGE)) {
-            double currentModifierAmount = this.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH) - 20.0;
-            this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).overwritePersistentModifier(new EntityAttributeModifier(ScalingDifficulty.PERMANENT_DAMAGE_IDENTIFIER, currentModifierAmount - finalAmount, EntityAttributeModifier.Operation.ADD_VALUE));
+            double currentModifierAmount = this.getAttributeValue(EntityAttributes.MAX_HEALTH) - 20.0;
+            this.getAttributeInstance(EntityAttributes.MAX_HEALTH).overwritePersistentModifier(new EntityAttributeModifier(ScalingDifficulty.PERMANENT_DAMAGE_IDENTIFIER, currentModifierAmount - finalAmount, EntityAttributeModifier.Operation.ADD_VALUE));
         }
     }
 }

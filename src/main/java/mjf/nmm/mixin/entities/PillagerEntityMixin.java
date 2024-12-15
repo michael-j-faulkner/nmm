@@ -42,8 +42,8 @@ public abstract class PillagerEntityMixin extends IllagerEntity implements Cross
     @Inject(at = @At("RETURN"), method = "createPillagerAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.45)
-            .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 64.0));
+			.add(EntityAttributes.MOVEMENT_SPEED, 0.45)
+            .add(EntityAttributes.FOLLOW_RANGE, 64.0));
 	}
 
     @Override

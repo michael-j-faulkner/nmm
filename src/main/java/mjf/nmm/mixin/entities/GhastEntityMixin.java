@@ -24,8 +24,8 @@ public class GhastEntityMixin {
     @Inject(at = @At("RETURN"), method = "createGhastAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.GENERIC_ARMOR, 20.0)
-			.add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, 8.0)
-			.add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0));
+			.add(EntityAttributes.ARMOR, 20.0)
+			.add(EntityAttributes.ARMOR_TOUGHNESS, 8.0)
+			.add(EntityAttributes.MAX_HEALTH, 20.0));
 	}
 }

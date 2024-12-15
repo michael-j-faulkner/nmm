@@ -11,7 +11,7 @@ extends NearestLivingEntitiesSensor<T> {
 
     @Override
     protected void sense(ServerWorld serverWorld, T entity) {
-        this.range = entity.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE);
+        this.range = entity.getAttributeValue(EntityAttributes.FOLLOW_RANGE);
         super.sense(serverWorld, entity);
     }
 

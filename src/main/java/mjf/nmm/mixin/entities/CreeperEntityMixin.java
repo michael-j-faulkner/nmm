@@ -43,7 +43,7 @@ public abstract class CreeperEntityMixin extends HostileEntity {
 	@Inject(at = @At("RETURN"), method = "createCreeperAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.35));
+			.add(EntityAttributes.MOVEMENT_SPEED, 0.35));
 	}
 
 	@Shadow

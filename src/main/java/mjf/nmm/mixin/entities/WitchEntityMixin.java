@@ -27,9 +27,9 @@ public abstract class WitchEntityMixin extends RaiderEntity {
     @Inject(at = @At("RETURN"), method = "createWitchAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-            .add(EntityAttributes.GENERIC_ARMOR, 20.0)
-            .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.45)
-            .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 64.0));
+            .add(EntityAttributes.ARMOR, 20.0)
+            .add(EntityAttributes.MOVEMENT_SPEED, 0.45)
+            .add(EntityAttributes.FOLLOW_RANGE, 64.0));
 	}
 
     @ModifyArg(method = "initGoals", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/goal/GoalSelector;add(ILnet/minecraft/entity/ai/goal/Goal;)V", ordinal = 1))

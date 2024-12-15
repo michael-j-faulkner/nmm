@@ -28,7 +28,7 @@ public class FollowRangePlayersSensor extends Sensor<LivingEntity> {
     protected void sense(ServerWorld world, LivingEntity entity) {
         Brain<?> brain = entity.getBrain();
         List<PlayerEntity> nearbyPlayers = world.getPlayers().stream().filter(EntityPredicates.EXCEPT_SPECTATOR)
-            .filter(player -> entity.isInRange(player, entity.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE)))
+            .filter(player -> entity.isInRange(player, entity.getAttributeValue(EntityAttributes.FOLLOW_RANGE)))
             .sorted(Comparator.comparingDouble(entity::squaredDistanceTo)).collect(Collectors.toList());
         brain.remember(MemoryModuleType.NEAREST_PLAYERS, nearbyPlayers);
 

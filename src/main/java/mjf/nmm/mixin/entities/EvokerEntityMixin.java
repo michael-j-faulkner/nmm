@@ -31,10 +31,10 @@ public abstract class EvokerEntityMixin extends SpellcastingIllagerEntity implem
     @Inject(at = @At("RETURN"), method = "createEvokerAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.GENERIC_FOLLOW_RANGE, 64.0)
-            .add(EntityAttributes.GENERIC_ARMOR, 20.0)
-            .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, 10.0)
-            .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.45));
+			.add(EntityAttributes.FOLLOW_RANGE, 64.0)
+            .add(EntityAttributes.ARMOR, 20.0)
+            .add(EntityAttributes.ARMOR_TOUGHNESS, 10.0)
+            .add(EntityAttributes.MOVEMENT_SPEED, 0.45));
 	}
 
     @Override

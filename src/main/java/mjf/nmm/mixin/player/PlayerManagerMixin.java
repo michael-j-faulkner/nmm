@@ -17,7 +17,7 @@ public class PlayerManagerMixin {
     @Inject(method = "respawnPlayer", at = @At("RETURN"), cancellable = true)
     public void respawnPlayer(ServerPlayerEntity player, boolean alive, Entity.RemovalReason removalReason, CallbackInfoReturnable<ServerPlayerEntity> cir) {
         ServerPlayerEntity finalPlayerEntity = cir.getReturnValue();
-        finalPlayerEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).overwritePersistentModifier(new EntityAttributeModifier(ScalingDifficulty.PERMANENT_DAMAGE_IDENTIFIER, player.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH) - 20.0, EntityAttributeModifier.Operation.ADD_VALUE));
+        finalPlayerEntity.getAttributeInstance(EntityAttributes.MAX_HEALTH).overwritePersistentModifier(new EntityAttributeModifier(ScalingDifficulty.PERMANENT_DAMAGE_IDENTIFIER, player.getAttributeValue(EntityAttributes.MAX_HEALTH) - 20.0, EntityAttributeModifier.Operation.ADD_VALUE));
         finalPlayerEntity.setHealth(finalPlayerEntity.getMaxHealth());
         cir.setReturnValue(finalPlayerEntity);
     }

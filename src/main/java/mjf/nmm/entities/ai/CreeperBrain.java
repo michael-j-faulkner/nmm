@@ -17,14 +17,14 @@ import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
 import net.minecraft.entity.ai.brain.task.ForgetTask;
 import net.minecraft.entity.ai.brain.task.GoToRememberedPositionTask;
-import net.minecraft.entity.ai.brain.task.LookAroundTask;
 import net.minecraft.entity.ai.brain.task.LookAtMobTask;
+import net.minecraft.entity.ai.brain.task.MoveToTargetTask;
 import net.minecraft.entity.ai.brain.task.RandomTask;
 import net.minecraft.entity.ai.brain.task.RangedApproachTask;
 import net.minecraft.entity.ai.brain.task.StrollTask;
 import net.minecraft.entity.ai.brain.task.UpdateAttackTargetTask;
+import net.minecraft.entity.ai.brain.task.UpdateLookControlTask;
 import net.minecraft.entity.ai.brain.task.WaitTask;
-import net.minecraft.entity.ai.brain.task.WanderAroundTask;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.CreeperEntity;
 
@@ -51,15 +51,15 @@ public class CreeperBrain {
 
     private static void addCoreActivities(CreeperEntity creeper, Brain<CreeperEntity> brain) {
         brain.setTaskList(Activity.CORE, 0, ImmutableList.of(
-            new LookAroundTask(45, 90),
-            new WanderAroundTask(),
+            new UpdateLookControlTask(45, 90),
+            new MoveToTargetTask(),
             CreeperIgniteTask.create()));
     }
 
     private static void addIdleActivities(CreeperEntity creeper, Brain<CreeperEntity> brain) {
         brain.setTaskList(Activity.IDLE, 10, ImmutableList.of(
             UpdateAttackTargetTask.create(CreeperBrain::getTarget), 
-            LookAtMobTask.create((float)creeper.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE)),
+            LookAtMobTask.create((float)creeper.getAttributeValue(EntityAttributes.FOLLOW_RANGE)),
             new RandomTask<CreeperEntity>(ImmutableList.of(
                 Pair.of(StrollTask.create(1.0f), 1),
                 Pair.of(new WaitTask(30, 60), 1)))

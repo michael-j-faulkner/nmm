@@ -14,7 +14,7 @@ public class ElderGuardianEntityMixin {
     @Inject(at = @At("RETURN"), method = "createElderGuardianAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 18.0)
-            .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32.0));
+			.add(EntityAttributes.ATTACK_DAMAGE, 18.0)
+            .add(EntityAttributes.FOLLOW_RANGE, 32.0));
 	}
 }

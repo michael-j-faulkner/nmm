@@ -22,7 +22,7 @@ public abstract class ShulkerBulletEntityMixin extends ProjectileEntity {
 
     @Redirect(method = "onEntityHit", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"))
     public boolean changeDamageType(Entity entity, DamageSource source, float amount) {
-        return entity.damage(this.getDamageSources().magic(), 19.0f);
+        return entity.clientDamage(this.getDamageSources().magic(), 19.0f);
     }
 
     @ModifyArg(method = "onEntityHit", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;addStatusEffect(Lnet/minecraft/entity/effect/StatusEffectInstance;Lnet/minecraft/entity/Entity;)Z"))

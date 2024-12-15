@@ -14,7 +14,7 @@ public class RavagerEntityMixin {
     @Inject(at = @At("RETURN"), method = "createRavagerAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.45)
-            .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 20.0));
+			.add(EntityAttributes.MOVEMENT_SPEED, 0.45)
+            .add(EntityAttributes.ATTACK_DAMAGE, 20.0));
 	}
 }

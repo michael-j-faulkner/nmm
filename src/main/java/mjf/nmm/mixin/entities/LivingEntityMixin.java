@@ -47,12 +47,12 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "eatFood", at = @At("HEAD"))
     public void eatFood(World world, ItemStack stack, FoodComponent foodComponent, CallbackInfoReturnable<ItemStack> cir) {
         LivingEntity entity = (LivingEntity)(Object)this;
-        double currentModifierAmount = this.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH) - 20.0;
+        double currentModifierAmount = this.getAttributeValue(EntityAttributes.MAX_HEALTH) - 20.0;
         if (stack.isOf(Items.GOLDEN_APPLE) && currentModifierAmount < 0.0) {
-            entity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).overwritePersistentModifier(new EntityAttributeModifier(ScalingDifficulty.PERMANENT_DAMAGE_IDENTIFIER, Math.min(currentModifierAmount + HEALTH_PER_APPLE, 0.0), EntityAttributeModifier.Operation.ADD_VALUE));
+            entity.getAttributeInstance(EntityAttributes.MAX_HEALTH).overwritePersistentModifier(new EntityAttributeModifier(ScalingDifficulty.PERMANENT_DAMAGE_IDENTIFIER, Math.min(currentModifierAmount + HEALTH_PER_APPLE, 0.0), EntityAttributeModifier.Operation.ADD_VALUE));
         }
         if (stack.isOf(Items.ENCHANTED_GOLDEN_APPLE)) {
-            entity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).overwritePersistentModifier(new EntityAttributeModifier(ScalingDifficulty.PERMANENT_DAMAGE_IDENTIFIER, Math.min(currentModifierAmount + HEALTH_PER_APPLE, MAX_HEALTH - 20.0), EntityAttributeModifier.Operation.ADD_VALUE));
+            entity.getAttributeInstance(EntityAttributes.MAX_HEALTH).overwritePersistentModifier(new EntityAttributeModifier(ScalingDifficulty.PERMANENT_DAMAGE_IDENTIFIER, Math.min(currentModifierAmount + HEALTH_PER_APPLE, MAX_HEALTH - 20.0), EntityAttributeModifier.Operation.ADD_VALUE));
         }
     } 
 

@@ -98,7 +98,7 @@ public abstract class MobEntityMixin extends LivingEntity implements Targeter {
                 ItemStack itemStack = this.getEquippedStack(equipmentSlot);
                 if (!itemStack.isEmpty()) {
                     EnchantmentHelper.enchant(random, itemStack, (int)(5.0 + percentDifficulty * (15.0 + random.nextInt(15))), 
-                        world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntryList(EnchantmentTags.ON_MOB_SPAWN_EQUIPMENT)
+                        world.getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getEntryList(EnchantmentTags.ON_MOB_SPAWN_EQUIPMENT)
                         .orElseThrow().stream());
                     this.equipStack(equipmentSlot, itemStack);
                 }

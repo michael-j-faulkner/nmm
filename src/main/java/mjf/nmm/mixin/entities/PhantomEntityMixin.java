@@ -30,7 +30,7 @@ public abstract class PhantomEntityMixin extends FlyingEntity {
     @Inject(method = "initialize", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/PhantomEntity;setPhantomSize(I)V", shift = At.Shift.AFTER))
 	public void initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, CallbackInfoReturnable<EntityData> cir) {
         double percentDifficulty = ScalingDifficulty.getPercentDifficulty(world, this.getPos());
-        if (world.getDimension().equals(world.getRegistryManager().get(RegistryKeys.DIMENSION_TYPE).get(DimensionTypes.THE_END))) {
+        if (world.getDimension().equals(world.getRegistryManager().getOrThrow(RegistryKeys.DIMENSION_TYPE).get(DimensionTypes.THE_END))) {
             this.setPhantomSize(5 + (int) (percentDifficulty * (5 + world.getRandom().nextInt(6))));
         } else {
             this.setPhantomSize((int) (percentDifficulty * (3 + world.getRandom().nextInt(3))));
@@ -44,8 +44,8 @@ public abstract class PhantomEntityMixin extends FlyingEntity {
 
     @Inject(method = "onSizeChanged", at = @At("TAIL"))
     public void increaseDamage(CallbackInfo ci) {
-        this.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_KNOCKBACK).setBaseValue(this.getPhantomSize());
-        this.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(6.0 + 2.0 * this.getPhantomSize());
-        this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(20.0 + 3.0 * this.getPhantomSize());
+        this.getAttributeInstance(EntityAttributes.ATTACK_KNOCKBACK).setBaseValue(this.getPhantomSize());
+        this.getAttributeInstance(EntityAttributes.ATTACK_DAMAGE).setBaseValue(6.0 + 2.0 * this.getPhantomSize());
+        this.getAttributeInstance(EntityAttributes.MAX_HEALTH).setBaseValue(20.0 + 3.0 * this.getPhantomSize());
     }
 }

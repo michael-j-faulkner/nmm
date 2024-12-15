@@ -29,19 +29,19 @@ public class SensorMixin {
 
     @Inject(at = @At("HEAD"), method = "testTargetPredicate")
     private static void targetPredWithFollowRange(LivingEntity entity, LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
-        TARGET_PREDICATE.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE));
-        TARGET_PREDICATE_IGNORE_DISTANCE_SCALING.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE));
+        TARGET_PREDICATE.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.FOLLOW_RANGE));
+        TARGET_PREDICATE_IGNORE_DISTANCE_SCALING.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.FOLLOW_RANGE));
     }
 
     @Inject(at = @At("HEAD"), method = "testAttackableTargetPredicate")
     private static void attackablePredWithFollowRange(LivingEntity entity, LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
-        ATTACKABLE_TARGET_PREDICATE.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE));
-        ATTACKABLE_TARGET_PREDICATE_IGNORE_DISTANCE_SCALING.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE));
+        ATTACKABLE_TARGET_PREDICATE.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.FOLLOW_RANGE));
+        ATTACKABLE_TARGET_PREDICATE_IGNORE_DISTANCE_SCALING.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.FOLLOW_RANGE));
     }
 
     @Inject(at = @At("HEAD"), method = "testAttackableTargetPredicateIgnoreVisibility")
     private static void attackableIgnoreVisibilityPredWithFollowRange(LivingEntity entity, LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
-        ATTACKABLE_TARGET_PREDICATE_IGNORE_VISIBILITY.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE));
-        ATTACKABLE_TARGET_PREDICATE_IGNORE_VISIBILITY_OR_DISTANCE_SCALING.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE));
+        ATTACKABLE_TARGET_PREDICATE_IGNORE_VISIBILITY.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.FOLLOW_RANGE));
+        ATTACKABLE_TARGET_PREDICATE_IGNORE_VISIBILITY_OR_DISTANCE_SCALING.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.FOLLOW_RANGE));
     }
 }

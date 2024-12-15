@@ -360,7 +360,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(32).buyItem1Max(64)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.LURE);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 3)) : Items.BOOK.getDefaultStack();
@@ -370,7 +370,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 									.buyItem1(Items.DIAMOND).buyItem1Min(32).buyItem1Max(64)
 									.sellItemGenerator((entity, random) -> {
 										Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-											entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+											entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 											.getEntry(Enchantments.LUCK_OF_THE_SEA);
 										return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 											new EnchantmentLevelEntry(enchantment.get(), 3)) : Items.BOOK.getDefaultStack();
@@ -380,7 +380,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 									.buyItem1(Items.DIAMOND).buyItem1Min(32).buyItem1Max(64)
 									.sellItemGenerator((entity, random) -> {
 										Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-											entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+											entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 											.getEntry(Enchantments.LUCK_OF_THE_SEA);
 										return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 											new EnchantmentLevelEntry(enchantment.get(), 3)) : Items.BOOK.getDefaultStack();
@@ -552,7 +552,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(16).buyItem1Max(48)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.SILK_TOUCH);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 1)) : Items.BOOK.getDefaultStack();
@@ -608,7 +608,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(16).buyItem1Max(48)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.POWER);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 5)) : Items.BOOK.getDefaultStack();
@@ -618,7 +618,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(16).buyItem1Max(48)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.PUNCH);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 2)) : Items.BOOK.getDefaultStack();
@@ -628,7 +628,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(16).buyItem1Max(48)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.INFINITY);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 1)) : Items.BOOK.getDefaultStack();
@@ -638,7 +638,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(16).buyItem1Max(48)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.FLAME);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 1)) : Items.BOOK.getDefaultStack();
@@ -648,7 +648,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(16).buyItem1Max(48)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.MULTISHOT);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 1)) : Items.BOOK.getDefaultStack();
@@ -658,7 +658,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(16).buyItem1Max(48)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.PIERCING);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 4)) : Items.BOOK.getDefaultStack();
@@ -668,7 +668,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(16).buyItem1Max(48)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.QUICK_CHARGE);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 3)) : Items.BOOK.getDefaultStack();
@@ -760,7 +760,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 									.buyItem1(Items.DIAMOND).buyItem1Min(16).buyItem1Max(48)
 									.sellItemGenerator((entity, random) -> {
 										Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-											entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+											entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 											.getEntry(Enchantments.POWER);
 										return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 											new EnchantmentLevelEntry(enchantment.get(), 5)) : Items.BOOK.getDefaultStack();
@@ -858,7 +858,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(32).buyItem1Max(64)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.DEPTH_STRIDER);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 3)) : Items.BOOK.getDefaultStack();
@@ -906,7 +906,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(32).buyItem1Max(64)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.FEATHER_FALLING);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 4)) : Items.BOOK.getDefaultStack();
@@ -974,7 +974,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(32).buyItem1Max(64)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.PROTECTION);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 4)) : Items.BOOK.getDefaultStack();
@@ -984,7 +984,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(32).buyItem1Max(64)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.PROJECTILE_PROTECTION);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 4)) : Items.BOOK.getDefaultStack();
@@ -994,7 +994,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(32).buyItem1Max(64)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.BLAST_PROTECTION);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 4)) : Items.BOOK.getDefaultStack();
@@ -1004,7 +1004,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(32).buyItem1Max(64)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.FIRE_PROTECTION);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 4)) : Items.BOOK.getDefaultStack();
@@ -1072,7 +1072,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(32).buyItem1Max(64)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.SHARPNESS);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 5)) : Items.BOOK.getDefaultStack();
@@ -1082,7 +1082,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(32).buyItem1Max(64)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.SMITE);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 5)) : Items.BOOK.getDefaultStack();
@@ -1092,7 +1092,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(32).buyItem1Max(64)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.BANE_OF_ARTHROPODS);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 5)) : Items.BOOK.getDefaultStack();
@@ -1156,7 +1156,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(32).buyItem1Max(64)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.EFFICIENCY);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 5)) : Items.BOOK.getDefaultStack();
@@ -1166,7 +1166,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(32).buyItem1Max(64)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.UNBREAKING);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 3)) : Items.BOOK.getDefaultStack();
@@ -1234,7 +1234,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(32).buyItem1Max(64)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.LOOTING);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 3)) : Items.BOOK.getDefaultStack();
@@ -1286,7 +1286,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(16).buyItem1Max(48)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.POWER);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 5)) : Items.BOOK.getDefaultStack();
@@ -1354,7 +1354,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(32).buyItem1Max(64)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.SILK_TOUCH);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 1)) : Items.BOOK.getDefaultStack();
@@ -1364,7 +1364,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 								.buyItem1(Items.DIAMOND).buyItem1Min(32).buyItem1Max(64)
 								.sellItemGenerator((entity, random) -> {
 									Optional<RegistryEntry.Reference<Enchantment>> enchantment = 
-										entity.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT)
+										entity.getWorld().getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT)
 										.getEntry(Enchantments.FORTUNE);
 									return enchantment.isPresent() ? EnchantedBookItem.forEnchantment(
 										new EnchantmentLevelEntry(enchantment.get(), 3)) : Items.BOOK.getDefaultStack();
