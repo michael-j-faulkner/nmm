@@ -9,18 +9,14 @@ import net.minecraft.world.GameRules;
 
 public class Events {
     public static void registerEvents() {
-		ServerLifecycleEvents.SERVER_STARTING.register(Events::onServerStarting);
+		// ServerLifecycleEvents.SERVER_STARTING.register(Events::onServerStarting);
         ServerWorldEvents.LOAD.register(Events::onWorldLoad);
     }
 
-	private static void onServerStarting(MinecraftServer server) {
-		// Ensure the game is on hard
-		server.setDifficulty(Difficulty.HARD, true);
-		server.setDifficultyLocked(true);
-	}
-
 	private static void onWorldLoad(MinecraftServer server, ServerWorld world) {
 		// Prevent sleep from skipping the night
+		server.setDifficulty(Difficulty.HARD, true);
+		server.setDifficultyLocked(true);
 		world.getGameRules().get(GameRules.PLAYERS_SLEEPING_PERCENTAGE).set(101, server);
 		world.getGameRules().get(GameRules.UNIVERSAL_ANGER).set(true, server);
 		world.getGameRules().get(GameRules.FORGIVE_DEAD_PLAYERS).set(false, server);
