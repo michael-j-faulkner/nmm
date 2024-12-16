@@ -29,8 +29,8 @@ public abstract class MobEntityMixin extends LivingEntity implements Targeter {
         super(entityType, world);
     }
 
-    private static final double[] ARMOR_CHANCES_EARLY_GAME = {0.9, 0.05, 0.015, 0.015, 0.019, 0.001};
-    private static final double[] ARMOR_CHANCES_LATE_GAME = {0.05, 0.1, 0.125, 0.125, 0.4, 0.2};
+    private static final double[] ARMOR_CHANCES_EARLY_GAME = {0.8, 0.1, 0.025, 0.025, 0.04, 0.01};
+    private static final double[] ARMOR_CHANCES_LATE_GAME = {0.01, 0.04, 0.05, 0.05, 0.3, 0.55};
 
     private static final int NUM_ARMOR_LEVELS = 6;
     private static final double[] LERP_CONSTANTS_EARLY_GAME = new double[NUM_ARMOR_LEVELS];
@@ -39,7 +39,7 @@ public abstract class MobEntityMixin extends LivingEntity implements Targeter {
         assert Arrays.stream(ARMOR_CHANCES_EARLY_GAME).sum() - 1.0 < 1.0e-7;
         assert Arrays.stream(ARMOR_CHANCES_LATE_GAME).sum() - 1.0 < 1.0e-7;
 
-        // See Desmos file for calculation: https://www.desmos.com/calculator/jisu1gdvzx
+        // See Desmos file for calculation: https://www.desmos.com/calculator/f7khin1u52
         LERP_CONSTANTS_EARLY_GAME[0] = ARMOR_CHANCES_EARLY_GAME[0];
         LERP_CONSTANTS_LATE_GAME[0] = ARMOR_CHANCES_LATE_GAME[0];
         for (int i = 1; i < NUM_ARMOR_LEVELS; ++i) {
@@ -72,7 +72,7 @@ public abstract class MobEntityMixin extends LivingEntity implements Targeter {
                 continue;
             
             // Add armor boots to head, with slight chance to stop partway
-            if (random.nextFloat() < 0.5 + 0.45 * percentDifficulty) {
+            if (random.nextFloat() < 0.5 + 0.5 * percentDifficulty * percentDifficulty) {
                 // Check if there's already an item set
                 ItemStack itemStack = this.getEquippedStack(equipmentSlot);
                 if (itemStack.isEmpty()) {
@@ -94,11 +94,11 @@ public abstract class MobEntityMixin extends LivingEntity implements Targeter {
     @Overwrite
     public void updateEnchantments(ServerWorldAccess world, Random random, LocalDifficulty localDifficulty) {
         double percentDifficulty = ScalingDifficulty.getPercentDifficulty(world, this.getPos());
-        if (random.nextFloat() < percentDifficulty) {
+        if (random.nextFloat() < percentDifficulty * percentDifficulty) {
             for (EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
                 ItemStack itemStack = this.getEquippedStack(equipmentSlot);
                 if (!itemStack.isEmpty()) {
-                    EnchantmentHelper.enchant(random, itemStack, (int)(5.0 + percentDifficulty * (15.0 + random.nextInt(15))), 
+                    EnchantmentHelper.enchant(random, itemStack, (int)(5.0 + percentDifficulty * percentDifficulty * (15.0 + random.nextInt(15))), 
                         StreamSupport.stream(world.getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).iterateEntries(EnchantmentTags.ON_MOB_SPAWN_EQUIPMENT).spliterator(), false));
                     this.equipStack(equipmentSlot, itemStack);
                 }

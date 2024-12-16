@@ -4,6 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.mojang.serialization.Dynamic;
@@ -33,13 +34,18 @@ public abstract class ZombieEntityMixin extends HostileEntity {
     @Inject(at = @At("RETURN"), method = "createZombieAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.MOVEMENT_SPEED, 0.3)
-			.add(EntityAttributes.ATTACK_DAMAGE, 4.0)
+			.add(EntityAttributes.MOVEMENT_SPEED, 0.25)
+			.add(EntityAttributes.ATTACK_DAMAGE, 2.0)
             .add(EntityAttributes.ARMOR, 10.0)
-            .add(EntityAttributes.KNOCKBACK_RESISTANCE, 0.5)
-            .add(EntityAttributes.SPAWN_REINFORCEMENTS, 0.1)
             .add(EntityAttributes.FOLLOW_RANGE, 32.0));
 	}
+
+    @Inject(method = "initAttributes", at = @At("TAIL"))
+    protected void normallyOverwritesReinforcementChance(CallbackInfo ci) {
+        double percentDifficulty = ScalingDifficulty.getPercentDifficulty((ServerWorld)this.getWorld(), this.getPos());
+		this.getAttributeInstance(EntityAttributes.SPAWN_REINFORCEMENTS).setBaseValue(0.25);
+		this.getAttributeInstance(EntityAttributes.KNOCKBACK_RESISTANCE).setBaseValue(percentDifficulty * 0.5);
+    }
 
     /**
      * @author
@@ -78,6 +84,7 @@ public abstract class ZombieEntityMixin extends HostileEntity {
                     this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_SHOVEL));
                     break;
                 }
+                break;
             case 2:
                 switch ((int) (2 * percentDifficulty + random.nextFloat())) {
                 case 0:
@@ -91,6 +98,7 @@ public abstract class ZombieEntityMixin extends HostileEntity {
                     this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_AXE));
                     break;
                 }
+                break;
             }
         }
     }

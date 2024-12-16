@@ -13,12 +13,11 @@ import net.minecraft.world.ServerWorldAccess;
 public class ScalingDifficulty {
     public static final Identifier PERMANENT_DAMAGE_IDENTIFIER = Identifier.of(NightmareMode.MODID, "permanent_damage");
 
-    public static int getDifficulty(ServerWorldAccess world, Vec3d pos) {
+    public static double getDifficulty(ServerWorldAccess world, Vec3d pos) {
         OptionalDouble avgPlayerDifficulty = world.toServerWorld().getPlayers().stream().filter(player -> player.squaredDistanceTo(pos) < 128 * 128 && !player.isSpectator()).mapToDouble(player -> getPlayerDifficulty(world.getServer(), player)).average();
-        double moonDifficulty = 2.0 * world.getMoonSize();
+        double moonDifficulty = 0.0; // 2.0 * world.getMoonSize();
 
-        int difficulty = (int)Math.round(MathHelper.clamp((avgPlayerDifficulty.isPresent() ? avgPlayerDifficulty.getAsDouble() : 0.0) + moonDifficulty, 0.0, 10.0));
-        return difficulty;
+        return MathHelper.clamp((avgPlayerDifficulty.isPresent() ? avgPlayerDifficulty.getAsDouble() : 0.0) + moonDifficulty, 0.0, 10.0);
     }
 
     public static double getPercentDifficulty(ServerWorldAccess world, Vec3d pos) {

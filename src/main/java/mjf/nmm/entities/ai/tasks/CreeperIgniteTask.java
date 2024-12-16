@@ -21,7 +21,7 @@ public class CreeperIgniteTask {
                 creeper.setFuseSpeed(-1);
                 return true;
             }
-            if (creeper.squaredDistanceTo(target.get()) > 16.0 + 20.0 * ScalingDifficulty.getPercentDifficulty(world, creeper.getPos())) {
+            if (creeper.squaredDistanceTo(target.get()) > 36.0) {
                 creeper.setFuseSpeed(-1);
                 return true;
             }
