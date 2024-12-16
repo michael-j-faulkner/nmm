@@ -33,8 +33,6 @@ public abstract class EvokerEntityMixin extends SpellcastingIllagerEntity implem
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
 			.add(EntityAttributes.FOLLOW_RANGE, 64.0)
-            .add(EntityAttributes.ARMOR, 20.0)
-            .add(EntityAttributes.ARMOR_TOUGHNESS, 10.0)
             .add(EntityAttributes.MOVEMENT_SPEED, 0.45));
 	}
 
@@ -59,6 +57,6 @@ public abstract class EvokerEntityMixin extends SpellcastingIllagerEntity implem
 
     @Override
     public boolean isInvulnerableTo(ServerWorld world, DamageSource damageSource) {
-        return super.isInvulnerableTo(world, damageSource) || damageSource.isOf(DamageTypes.ARROW);
+        return super.isInvulnerableTo(world, damageSource) || damageSource.isOf(DamageTypes.ARROW) || damageSource.isOf(DamageTypes.TRIDENT) || damageSource.isOf(DamageTypes.FIREWORKS);
     }
 }

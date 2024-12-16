@@ -16,8 +16,8 @@ public abstract class CreakingEntityMixin {
 	@Inject(at = @At("RETURN"), method = "createCreakingAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.MOVEMENT_SPEED, 0.6)
-            .add(EntityAttributes.ATTACK_DAMAGE, 256.0));
+			.add(EntityAttributes.MOVEMENT_SPEED, 0.5)
+            .add(EntityAttributes.ATTACK_DAMAGE, 1000.0));
 	}
 
     @ModifyConstant(method = "shouldBeUnrooted", constant = @Constant(doubleValue = 144.0))

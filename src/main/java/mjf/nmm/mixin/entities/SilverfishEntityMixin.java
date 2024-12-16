@@ -14,7 +14,7 @@ public class SilverfishEntityMixin {
     @Inject(at = @At("RETURN"), method = "createSilverfishAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.MOVEMENT_SPEED, 0.35)
+			.add(EntityAttributes.MOVEMENT_SPEED, 0.5)
 			.add(EntityAttributes.KNOCKBACK_RESISTANCE, 1.0)
 			.add(EntityAttributes.ATTACK_DAMAGE, 10.0));
 	}

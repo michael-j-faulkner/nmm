@@ -23,7 +23,7 @@ public class CrossbowItemMixin {
      */
     @Overwrite
     public int getRange() {
-        return 24;
+        return 28;
     }
 
     // Adjustable Parameters

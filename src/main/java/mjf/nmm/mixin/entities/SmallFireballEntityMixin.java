@@ -18,22 +18,17 @@ public abstract class SmallFireballEntityMixin extends AbstractFireballEntity {
         super(entityType, world);
     }
 
-    @ModifyArg(method = "onEntityHit", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/damage/DamageSource;F)Z"))
-    public float modifyDamage(float damage) {
-        return 15.0f;
-    }
-
     @Inject(method = "onEntityHit", at = @At("TAIL"))
     public void addExplosion(CallbackInfo ci) {
-        if (!this.getWorld().isClient() && this.getOwner() instanceof BlazeEntity) {
-            this.getWorld().createExplosion(this, this.getX(), this.getY(), this.getZ(), 2.0f, true, World.ExplosionSourceType.MOB);
+        if (this.getOwner() instanceof BlazeEntity) {
+            this.getWorld().createExplosion(this, this.getX(), this.getY(), this.getZ(), 3.0f, true, World.ExplosionSourceType.MOB);
 		}
     }
 
     @Inject(method = "onBlockHit", at = @At("TAIL"))
     public void addBlockExplosion(CallbackInfo ci) {
-        if (!this.getWorld().isClient() && this.getOwner() instanceof BlazeEntity) {
-            this.getWorld().createExplosion(this, this.getX(), this.getY(), this.getZ(), 2.0f, true, World.ExplosionSourceType.MOB);
+        if (this.getOwner() instanceof BlazeEntity) {
+            this.getWorld().createExplosion(this, this.getX(), this.getY(), this.getZ(), 3.0f, true, World.ExplosionSourceType.MOB);
 		}
     }
 }

@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Targeter;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -104,5 +105,16 @@ public abstract class MobEntityMixin extends LivingEntity implements Targeter {
                 }
             }
         }
+    }
+
+    @Override
+	public boolean damage(ServerWorld world, DamageSource source, float amount) {
+        if (super.damage(world, source, amount)) {
+            if (this.hasVehicle()) {
+                this.dismountVehicle();
+            }
+            return true;
+        }
+        return false;
     }
 }

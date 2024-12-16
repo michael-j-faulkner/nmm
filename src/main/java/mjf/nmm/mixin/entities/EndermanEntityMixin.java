@@ -6,12 +6,21 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.Angerable;
 import net.minecraft.entity.mob.EndermanEntity;
 import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
@@ -26,7 +35,7 @@ public abstract class EndermanEntityMixin extends HostileEntity implements Anger
     @Inject(at = @At("RETURN"), method = "createEndermanAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.ATTACK_DAMAGE, 40.0));
+			.add(EntityAttributes.ATTACK_DAMAGE, 30.0));
 	}
 
     private int destroyLightCooldown = 0;
@@ -76,6 +85,22 @@ public abstract class EndermanEntityMixin extends HostileEntity implements Anger
         if (blockLightView.getLightLevel(pos.west()) > lightLevel) {
             destroyLightSource(world, pos.west());
             return;
+        }
+    }
+
+    @Inject(method = "damage", at = @At("RETURN"))
+    public void damage(ServerWorld world, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        if (cir.getReturnValue() && source.getAttacker() instanceof PlayerEntity player) {
+            for (int i = 0; i < 16; ++i) {
+                double x = player.getX() + (player.getRandom().nextDouble() - 0.5) * 32.0;
+                double y = player.getY() + (player.getRandom().nextDouble() - 0.5) * 32.0;
+                double z = player.getZ() + (player.getRandom().nextDouble() - 0.5) * 32.0;
+
+                if (player.teleport(x, y, z, true)) {
+                    world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, SoundCategory.HOSTILE, 1.0f, 0.25f);
+                    break;
+                }
+            }
         }
     }
 }

@@ -44,7 +44,7 @@ public abstract class PhantomEntityMixin extends FlyingEntity {
 
     @Inject(method = "onSizeChanged", at = @At("TAIL"))
     public void increaseDamage(CallbackInfo ci) {
-        this.getAttributeInstance(EntityAttributes.ATTACK_KNOCKBACK).setBaseValue(this.getPhantomSize());
+        this.getAttributeInstance(EntityAttributes.ATTACK_KNOCKBACK).setBaseValue(5.0);
         this.getAttributeInstance(EntityAttributes.ATTACK_DAMAGE).setBaseValue(6.0 + 2.0 * this.getPhantomSize());
         this.getAttributeInstance(EntityAttributes.MAX_HEALTH).setBaseValue(20.0 + 3.0 * this.getPhantomSize());
     }

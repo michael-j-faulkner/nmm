@@ -14,9 +14,9 @@ public class BlazeEntityMixin {
     @Inject(at = @At("RETURN"), method = "createBlazeAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.MOVEMENT_SPEED, 0.35)
-            .add(EntityAttributes.ATTACK_DAMAGE, 15.0)
-			.add(EntityAttributes.ARMOR, 20.0)
-			.add(EntityAttributes.ARMOR_TOUGHNESS, 8.0));
+			.add(EntityAttributes.MOVEMENT_SPEED, 0.25)
+            .add(EntityAttributes.ATTACK_DAMAGE, 20.0)
+			.add(EntityAttributes.ARMOR, 30.0)
+			.add(EntityAttributes.ARMOR_TOUGHNESS, 12.0));
 	}
 }

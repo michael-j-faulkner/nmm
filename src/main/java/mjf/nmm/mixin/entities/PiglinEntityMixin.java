@@ -1,5 +1,7 @@
 package mjf.nmm.mixin.entities;
 
+import java.util.List;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -8,8 +10,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.google.common.collect.ImmutableList;
 
+import it.unimi.dsi.fastutil.ints.IntList;
 import mjf.nmm.entities.ai.sensors.CustomMemoryModuleType;
 import mjf.nmm.entities.ai.sensors.CustomSensorType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.FireworkExplosionComponent;
+import net.minecraft.component.type.FireworksComponent;
 import net.minecraft.entity.CrossbowUser;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
@@ -19,6 +25,9 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.AbstractPiglinEntity;
 import net.minecraft.entity.mob.PiglinEntity;
+import net.minecraft.item.FireworkRocketItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.world.World;
 
 @Mixin(PiglinEntity.class)
@@ -59,9 +68,20 @@ public abstract class PiglinEntityMixin extends AbstractPiglinEntity implements 
     @Inject(at = @At("RETURN"), method = "createPiglinAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.MOVEMENT_SPEED, 0.4)
+			.add(EntityAttributes.MOVEMENT_SPEED, 0.3)
             .add(EntityAttributes.ATTACK_DAMAGE, 15.0)
             .add(EntityAttributes.ARMOR, 20.0)
             .add(EntityAttributes.ARMOR_TOUGHNESS, 12.0));
 	}
+
+    @Override
+    public ItemStack getProjectileType(ItemStack stack) {
+        ItemStack firework = Items.FIREWORK_ROCKET.getDefaultStack();
+        FireworksComponent fireworksData = new FireworksComponent(
+            FireworkRocketItem.FLIGHT_VALUES[0], 
+            List.of()
+        );
+        firework.set(DataComponentTypes.FIREWORKS, fireworksData);
+        return firework;
+    }
 }

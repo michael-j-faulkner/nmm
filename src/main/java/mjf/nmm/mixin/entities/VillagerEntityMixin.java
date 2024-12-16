@@ -166,6 +166,94 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 			))
 		);
 
+		trades.put(VillagerProfession.CARTOGRAPHER, 
+			new Int2ObjectOpenHashMap<>(Map.of(
+				1, new TradeOffers.Factory[] {
+
+				}
+			))
+		);
+
+		trades.put(VillagerProfession.CLERIC, 
+			new Int2ObjectOpenHashMap<>(Map.of(
+				1, new TradeOffers.Factory[] {
+
+				}
+			))
+		);
+
+		trades.put(VillagerProfession.FARMER, 
+			new Int2ObjectOpenHashMap<>(Map.of(
+				1, new TradeOffers.Factory[] {
+
+				}
+			))
+		);
+
+		trades.put(VillagerProfession.FISHERMAN, 
+			new Int2ObjectOpenHashMap<>(Map.of(
+				1, new TradeOffers.Factory[] {
+
+				}
+			))
+		);
+
+		trades.put(VillagerProfession.FLETCHER, 
+			new Int2ObjectOpenHashMap<>(Map.of(
+				1, new TradeOffers.Factory[] {
+
+				}
+			))
+		);
+
+		trades.put(VillagerProfession.LEATHERWORKER, 
+			new Int2ObjectOpenHashMap<>(Map.of(
+				1, new TradeOffers.Factory[] {
+
+				}
+			))
+		);
+
+		trades.put(VillagerProfession.LIBRARIAN, 
+			new Int2ObjectOpenHashMap<>(Map.of(
+				1, new TradeOffers.Factory[] {
+
+				}
+			))
+		);
+
+		trades.put(VillagerProfession.MASON, 
+			new Int2ObjectOpenHashMap<>(Map.of(
+				1, new TradeOffers.Factory[] {
+
+				}
+			))
+		);
+
+		trades.put(VillagerProfession.SHEPHERD, 
+			new Int2ObjectOpenHashMap<>(Map.of(
+				1, new TradeOffers.Factory[] {
+
+				}
+			))
+		);
+
+		trades.put(VillagerProfession.TOOLSMITH, 
+			new Int2ObjectOpenHashMap<>(Map.of(
+				1, new TradeOffers.Factory[] {
+
+				}
+			))
+		);
+
+		trades.put(VillagerProfession.WEAPONSMITH, 
+			new Int2ObjectOpenHashMap<>(Map.of(
+				1, new TradeOffers.Factory[] {
+
+				}
+			))
+		);
+
 		return trades;
 	});
 }

@@ -4,7 +4,7 @@
 # Nightmare Mode
 This server side mod aims to spice up the survival experience! Monsters have been giving scaling stats as well as some unique abilities in order to make survival a challenge at all parts of the game! Will you be able to survive?
 
-A summary of the changes are listed below:
+A summary of the changes are listed below (**OUTDATED!!!!!!!!!!!!!!!!**):
 
 ## Change Summary
 
@@ -209,3 +209,7 @@ Faster Levitation
 Attack Damage: 20.0
 Movement Speed: 0.45
 Knockback Resistance: 1.0
+
+
+# Notes for updating mod
+Check SpawnRestriction file
