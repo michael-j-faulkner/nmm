@@ -43,7 +43,7 @@ public abstract class CreeperEntityMixin extends HostileEntity {
 	@Inject(at = @At("RETURN"), method = "createCreeperAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.MOVEMENT_SPEED, 0.35));
+			.add(EntityAttributes.MOVEMENT_SPEED, 0.4));
 	}
 
 	@Shadow
@@ -54,22 +54,22 @@ public abstract class CreeperEntityMixin extends HostileEntity {
 	@Override
 	public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
 		double percentDifficulty = ScalingDifficulty.getPercentDifficulty(world, this.getPos());
-		if (random.nextFloat() < 0.1 * percentDifficulty) {
+		if (random.nextFloat() < 0.25 * percentDifficulty) {
 			this.dataTracker.set(CHARGED, true);
 		}
-        if (random.nextFloat() < 0.1 * percentDifficulty) {
+        if (random.nextFloat() < 0.25 * percentDifficulty) {
             this.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, -1));
         }
-        if (random.nextFloat() < 0.1 * percentDifficulty) {
+        if (random.nextFloat() < 0.25 * percentDifficulty) {
             this.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, -1));
         }
-        if (random.nextFloat() < 0.1 * percentDifficulty) {
+        if (random.nextFloat() < 0.25 * percentDifficulty) {
             this.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, -1));
         }
-        if (random.nextFloat() < 0.1 * percentDifficulty) {
+        if (random.nextFloat() < 0.25 * percentDifficulty) {
             this.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, -1, 3));
         }
-		this.explosionRadius = 3;
+		this.explosionRadius = 4;
 		return super.initialize(world, difficulty, spawnReason, entityData);
     }
 

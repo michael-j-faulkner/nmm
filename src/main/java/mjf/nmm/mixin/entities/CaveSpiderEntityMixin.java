@@ -32,13 +32,13 @@ public abstract class CaveSpiderEntityMixin extends SpiderEntity {
         if (random.nextFloat() < percentDifficulty) {
             this.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, -1));
         }
-        if (random.nextFloat() < 0.5 * percentDifficulty) {
-            this.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1, Math.round((float)percentDifficulty)));
+        if (random.nextFloat() < percentDifficulty) {
+            this.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAVING, -1));
         }
-        if (random.nextFloat() < 0.5 * percentDifficulty) {
-            this.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, -1, Math.round(2.0f * (float)percentDifficulty)));
+        if (random.nextFloat() < percentDifficulty) {
+            this.addStatusEffect(new StatusEffectInstance(StatusEffects.INFESTED, -1));
         }
-        if (random.nextFloat() < 0.5 * percentDifficulty) {
+        if (random.nextFloat() < percentDifficulty) {
             this.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, -1));
         }
     }

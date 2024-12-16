@@ -36,7 +36,7 @@ public abstract class SpiderEntityMixin extends HostileEntity {
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
 			.add(EntityAttributes.MOVEMENT_SPEED, 0.4)
-            .add(EntityAttributes.ATTACK_DAMAGE, 3.0));
+            .add(EntityAttributes.ATTACK_DAMAGE, 6.0));
 	}
     
     @Override
@@ -71,13 +71,13 @@ public abstract class SpiderEntityMixin extends HostileEntity {
         if (random.nextFloat() < percentDifficulty) {
             this.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, -1));
         }
-        if (random.nextFloat() < 0.5 * percentDifficulty) {
-            this.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1, Math.round((float)percentDifficulty)));
+        if (random.nextFloat() < percentDifficulty) {
+            this.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAVING, -1));
         }
-        if (random.nextFloat() < 0.5 * percentDifficulty) {
-            this.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, -1, Math.round(2.0f * (float)percentDifficulty)));
+        if (random.nextFloat() < percentDifficulty) {
+            this.addStatusEffect(new StatusEffectInstance(StatusEffects.INFESTED, -1));
         }
-        if (random.nextFloat() < 0.5 * percentDifficulty) {
+        if (random.nextFloat() < percentDifficulty) {
             this.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, -1));
         }
         return entityData;
