@@ -8,8 +8,9 @@ import com.mojang.datafixers.util.Pair;
 
 import mjf.nmm.entities.ai.sensors.CustomMemoryModuleType;
 import mjf.nmm.entities.ai.sensors.CustomSensorType;
-import mjf.nmm.entities.ai.tasks.ForgetTargetOrMineTask;
+import mjf.nmm.entities.ai.tasks.ForgetTargetOrBuildAndMineTask;
 import mjf.nmm.entities.ai.tasks.MineBlockTask;
+import mjf.nmm.entities.ai.tasks.PlaceBlockTask;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.ai.brain.Brain;
@@ -40,7 +41,7 @@ public class ZombieBrain {
         MemoryModuleType.MOBS, MemoryModuleType.VISIBLE_MOBS,
         MemoryModuleType.NEAREST_PLAYERS, CustomMemoryModuleType.NEAREST_TARGETABLE_PLAYERS,
         CustomMemoryModuleType.NEAREST_TARGETABLE_PLAYER, MemoryModuleType.NEAREST_VISIBLE_PLAYER, 
-        MemoryModuleType.NEAREST_VISIBLE_TARGETABLE_PLAYER,
+        MemoryModuleType.NEAREST_VISIBLE_TARGETABLE_PLAYER, CustomMemoryModuleType.PLACE_BLOCK_LOCATION,
         MemoryModuleType.LOOK_TARGET, MemoryModuleType.WALK_TARGET, CustomMemoryModuleType.MINE_BLOCK_LOCATION,
 		MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE, MemoryModuleType.PATH, MemoryModuleType.ATTACK_TARGET,
         MemoryModuleType.ATTACK_COOLING_DOWN);
@@ -73,10 +74,11 @@ public class ZombieBrain {
 
     private static void addFightActivities(ZombieEntity zombie, Brain<ZombieEntity> brain) {
         brain.setTaskList(Activity.FIGHT, 10, ImmutableList.of(
-            ForgetTargetOrMineTask.create(),
+            ForgetTargetOrBuildAndMineTask.create(),
             RangedApproachTask.create(1.0f),
             MeleeAttackTask.create(10),
-            new MineBlockTask<ZombieEntity>()
+            new MineBlockTask<ZombieEntity>(),
+            PlaceBlockTask.create()
         ), MemoryModuleType.ATTACK_TARGET);
     }
 

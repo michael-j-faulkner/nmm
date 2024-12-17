@@ -38,11 +38,10 @@ public abstract class HoldingPatternPhaseMixin extends AbstractPhase {
     @Shadow
     protected abstract void followPath();
 
-    @Redirect(method = "serverTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/boss/dragon/phase/HoldingPatternPhase;tickInRange()V"))
-    private void tick(HoldingPatternPhase phase) {
+    @Redirect(method = "serverTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/boss/dragon/phase/HoldingPatternPhase;tickInRange(Lnet/minecraft/server/world/ServerWorld;)V"))
+    private void tick(HoldingPatternPhase phase, ServerWorld world) {
         // Check if we should change phases
         if (this.path != null && this.path.isFinished()) {
-            ServerWorld world = this.dragon.getServer().getWorld(this.dragon.getWorld().getRegistryKey());
             BlockPos origin = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, new BlockPos(EndPortalFeature.offsetOrigin(this.dragon.getFightOrigin())));
             int remainingCrystals = this.dragon.getFight() == null ? 0 : this.dragon.getFight().getAliveEndCrystals();
             PlayerEntity nearestPlayer = world.getClosestPlayer((double)origin.getX(), (double)origin.getY(), (double)origin.getZ(), 256.0, target -> PLAYERS_IN_RANGE_PREDICATE.test(world, this.dragon, (PlayerEntity)target));

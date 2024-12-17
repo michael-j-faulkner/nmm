@@ -1,6 +1,8 @@
 package mjf.nmm.mixin.entities;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -103,4 +105,20 @@ public abstract class EndermanEntityMixin extends HostileEntity implements Anger
             }
         }
     }
+
+    @Shadow
+    abstract boolean teleportTo(double x, double y, double z);
+
+    @Inject(method = "teleportRandomly", at = @At("HEAD"), cancellable = true)
+    protected void teleportRandomly(CallbackInfoReturnable<Boolean> cir) {
+        PlayerEntity entity = this.getWorld().getClosestPlayer(this, 128);
+        if (entity != null) {
+
+            this.teleportTo(
+                entity.getX() + this.getRandom().nextTriangular(0.0, 0.5) * 128.0, 
+                entity.getY() + this.getRandom().nextTriangular(0.0, 0.5) * 128.0, 
+                entity.getZ() + this.getRandom().nextTriangular(0.0, 0.5) * 128.0);
+            cir.cancel();
+        }
+	}
 }

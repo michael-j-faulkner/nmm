@@ -4,7 +4,6 @@
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"ai/DrownedMoveControlMixin",
-		"ai/PhantomEntityFindTargetMixin",
 		"ai/SensorMixin",
 		"enderdragon/ChargingPlayerPhaseMixin",
 		"enderdragon/DragonFireballEntityMixin",

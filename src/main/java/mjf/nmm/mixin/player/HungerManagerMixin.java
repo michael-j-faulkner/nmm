@@ -43,7 +43,7 @@ public abstract class HungerManagerMixin {
         }
         if (serverWorld.getGameRules().getBoolean(GameRules.NATURAL_REGENERATION) && this.foodLevel >= 18 && player.canFoodHeal()) {
             ++this.foodTickTimer;
-            if (this.foodTickTimer >= 600) {
+            if (this.foodTickTimer >= 100) {
                 player.heal(1.0f);
                 this.addExhaustion(6.0f);
                 this.foodTickTimer = 0;

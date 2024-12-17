@@ -69,7 +69,7 @@ public abstract class CreeperEntityMixin extends HostileEntity {
         if (random.nextFloat() < 0.25 * percentDifficulty) {
             this.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, -1, 3));
         }
-		this.explosionRadius = 4;
+		this.explosionRadius = 3;
 		return super.initialize(world, difficulty, spawnReason, entityData);
     }
 
