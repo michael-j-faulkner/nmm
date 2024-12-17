@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.stream.StreamSupport;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,6 +14,9 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.MerchantEntity;
@@ -19,6 +24,8 @@ import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.tag.EnchantmentTags;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.village.TradeOffer;
@@ -80,6 +87,12 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 			return this;
 		}
 
+		public TradeFactory buyItem1Count(int count) {
+			this.buyItem1Min = count;
+			this.buyItem1Max = count;
+			return this;
+		}
+
 		public TradeFactory buyItem2Min(int count) {
 			this.buyItem2Min = count;
 			return this;
@@ -90,12 +103,24 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 			return this;
 		}
 
+		public TradeFactory buyItem2Count(int count) {
+			this.buyItem2Min = count;
+			this.buyItem2Max = count;
+			return this;
+		}
+
 		public TradeFactory sellItemMin(int count) {
 			this.sellItemMin = count;
 			return this;
 		}
 
 		public TradeFactory sellItemMax(int count) {
+			this.sellItemMax = count;
+			return this;
+		}
+
+		public TradeFactory sellItemCount(int count) {
+			this.sellItemMin = count;
 			this.sellItemMax = count;
 			return this;
 		}
@@ -147,13 +172,35 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
         return CUSTOM_TRADES.get(this.getVillagerData().getProfession());
     }
 
+	private static ItemStack enchantWithLevel(ItemStack itemStack, int level, Random random, Entity entity) {
+		Registry<Enchantment> enchantmentRegistry = entity.getRegistryManager().getOrThrow(Enchantments.AQUA_AFFINITY.getRegistryRef());
+		return EnchantmentHelper.enchant(random, itemStack, level, StreamSupport.stream(enchantmentRegistry.iterateEntries(EnchantmentTags.NON_TREASURE).spliterator(), false));
+	}
+
 	private static final Map<VillagerProfession, Int2ObjectMap<TradeOffers.Factory[]>> CUSTOM_TRADES = Util.make(() -> {
 		Map<VillagerProfession, Int2ObjectMap<TradeOffers.Factory[]>> trades = new HashMap<>();
 		
 		trades.put(VillagerProfession.ARMORER, 
 			new Int2ObjectOpenHashMap<>(Map.of(
 				1, new TradeOffers.Factory[] {
-					
+					new TradeFactory()
+						.buyItem1(Items.IRON_INGOT).buyItem1Min(8).buyItem1Max(16)
+						.sellItemGenerator((entity, random) -> enchantWithLevel(Items.IRON_HELMET.getDefaultStack(), 10, random, entity))
+						.experience(20).maxUses(2).multiplier(0.01f),
+					new TradeFactory()
+						.buyItem1(Items.IRON_INGOT).buyItem1Min(6).buyItem1Max(12)
+						.sellItemGenerator((entity, random) -> enchantWithLevel(Items.IRON_BOOTS.getDefaultStack(), 10, random, entity))
+						.experience(20).maxUses(2).multiplier(0.01f),
+				},
+				2, new TradeOffers.Factory[] {
+					new TradeFactory()
+						.buyItem1(Items.IRON_INGOT).buyItem1Min(12).buyItem1Max(24)
+						.sellItemGenerator((entity, random) -> enchantWithLevel(Items.IRON_CHESTPLATE.getDefaultStack(), 10, random, entity))
+						.experience(25).maxUses(2).multiplier(0.01f),
+					new TradeFactory()
+						.buyItem1(Items.IRON_INGOT).buyItem1Min(11).buyItem1Max(22)
+						.sellItemGenerator((entity, random) -> enchantWithLevel(Items.IRON_LEGGINGS.getDefaultStack(), 10, random, entity))
+						.experience(25).maxUses(2).multiplier(0.01f),
 				}
 			))
 		);

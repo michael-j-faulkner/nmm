@@ -11,6 +11,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 
 public class PlaceBlockTask {
@@ -25,6 +26,7 @@ public class PlaceBlockTask {
                         return false;
                     }
                     cooldown.setValue(5);
+                    entity.swingHand(Hand.MAIN_HAND);
                     BlockPos pos = context.getValue(placeBlockLocation);
                     if (world.getBlockState(pos).canPathfindThrough(NavigationType.LAND)) {
                         // world.setBlockState(pos, Blocks.DIRT.getDefaultState());

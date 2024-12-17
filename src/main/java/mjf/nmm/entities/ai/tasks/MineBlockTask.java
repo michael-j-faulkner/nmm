@@ -3,16 +3,17 @@ package mjf.nmm.entities.ai.tasks;
 import com.google.common.collect.ImmutableMap;
 
 import mjf.nmm.entities.ai.sensors.CustomMemoryModuleType;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.MemoryModuleState;
 import net.minecraft.entity.ai.brain.task.MultiTickTask;
+import net.minecraft.entity.ai.pathing.Path;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 
-public class MineBlockTask<E extends LivingEntity> extends MultiTickTask<E> {
+public class MineBlockTask<E extends MobEntity> extends MultiTickTask<E> {
     protected BlockPos targetPos;
     protected long breakTime;
     protected long elapsedTime;
@@ -52,9 +53,14 @@ public class MineBlockTask<E extends LivingEntity> extends MultiTickTask<E> {
 
     @Override
     protected boolean shouldKeepRunning(ServerWorld world, E entity, long time) {
+        Path path = entity.getNavigation().getCurrentPath();
+        
         return this.breakTime >= time
             && entity.squaredDistanceTo(this.targetPos.getX(), this.targetPos.getY(), this.targetPos.getZ()) < 25.0
-            && entity.hurtTime == 0;
+            && entity.hurtTime == 0 && entity.isAlive() 
+            && (path == null 
+                || path.getLastNode() == null 
+                || path.getLastNode().getManhattanDistance(entity.getBlockPos()) < entity.getNavigation().getNodeReachProximity());
     }
 
     @Override

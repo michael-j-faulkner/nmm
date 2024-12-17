@@ -1,5 +1,6 @@
 package mjf.nmm.entities.ai;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.google.common.collect.ImmutableList;
@@ -90,9 +91,15 @@ public class ZombieBrain {
         Optional<? extends LivingEntity> target = zombie.getBrain().getOptionalRegisteredMemory(MemoryModuleType.NEAREST_VISIBLE_TARGETABLE_PLAYER);
         if (target.isPresent())
             return target;
-        Optional<? extends LivingTargetCache> visibleMobs = zombie.getBrain().getOptionalRegisteredMemory(MemoryModuleType.VISIBLE_MOBS);
-        if (visibleMobs.isPresent()) {
-            return visibleMobs.get().findFirst(ZombieBrain::isZombieTarget);
+
+        Optional<? extends LivingEntity> nonVisiblePlayer = zombie.getBrain().getOptionalRegisteredMemory(CustomMemoryModuleType.NEAREST_TARGETABLE_PLAYER);
+        if (nonVisiblePlayer.isPresent() && nonVisiblePlayer.get().squaredDistanceTo(zombie) < 256.0) // See through walls if nearby
+            return nonVisiblePlayer;
+        
+        // Ignore Visibility for other mobs (murder villagers... and turtles)
+        Optional<? extends List<LivingEntity>> mobs = zombie.getBrain().getOptionalRegisteredMemory(MemoryModuleType.MOBS);
+        if (mobs.isPresent()) {
+            return mobs.get().stream().filter(ZombieBrain::isZombieTarget).findFirst();
         }
         return Optional.empty();
     }

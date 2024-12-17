@@ -12,6 +12,7 @@ import net.minecraft.entity.ai.brain.MemoryQueryResult;
 import net.minecraft.entity.ai.brain.task.Task;
 import net.minecraft.entity.ai.brain.task.TaskTriggerer;
 import net.minecraft.entity.ai.pathing.NavigationType;
+import net.minecraft.entity.ai.pathing.Path;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -25,21 +26,22 @@ public class ForgetTargetOrBuildAndMineTask {
             context.group(
                 context.queryMemoryValue(MemoryModuleType.ATTACK_TARGET), 
                 context.queryMemoryOptional(CustomMemoryModuleType.NEAREST_TARGETABLE_PLAYERS), 
+                context.queryMemoryOptional(MemoryModuleType.MOBS), 
                 context.queryMemoryOptional(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE), 
                 context.queryMemoryOptional(CustomMemoryModuleType.MINE_BLOCK_LOCATION),
                 context.queryMemoryOptional(CustomMemoryModuleType.PLACE_BLOCK_LOCATION))
             .apply(context, 
-                (attackTarget, nearbyPlayers, cantReachWalkTargetSince, mineBlockLocation, placeBlockLocation) -> (world, entity, time) -> {
+                (attackTarget, nearbyPlayers, nearbyMobs, cantReachWalkTargetSince, mineBlockLocation, placeBlockLocation) -> (world, entity, time) -> {
                     LivingEntity target = context.getValue(attackTarget);
 
                     boolean cantReachTarget = ForgetTargetOrBuildAndMineTask.cannotReachTarget(entity, context.getOptionalValue(cantReachWalkTargetSince));
                     if (!entity.canTarget(target) || cantReachTarget || !target.isAlive() || target.getWorld() != entity.getWorld()) {
                         Optional<List<PlayerEntity>> players = context.getOptionalValue(nearbyPlayers);
-                        if (cantReachTarget && players.isPresent() && players.get().contains(target)) {
-                            if (entity.getNavigation().isIdle()) {
+                        Optional<List<LivingEntity>> mobs = context.getOptionalValue(nearbyMobs);
+                        if (cantReachTarget && (players.isPresent() && players.get().contains(target) || mobs.isPresent() && mobs.get().contains(target))) {
+                            Path path = entity.getNavigation().getCurrentPath();
+                            if (path != null && path.isFinished()) {
                                 ForgetTargetOrBuildAndMineTask.updateBlockTargets(world, entity, target, mineBlockLocation, placeBlockLocation);
-                                // mineBlockLocation.remember(ForgetTargetOrBuildAndMineTask.getMineBlockLocation(world, entity, target));
-                                // placeBlockLocation.remember(ForgetTargetOrBuildAndMineTask.getPlaceBlockLocation(world, entity, target));
                             }
                         } else {
                             attackTarget.forget();
