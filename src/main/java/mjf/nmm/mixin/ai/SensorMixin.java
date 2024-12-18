@@ -10,6 +10,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.server.world.ServerWorld;
 
 @Mixin(Sensor.class)
 public class SensorMixin {
@@ -28,20 +29,20 @@ public class SensorMixin {
     private static final TargetPredicate ATTACKABLE_TARGET_PREDICATE_IGNORE_VISIBILITY_OR_DISTANCE_SCALING = TargetPredicate.createAttackable().setBaseMaxDistance(FALLBACK_FOLLOW_RANGE).ignoreVisibility().ignoreDistanceScalingFactor(); 
 
     @Inject(at = @At("HEAD"), method = "testTargetPredicate")
-    private static void targetPredWithFollowRange(LivingEntity entity, LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
-        TARGET_PREDICATE.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE));
-        TARGET_PREDICATE_IGNORE_DISTANCE_SCALING.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE));
+    private static void targetPredWithFollowRange(ServerWorld world, LivingEntity entity, LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
+        TARGET_PREDICATE.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.FOLLOW_RANGE));
+        TARGET_PREDICATE_IGNORE_DISTANCE_SCALING.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.FOLLOW_RANGE));
     }
 
     @Inject(at = @At("HEAD"), method = "testAttackableTargetPredicate")
-    private static void attackablePredWithFollowRange(LivingEntity entity, LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
-        ATTACKABLE_TARGET_PREDICATE.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE));
-        ATTACKABLE_TARGET_PREDICATE_IGNORE_DISTANCE_SCALING.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE));
+    private static void attackablePredWithFollowRange(ServerWorld world, LivingEntity entity, LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
+        ATTACKABLE_TARGET_PREDICATE.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.FOLLOW_RANGE));
+        ATTACKABLE_TARGET_PREDICATE_IGNORE_DISTANCE_SCALING.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.FOLLOW_RANGE));
     }
 
     @Inject(at = @At("HEAD"), method = "testAttackableTargetPredicateIgnoreVisibility")
-    private static void attackableIgnoreVisibilityPredWithFollowRange(LivingEntity entity, LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
-        ATTACKABLE_TARGET_PREDICATE_IGNORE_VISIBILITY.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE));
-        ATTACKABLE_TARGET_PREDICATE_IGNORE_VISIBILITY_OR_DISTANCE_SCALING.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE));
+    private static void attackableIgnoreVisibilityPredWithFollowRange(ServerWorld world, LivingEntity entity, LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
+        ATTACKABLE_TARGET_PREDICATE_IGNORE_VISIBILITY.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.FOLLOW_RANGE));
+        ATTACKABLE_TARGET_PREDICATE_IGNORE_VISIBILITY_OR_DISTANCE_SCALING.setBaseMaxDistance(entity.getAttributeValue(EntityAttributes.FOLLOW_RANGE));
     }
 }

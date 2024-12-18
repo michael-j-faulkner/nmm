@@ -3,6 +3,7 @@ package mjf.nmm.entities.ai.sensors;
 import java.util.function.Supplier;
 
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.brain.sensor.NearestLivingEntitiesSensor;
 import net.minecraft.entity.ai.brain.sensor.Sensor;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
 import net.minecraft.registry.Registries;
@@ -10,8 +11,8 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
 public class CustomSensorType<U extends Sensor<?>> {
-    public static SensorType<FollowRangePlayersSensor> FOLLOW_RANGE_PLAYERS;
-    public static SensorType<FollowRangeEntitySensor<LivingEntity>> FOLLOW_RANGE_ENTITIES;
+    public static final SensorType<FollowRangePlayersSensor> FOLLOW_RANGE_PLAYERS = register("follow_range_players", FollowRangePlayersSensor::new);
+    public static final SensorType<NearestLivingEntitiesSensor<LivingEntity>> FOLLOW_RANGE_ENTITIES = register("follow_range_entities", NearestLivingEntitiesSensor::new);
     private final Supplier<U> factory;
 
     public CustomSensorType(Supplier<U> factory) {
@@ -23,11 +24,6 @@ public class CustomSensorType<U extends Sensor<?>> {
     }
 
     private static <U extends Sensor<?>> SensorType<U> register(String id, Supplier<U> factory) {
-        return Registry.register(Registries.SENSOR_TYPE, new Identifier(id), new SensorType<U>(factory));
-    }
-
-    public static void register() {
-        FOLLOW_RANGE_PLAYERS = register("follow_range_players", FollowRangePlayersSensor::new);
-        FOLLOW_RANGE_ENTITIES = register("follow_range_entities", FollowRangeEntitySensor::new);
+        return Registry.register(Registries.SENSOR_TYPE, Identifier.of(id), new SensorType<U>(factory));
     }
 }

@@ -4,16 +4,23 @@ import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.brain.Brain;
+import net.minecraft.entity.ai.brain.LivingTargetCache;
+import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.entity.passive.CatEntity;
+import net.minecraft.entity.passive.OcelotEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 
+import java.util.Optional;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -36,19 +43,40 @@ public abstract class CreeperEntityMixin extends HostileEntity {
 	@Inject(at = @At("RETURN"), method = "createCreeperAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3));
+			.add(EntityAttributes.MOVEMENT_SPEED, 0.4));
 	}
 
 	@Shadow
     private int explosionRadius;
+	@Shadow
+	private static TrackedData<Boolean> CHARGED;
 
-	public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-		this.explosionRadius = 3 + (int)Math.round(2.0 * ScalingDifficulty.getPercentDifficulty(world, this.getPos()));
-		return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+	@Override
+	public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+		double percentDifficulty = ScalingDifficulty.getPercentDifficulty(world, this.getPos());
+		if (random.nextFloat() < 0.25 * percentDifficulty) {
+			this.dataTracker.set(CHARGED, true);
+		}
+        if (random.nextFloat() < 0.25 * percentDifficulty) {
+            this.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, -1));
+        }
+        if (random.nextFloat() < 0.25 * percentDifficulty) {
+            this.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, -1));
+        }
+        if (random.nextFloat() < 0.25 * percentDifficulty) {
+            this.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, -1));
+        }
+        if (random.nextFloat() < 0.25 * percentDifficulty) {
+            this.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, -1, 3));
+        }
+		this.explosionRadius = 3;
+		return super.initialize(world, difficulty, spawnReason, entityData);
     }
 
 	/**
 	 * Delete normal creeper ai
+     * @reason 
+     * @author
 	 */
 	@Overwrite
 	public void initGoals() {
@@ -68,9 +96,23 @@ public abstract class CreeperEntityMixin extends HostileEntity {
         return (Brain<CreeperEntity>) super.getBrain();
     }
 
-    protected void mobTick() {
-        this.getBrain().tick((ServerWorld)this.getWorld(), (CreeperEntity) (Object) this);
+	protected int lookForCatTimer = 0;
+
+	@Override
+    protected void mobTick(ServerWorld world) {
+		Brain<CreeperEntity> brain = this.getBrain();
+        brain.tick((ServerWorld)this.getWorld(), (CreeperEntity) (Object) this);
 		CreeperBrain.updateActivities(this.getBrain());
-		super.mobTick();
-    }
+		super.mobTick(world);
+
+		if (this.lookForCatTimer > 0) {
+			--this.lookForCatTimer;
+			return;
+		}
+		Optional<LivingTargetCache> visibleMobs = brain.getOptionalMemory(MemoryModuleType.VISIBLE_MOBS);
+		if (visibleMobs.isPresent()) {
+			brain.remember(MemoryModuleType.AVOID_TARGET, visibleMobs.get().findFirst(entity -> entity instanceof CatEntity || entity instanceof OcelotEntity));
+		}
+		this.lookForCatTimer = 20;
+	}
 }

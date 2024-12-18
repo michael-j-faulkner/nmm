@@ -4,18 +4,25 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.mojang.serialization.Dynamic;
 
+import mjf.nmm.entities.ScalingDifficulty;
 import mjf.nmm.entities.ai.ZombieBrain;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.ZombieEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.World;
 
 @Mixin(ZombieEntity.class)
@@ -27,15 +34,79 @@ public abstract class ZombieEntityMixin extends HostileEntity {
     @Inject(at = @At("RETURN"), method = "createZombieAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25)
-            .add(EntityAttributes.GENERIC_ARMOR, 0.0)
-            .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 0.2)
-            .add(EntityAttributes.ZOMBIE_SPAWN_REINFORCEMENTS, 0.1)
-            .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32.0));
+			.add(EntityAttributes.MOVEMENT_SPEED, 0.27)
+			.add(EntityAttributes.ATTACK_DAMAGE, 3.0)
+            .add(EntityAttributes.ARMOR, 10.0)
+            .add(EntityAttributes.FOLLOW_RANGE, 32.0));
 	}
+
+    @Inject(method = "initAttributes", at = @At("TAIL"))
+    protected void normallyOverwritesReinforcementChance(CallbackInfo ci) {
+        double percentDifficulty = ScalingDifficulty.getPercentDifficulty((ServerWorld)this.getWorld(), this.getPos());
+		this.getAttributeInstance(EntityAttributes.SPAWN_REINFORCEMENTS).setBaseValue(0.25);
+		this.getAttributeInstance(EntityAttributes.KNOCKBACK_RESISTANCE).setBaseValue(percentDifficulty * 0.5);
+    }
+
+    /**
+     * @author
+     * @reason
+     */
+    @Overwrite
+    public void initEquipment(Random random, LocalDifficulty localDifficulty) {
+        super.initEquipment(random, localDifficulty);
+        double percentDifficulty = ScalingDifficulty.getPercentDifficulty((ServerWorld)this.getWorld(), this.getPos());
+        if (random.nextFloat() < percentDifficulty) {
+            switch (random.nextInt(3)) {
+            case 0:
+                switch ((int) (2 * percentDifficulty + random.nextFloat())) {
+                    case 0:
+                        this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.STONE_PICKAXE));
+                        break;
+                    case 1:
+                        this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_PICKAXE));
+                        break;
+                    case 2:
+                    case 3:
+                        this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_PICKAXE));
+                        break;
+                }
+                break;
+            case 1:
+                switch ((int) (2 * percentDifficulty + random.nextFloat())) {
+                case 0:
+                    this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.STONE_SHOVEL));
+                    break;
+                case 1:
+                    this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SHOVEL));
+                    break;
+                case 2:
+                case 3:
+                    this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_SHOVEL));
+                    break;
+                }
+                break;
+            case 2:
+                switch ((int) (2 * percentDifficulty + random.nextFloat())) {
+                case 0:
+                    this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.STONE_AXE));
+                    break;
+                case 1:
+                    this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_AXE));
+                    break;
+                case 2:
+                case 3:
+                    this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_AXE));
+                    break;
+                }
+                break;
+            }
+        }
+    }
 
     /**
 	 * Delete normal zombie ai
+     * @reason 
+     * @author
 	 */
 	@Overwrite
 	public void initGoals() {
@@ -55,9 +126,10 @@ public abstract class ZombieEntityMixin extends HostileEntity {
         return (Brain<ZombieEntity>) super.getBrain();
     }
 
-    protected void mobTick() {
-        this.getBrain().tick((ServerWorld)this.getWorld(), (ZombieEntity) (Object) this);
+    @Override
+    protected void mobTick(ServerWorld world) {
+        this.getBrain().tick(world, (ZombieEntity) (Object) this);
 		ZombieBrain.updateActivities(this.getBrain());
-		super.mobTick();
+		super.mobTick(world);
     }
 }

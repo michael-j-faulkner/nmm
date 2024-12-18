@@ -14,6 +14,6 @@ public class HostileEntityMixin {
     @Inject(at = @At("RETURN"), method = "createHostileAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32.0));
+			.add(EntityAttributes.FOLLOW_RANGE, 32.0));
 	}
 }

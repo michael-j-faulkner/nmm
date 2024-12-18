@@ -1,0 +1,85 @@
+package mjf.nmm.mixin.entities;
+
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import mjf.nmm.entities.ScalingDifficulty;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityData;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.mob.SkeletonEntity;
+import net.minecraft.entity.mob.SpiderEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.world.LocalDifficulty;
+import net.minecraft.world.ServerWorldAccess;
+import net.minecraft.world.World;
+
+@Mixin(SpiderEntity.class)
+public abstract class SpiderEntityMixin extends HostileEntity {
+    protected SpiderEntityMixin(EntityType<? extends HostileEntity> entityType, World world) {
+        super(entityType, world);
+    }
+
+    @Inject(at = @At("RETURN"), method = "createSpiderAttributes", cancellable = true)
+	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
+		cir.setReturnValue(cir.getReturnValue()
+			.add(EntityAttributes.MOVEMENT_SPEED, 0.4)
+            .add(EntityAttributes.ATTACK_DAMAGE, 6.0));
+	}
+    
+    @Override
+    public boolean tryAttack(ServerWorld world, Entity target) {
+        if (super.tryAttack(world, target)) {
+            if (this.getWorld().getBlockState(target.getBlockPos()).getHardness(target.getWorld(), target.getBlockPos()) >= 0.0f 
+                    && !this.getWorld().getBlockState(this.getBlockPos()).isOf(Blocks.COBWEB)) {
+                this.getWorld().breakBlock(target.getBlockPos(), true);
+                this.getWorld().setBlockState(target.getBlockPos(), Blocks.COBWEB.getDefaultState());
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @author
+     * @reason
+     */
+    @Overwrite
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+        entityData = super.initialize(world, difficulty, spawnReason, entityData);
+        Random random = world.getRandom();
+
+        SkeletonEntity skeletonEntity;
+        if (random.nextInt(100) == 0 && (skeletonEntity = EntityType.SKELETON.create(this.getWorld(), SpawnReason.JOCKEY)) != null) {
+            skeletonEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), 0.0f);
+            skeletonEntity.initialize(world, difficulty, spawnReason, null);
+            skeletonEntity.startRiding(this);
+        }
+        double percentDifficulty = ScalingDifficulty.getPercentDifficulty(world, this.getPos());
+        if (random.nextFloat() < percentDifficulty) {
+            this.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, -1));
+        }
+        if (random.nextFloat() < percentDifficulty) {
+            this.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAVING, -1));
+        }
+        if (random.nextFloat() < percentDifficulty) {
+            this.addStatusEffect(new StatusEffectInstance(StatusEffects.INFESTED, -1));
+        }
+        if (random.nextFloat() < percentDifficulty) {
+            this.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, -1));
+        }
+        return entityData;
+    }
+}

@@ -1,12 +1,13 @@
 package mjf.nmm;
 
 import net.fabricmc.api.ModInitializer;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import mjf.nmm.entities.ai.sensors.CustomSensorType;
+import mjf.nmm.commands.Commands;
+import mjf.nmm.entities.ai.sensors.CustomActivity;
 import mjf.nmm.events.Events;
+import mjf.nmm.world.AlterSpawns;
 
 public class NightmareMode implements ModInitializer {
 	// This logger is used to write text to the console and the log file.
@@ -18,6 +19,8 @@ public class NightmareMode implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		Events.registerEvents();
-		CustomSensorType.register();
+		CustomActivity.register();
+		AlterSpawns.alterSpawns();
+		Commands.registerCommands();
 	}
 }

@@ -1,21 +1,25 @@
 package mjf.nmm.mixin.entities;
 
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import java.util.Arrays;
+import java.util.stream.StreamSupport;
 
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import mjf.nmm.entities.ScalingDifficulty;
-import net.minecraft.entity.EntityData;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.Targeter;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.EnchantmentTags;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
@@ -26,22 +30,91 @@ public abstract class MobEntityMixin extends LivingEntity implements Targeter {
         super(entityType, world);
     }
 
-    @Inject(at = @At("RETURN"), method = "initialize")
-    private void initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt, CallbackInfoReturnable<EntityData> ci) {
-        double percentDifficulty = ScalingDifficulty.getPercentDifficulty(world, this.getPos());
-        if (this.getAttributes().hasAttribute(EntityAttributes.GENERIC_MAX_HEALTH)) {
-            this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).addPersistentModifier(new EntityAttributeModifier("Scaling Difficulty Bonus", 2.0 * percentDifficulty, EntityAttributeModifier.Operation.MULTIPLY_BASE));
-            this.setHealth(this.getMaxHealth());
+    private static final double[] ARMOR_CHANCES_EARLY_GAME = {0.8, 0.1, 0.025, 0.025, 0.04, 0.01};
+    private static final double[] ARMOR_CHANCES_LATE_GAME = {0.01, 0.04, 0.05, 0.05, 0.3, 0.55};
+
+    private static final int NUM_ARMOR_LEVELS = 6;
+    private static final double[] LERP_CONSTANTS_EARLY_GAME = new double[NUM_ARMOR_LEVELS];
+    private static final double[] LERP_CONSTANTS_LATE_GAME = new double[NUM_ARMOR_LEVELS];
+    static {
+        assert Arrays.stream(ARMOR_CHANCES_EARLY_GAME).sum() - 1.0 < 1.0e-7;
+        assert Arrays.stream(ARMOR_CHANCES_LATE_GAME).sum() - 1.0 < 1.0e-7;
+
+        // See Desmos file for calculation: https://www.desmos.com/calculator/f7khin1u52
+        LERP_CONSTANTS_EARLY_GAME[0] = ARMOR_CHANCES_EARLY_GAME[0];
+        LERP_CONSTANTS_LATE_GAME[0] = ARMOR_CHANCES_LATE_GAME[0];
+        for (int i = 1; i < NUM_ARMOR_LEVELS; ++i) {
+            LERP_CONSTANTS_EARLY_GAME[i] = ARMOR_CHANCES_EARLY_GAME[i] * LERP_CONSTANTS_EARLY_GAME[i-1] / (ARMOR_CHANCES_EARLY_GAME[i-1] * (1 - LERP_CONSTANTS_EARLY_GAME[i-1]));
+            LERP_CONSTANTS_LATE_GAME[i] = ARMOR_CHANCES_LATE_GAME[i] * LERP_CONSTANTS_LATE_GAME[i-1] / (ARMOR_CHANCES_LATE_GAME[i-1] * (1 - LERP_CONSTANTS_LATE_GAME[i-1]));
         }
-        if (this.getAttributes().hasAttribute(EntityAttributes.GENERIC_ARMOR))
-            this.getAttributeInstance(EntityAttributes.GENERIC_ARMOR).addPersistentModifier(new EntityAttributeModifier("Scaling Difficulty Bonus", 10.0 * percentDifficulty, EntityAttributeModifier.Operation.ADDITION));
-        if (this.getAttributes().hasAttribute(EntityAttributes.GENERIC_ARMOR_TOUGHNESS))
-            this.getAttributeInstance(EntityAttributes.GENERIC_ARMOR_TOUGHNESS).addPersistentModifier(new EntityAttributeModifier("Scaling Difficulty Bonus", 8.0 * percentDifficulty, EntityAttributeModifier.Operation.ADDITION));
-        if (this.getAttributes().hasAttribute(EntityAttributes.GENERIC_ATTACK_DAMAGE))
-            this.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).addPersistentModifier(new EntityAttributeModifier("Scaling Difficulty Bonus", 3.0 * percentDifficulty, EntityAttributeModifier.Operation.MULTIPLY_BASE));
-        if (this.getAttributes().hasAttribute(EntityAttributes.GENERIC_MOVEMENT_SPEED))
-            this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).addPersistentModifier(new EntityAttributeModifier("Scaling Difficulty Bonus", 0.5 * percentDifficulty, EntityAttributeModifier.Operation.MULTIPLY_BASE));
-        if (this.getAttributes().hasAttribute(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE))
-            this.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE).addPersistentModifier(new EntityAttributeModifier("Scaling Difficulty Bonus", 0.5 * percentDifficulty, EntityAttributeModifier.Operation.ADDITION));
+    }
+
+    /**
+     * @author 
+     * @reason 
+     */
+    @Overwrite
+    public void initEquipment(Random random, LocalDifficulty localDifficulty) {
+        double percentDifficulty = ScalingDifficulty.getPercentDifficulty((ServerWorld)this.getWorld(), this.getPos());
+        int armorLevel = 0;
+        for (int i = 0; i < NUM_ARMOR_LEVELS; ++i) {
+            armorLevel = i;
+            double probStopping = MathHelper.lerp(percentDifficulty, LERP_CONSTANTS_EARLY_GAME[i], LERP_CONSTANTS_LATE_GAME[i]);
+            if (random.nextFloat() < probStopping) {
+                break;
+            }
+        }
+        if (armorLevel == 0)
+            return;
+        --armorLevel;
+
+        for (EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
+            if (equipmentSlot.getType() != EquipmentSlot.Type.HUMANOID_ARMOR) 
+                continue;
+            
+            // Add armor boots to head, with slight chance to stop partway
+            if (random.nextFloat() < 0.5 + 0.5 * percentDifficulty * percentDifficulty) {
+                // Check if there's already an item set
+                ItemStack itemStack = this.getEquippedStack(equipmentSlot);
+                if (itemStack.isEmpty()) {
+                    // Item to put in if not
+                    Item item = MobEntity.getEquipmentForSlot(equipmentSlot, armorLevel);
+                    if (item != null)
+                        this.equipStack(equipmentSlot, new ItemStack(item));
+                }
+            } else {
+                break;
+            }
+        }
+    }
+
+    /**
+     * @author
+     * @reason
+     */
+    @Overwrite
+    public void updateEnchantments(ServerWorldAccess world, Random random, LocalDifficulty localDifficulty) {
+        double percentDifficulty = ScalingDifficulty.getPercentDifficulty(world, this.getPos());
+        if (random.nextFloat() < percentDifficulty * percentDifficulty) {
+            for (EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
+                ItemStack itemStack = this.getEquippedStack(equipmentSlot);
+                if (!itemStack.isEmpty()) {
+                    EnchantmentHelper.enchant(random, itemStack, (int)(5.0 + percentDifficulty * percentDifficulty * (15.0 + random.nextInt(15))), 
+                        StreamSupport.stream(world.getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).iterateEntries(EnchantmentTags.ON_MOB_SPAWN_EQUIPMENT).spliterator(), false));
+                    this.equipStack(equipmentSlot, itemStack);
+                }
+            }
+        }
+    }
+
+    @Override
+	public boolean damage(ServerWorld world, DamageSource source, float amount) {
+        if (super.damage(world, source, amount)) {
+            if (this.hasVehicle()) {
+                this.dismountVehicle();
+            }
+            return true;
+        }
+        return false;
     }
 }
