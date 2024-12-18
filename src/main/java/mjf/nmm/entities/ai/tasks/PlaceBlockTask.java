@@ -25,7 +25,7 @@ public class PlaceBlockTask {
                     if (cooldown.getAndDecrement() > 0 || !entity.isOnGround()) {
                         return false;
                     }
-                    cooldown.setValue(5);
+                    cooldown.setValue(2);
                     entity.swingHand(Hand.MAIN_HAND);
                     BlockPos pos = context.getValue(placeBlockLocation);
                     if (world.getBlockState(pos).canPathfindThrough(NavigationType.LAND)) {

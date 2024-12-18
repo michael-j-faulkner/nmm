@@ -38,7 +38,8 @@ public class FollowRangePlayersSensor extends Sensor<LivingEntity> {
         brain.remember(CustomMemoryModuleType.NEAREST_TARGETABLE_PLAYERS, targetablePlayers);
 
         Optional<PlayerEntity> nearestTargetablePlayer = targetablePlayers.stream().findFirst();
-        brain.remember(MemoryModuleType.NEAREST_VISIBLE_TARGETABLE_PLAYER, nearestTargetablePlayer);
+        if (nearestTargetablePlayer.isPresent())
+            brain.remember(MemoryModuleType.NEAREST_VISIBLE_TARGETABLE_PLAYER, nearestTargetablePlayer.get());
 
         List<PlayerEntity> visiblePlayers = nearbyPlayers.stream()
             .filter(player -> FollowRangePlayersSensor.testTargetPredicate(world, entity, player))
@@ -47,7 +48,8 @@ public class FollowRangePlayersSensor extends Sensor<LivingEntity> {
 
         Optional<PlayerEntity> nearestVisibleTargetablePlayer = visiblePlayers.stream()
             .filter(player -> FollowRangePlayersSensor.testAttackableTargetPredicate(world, entity, player)).findFirst();
-        brain.remember(MemoryModuleType.NEAREST_VISIBLE_TARGETABLE_PLAYER, nearestVisibleTargetablePlayer);
+        if (nearestVisibleTargetablePlayer.isPresent())
+            brain.remember(MemoryModuleType.NEAREST_VISIBLE_TARGETABLE_PLAYER, nearestVisibleTargetablePlayer.get());
     }
     
 }

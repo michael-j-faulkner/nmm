@@ -46,15 +46,17 @@ public class ForgetTargetOrBuildAndMineTask {
                         } else {
                             attackTarget.forget();
                         }
-                        return true;
                     }
                     return true;
                 }));
     }
 
     private static boolean tryGetBlocksForTargePos(BlockPos targetPos, ServerWorld world, MemoryQueryResult<?, BlockPos> mineBlockLocation,  MemoryQueryResult<?, BlockPos> placeBlockLocation, int deltaYSign, int mobHeight, boolean avoidPillaring) {
-        if (deltaYSign > 0 && avoidPillaring && !isEmpty(world, targetPos.down(3))) {
-            return false;
+        if (deltaYSign > 0 && avoidPillaring) {
+            for (int i = 0; i <= mobHeight; ++i) { // <= to account for jump height
+                if (!isEmpty(world, targetPos.down(3 + i)))
+                    return false;
+            }
         }
         switch (deltaYSign) {
         case 1:

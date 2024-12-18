@@ -11,6 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.task.Task;
 import net.minecraft.entity.ai.brain.task.TaskTriggerer;
+import net.minecraft.entity.ai.pathing.Path;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.MobEntity;
 
@@ -22,10 +23,14 @@ public class ForgetTargetOrDetonateTask {
             Optional<List<PlayerEntity>> players = context.getOptionalValue(nearbyPlayers);
             boolean cantReachTarget = ForgetTargetOrDetonateTask.cannotReachTarget(entity, context.getOptionalValue(cantReachWalkTargetSince));
             if (!entity.canTarget(target) || cantReachTarget || !target.isAlive() || target.getWorld() != entity.getWorld()) {
-                if (cantReachTarget && players.isPresent() && players.get().contains(target))
-                    creeper.ignite();
-                attackTarget.forget();
-                return true;
+                if (cantReachTarget && players.isPresent() && players.get().contains(target)) {
+                    Path path = entity.getNavigation().getCurrentPath();
+                    if (path != null && path.isFinished()) {
+                        creeper.ignite();
+                    }
+                } else {
+                    attackTarget.forget();
+                }
             }
             return true;
         }));
