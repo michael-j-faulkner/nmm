@@ -9,5 +9,6 @@ public class AlterSpawns {
     public static void alterSpawns() {
         BiomeModifications.addSpawn(biome -> biome.hasTag(BiomeTags.IS_OVERWORLD), SpawnGroup.MONSTER, EntityType.PHANTOM, 50, 1, 4);
         BiomeModifications.addSpawn(biome -> biome.hasTag(BiomeTags.IS_END), SpawnGroup.MONSTER, EntityType.PHANTOM, 2, 4, 4);
+        BiomeModifications.addSpawn(biome -> biome.hasTag(BiomeTags.IS_OCEAN) || biome.hasTag(BiomeTags.IS_OCEAN) || biome.hasTag(BiomeTags.IS_RIVER), SpawnGroup.MONSTER, EntityType.DROWNED, 100, 4, 4);
     }
 }

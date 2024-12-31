@@ -18,6 +18,7 @@ import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
@@ -30,7 +31,8 @@ public abstract class DrownedEntityMixin extends ZombieEntity {
     }
 
     // Remove new AI that zombies have
-    protected void mobTick() {
+    @Override
+    protected void mobTick(ServerWorld world) {
     }
 
     // Re add old ones
@@ -48,7 +50,7 @@ public abstract class DrownedEntityMixin extends ZombieEntity {
     @Overwrite
     public void initEquipment(Random random, LocalDifficulty localDifficulty) {
 		super.initEquipment(random, localDifficulty);
-        if (!this.getMainHandStack().isEmpty()) {
+        if (random.nextFloat() < 0.9) {
             this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.TRIDENT));
         }
 	}

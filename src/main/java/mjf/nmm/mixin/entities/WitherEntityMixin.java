@@ -13,6 +13,9 @@ import net.minecraft.entity.boss.ServerBossBar;
 import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.WitherSkeletonEntity;
+import net.minecraft.predicate.entity.EntityPredicate;
+import net.minecraft.predicate.entity.EntityTypePredicate;
+import net.minecraft.registry.tag.EntityTypeTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -48,7 +51,10 @@ public abstract class WitherEntityMixin extends HostileEntity {
     @Shadow
     private int blockBreakingCooldown;
     @Shadow
-    private static final TargetPredicate HEAD_TARGET_PREDICATE = TargetPredicate.createAttackable().setBaseMaxDistance(32.0).ignoreVisibility();
+    private static final TargetPredicate HEAD_TARGET_PREDICATE = TargetPredicate.createAttackable()
+        .setBaseMaxDistance(32.0)
+        .ignoreVisibility()
+        .setPredicate((entity, world) -> !entity.getType().isIn(EntityTypeTags.WITHER_FRIENDS) && entity.isMobOrPlayer());
 
     /**
      * @author
