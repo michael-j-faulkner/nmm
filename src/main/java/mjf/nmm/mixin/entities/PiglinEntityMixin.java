@@ -68,8 +68,9 @@ public abstract class PiglinEntityMixin extends AbstractPiglinEntity implements 
     @Inject(at = @At("RETURN"), method = "createPiglinAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.MOVEMENT_SPEED, 0.3)
-            .add(EntityAttributes.ATTACK_DAMAGE, 15.0)
+			.add(EntityAttributes.FOLLOW_RANGE, 64.0)
+			.add(EntityAttributes.MOVEMENT_SPEED, 0.4)
+            .add(EntityAttributes.ATTACK_DAMAGE, 20.0)
             .add(EntityAttributes.ARMOR, 20.0)
             .add(EntityAttributes.ARMOR_TOUGHNESS, 12.0));
 	}

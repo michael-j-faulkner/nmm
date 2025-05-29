@@ -16,8 +16,10 @@ public class VindicatorEntityMixin {
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
 			.add(EntityAttributes.FOLLOW_RANGE, 64.0)
-            .add(EntityAttributes.ATTACK_DAMAGE, 15.0)
-            .add(EntityAttributes.MOVEMENT_SPEED, 0.4));
+            .add(EntityAttributes.MOVEMENT_SPEED, 0.4)
+            .add(EntityAttributes.ATTACK_DAMAGE, 20.0)
+            .add(EntityAttributes.ARMOR, 20.0)
+            .add(EntityAttributes.ARMOR_TOUGHNESS, 8.0));
 	}
 
 	

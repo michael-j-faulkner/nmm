@@ -96,7 +96,7 @@ public class PatrolSpawnerMixin implements SpecialSpawner {
         PatrolEntity patrolEntity = null;
         BlockState blockState = world.getBlockState(pos);
 
-        if (random.nextFloat() < percentDifficulty) {
+        if (captain || random.nextFloat() > percentDifficulty) {
             switch (random.nextInt(2)) {
             case 0: default:
                 if (!SpawnHelper.isClearForSpawn(world, pos, blockState, blockState.getFluidState(), EntityType.PILLAGER)

@@ -26,11 +26,12 @@ public abstract class ZombifiedPiglinEntityMixin extends ZombieEntity {
     @Inject(at = @At("RETURN"), method = "createZombifiedPiglinAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
+        .add(EntityAttributes.FOLLOW_RANGE, 64.0)
         .add(EntityAttributes.MOVEMENT_SPEED, 0.4)
         .add(EntityAttributes.ATTACK_DAMAGE, 30.0)
         .add(EntityAttributes.ARMOR, 20.0)
         .add(EntityAttributes.ARMOR_TOUGHNESS, 12.0)
-        .add(EntityAttributes.KNOCKBACK_RESISTANCE, 1.0));
+        .add(EntityAttributes.KNOCKBACK_RESISTANCE, 0.75));
 	}
 
     // Remove new AI that zombies have

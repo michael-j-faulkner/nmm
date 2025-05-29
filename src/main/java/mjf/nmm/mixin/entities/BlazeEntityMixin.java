@@ -14,6 +14,7 @@ public class BlazeEntityMixin {
     @Inject(at = @At("RETURN"), method = "createBlazeAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
+			.add(EntityAttributes.FOLLOW_RANGE, 64.0)
 			.add(EntityAttributes.MOVEMENT_SPEED, 0.25)
             .add(EntityAttributes.ATTACK_DAMAGE, 20.0)
 			.add(EntityAttributes.ARMOR, 30.0)

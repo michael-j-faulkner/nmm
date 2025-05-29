@@ -482,9 +482,37 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 				},
 				5, new TradeOffers.Factory[] {
 					new TradeFactory()
-						.buyItem1(Items.EMERALD).buyItem1Min(16).buyItem1Max(24)
+						.buyItem1(Items.WITHER_SKELETON_SKULL)
 						.sellItem(Items.ENCHANTED_GOLDEN_APPLE)
-						.maxUses(4),
+						.maxUses(2),
+					new TradeFactory()
+						.buyItem1(Items.HEAVY_CORE)
+						.sellItem(Items.ENCHANTED_GOLDEN_APPLE)
+						.maxUses(2),
+					new TradeFactory()
+						.buyItem1(Items.DRAGON_EGG)
+						.sellItem(Items.ENCHANTED_GOLDEN_APPLE)
+						.maxUses(2),
+					new TradeFactory()
+						.buyItem1(Items.ELYTRA)
+						.sellItem(Items.ENCHANTED_GOLDEN_APPLE)
+						.maxUses(2),
+					new TradeFactory()
+						.buyItem1(Items.SHULKER_SHELL)
+						.sellItem(Items.ENCHANTED_GOLDEN_APPLE)
+						.maxUses(2),
+					new TradeFactory()
+						.buyItem1(Items.CREAKING_HEART)
+						.sellItem(Items.ENCHANTED_GOLDEN_APPLE)
+						.maxUses(2),
+					new TradeFactory()
+						.buyItem1(Items.TOTEM_OF_UNDYING)
+						.sellItem(Items.ENCHANTED_GOLDEN_APPLE)
+						.maxUses(2),
+					new TradeFactory()
+						.buyItem1(Items.SPONGE).buyItem1Count(16)
+						.sellItem(Items.ENCHANTED_GOLDEN_APPLE)
+						.maxUses(2),
 				}
 			))
 		);

@@ -1,6 +1,7 @@
 package mjf.nmm.mixin.enderdragon;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -38,6 +39,18 @@ public abstract class HoldingPatternPhaseMixin extends AbstractPhase {
     @Shadow
     protected abstract void followPath();
 
+    // Note also in Charging Phase
+    @Override
+    public float getMaxYAcceleration() {
+        return 40.0f;
+    }
+
+    // Note also in Charging Phase
+    @Override
+    public float getYawAcceleration() {
+        return 2.0f * super.getMaxYAcceleration();
+    }
+
     @Redirect(method = "serverTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/boss/dragon/phase/HoldingPatternPhase;tickInRange(Lnet/minecraft/server/world/ServerWorld;)V"))
     private void tick(HoldingPatternPhase phase, ServerWorld world) {
         // Check if we should change phases
@@ -46,13 +59,18 @@ public abstract class HoldingPatternPhaseMixin extends AbstractPhase {
             int remainingCrystals = this.dragon.getFight() == null ? 0 : this.dragon.getFight().getAliveEndCrystals();
             PlayerEntity nearestPlayer = world.getClosestPlayer((double)origin.getX(), (double)origin.getY(), (double)origin.getZ(), 256.0, target -> PLAYERS_IN_RANGE_PREDICATE.test(world, this.dragon, (PlayerEntity)target));
             if (nearestPlayer != null && this.dragon.getRandom().nextInt(11 - remainingCrystals) == 0) {
-                this.dragon.getPhaseManager().setPhase(PhaseType.CHARGING_PLAYER);
-                this.dragon.getPhaseManager().create(PhaseType.CHARGING_PLAYER).setPathTarget(nearestPlayer.getPos());
-                return;
-            }
-            if (nearestPlayer != null && (this.dragon.getRandom().nextInt(3) == 0 || this.dragon.getRandom().nextInt(1 + remainingCrystals) == 0)) {
-                this.strafePlayer(nearestPlayer);
-                return;
+                switch (this.dragon.getRandom().nextInt(2 + remainingCrystals)) {
+                    case 0: 
+                        this.strafePlayer(nearestPlayer);
+                        return;
+                    default:
+                        if (this.dragon.getRandom().nextInt(2) > 0) {
+                            this.dragon.getPhaseManager().setPhase(PhaseType.CHARGING_PLAYER);
+                            this.dragon.getPhaseManager().create(PhaseType.CHARGING_PLAYER).setPathTarget(nearestPlayer.getPos());
+                            return;
+                        }
+                        break;
+                }
             }
         }
 

@@ -39,7 +39,7 @@ public class HoglinEntityMixin {
     @Inject(at = @At("RETURN"), method = "createHoglinAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.ATTACK_DAMAGE, 15.0)
+			.add(EntityAttributes.ATTACK_DAMAGE, 20.0)
             .add(EntityAttributes.MOVEMENT_SPEED, 0.4)
             .add(EntityAttributes.ATTACK_KNOCKBACK, 3.0));
 	}

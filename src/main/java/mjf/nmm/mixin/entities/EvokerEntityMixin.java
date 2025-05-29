@@ -45,12 +45,12 @@ public abstract class EvokerEntityMixin extends SpellcastingIllagerEntity implem
         this.setSpell(Spell.FANGS);
     }
 
-    @Redirect(method = "initGoals", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/goal/GoalSelector;add(ILnet/minecraft/entity/ai/goal/Goal;)V", ordinal = 4))
+    @Redirect(method = "initGoals", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/goal/GoalSelector;add(ILnet/minecraft/entity/ai/goal/Goal;)V", ordinal = 5))
     private void changeFangsGoal(GoalSelector selector, int priority, Goal originalFangsGoal) {
         selector.add(priority, new EvokerFangsGoal((EvokerEntity)(Object)this));
     }
 
-    @ModifyArg(method = "initGoals", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/goal/GoalSelector;add(ILnet/minecraft/entity/ai/goal/Goal;)V", ordinal = 2))
+    @ModifyArg(method = "initGoals", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/goal/GoalSelector;add(ILnet/minecraft/entity/ai/goal/Goal;)V", ordinal = 3))
     private Goal modifyFleeGoal(Goal goal) {
         return new FleeEntityGoal<PlayerEntity>(this, PlayerEntity.class, 16.0F, 0.8, 1.0);
     }

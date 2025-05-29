@@ -37,7 +37,7 @@ public abstract class EndermanEntityMixin extends HostileEntity implements Anger
     @Inject(at = @At("RETURN"), method = "createEndermanAttributes", cancellable = true)
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
-			.add(EntityAttributes.ATTACK_DAMAGE, 30.0));
+			.add(EntityAttributes.ATTACK_DAMAGE, 40.0));
 	}
 
     private int destroyLightCooldown = 0;
