@@ -45,6 +45,7 @@
 		"entities/VexEntityMixin",
 		"entities/VillagerEntityMixin",
 		"entities/VindicatorEntityMixin",
+		"entities/WanderingTraderEntityMixin",
 		"entities/WitchEntityMixin",
 		"entities/WitherEntityMixin",
 		"entities/WitherSkeletonEntityMixin",

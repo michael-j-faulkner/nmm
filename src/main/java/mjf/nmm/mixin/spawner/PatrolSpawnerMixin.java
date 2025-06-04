@@ -49,14 +49,14 @@ public class PatrolSpawnerMixin implements SpecialSpawner {
      * @reason
      */
 	@Overwrite
-	public int spawn(ServerWorld world, boolean spawnMonsters, boolean spawnAnimals) {
+	public void spawn(ServerWorld world, boolean spawnMonsters, boolean spawnAnimals) {
 		if (this.canSpawn(world, spawnMonsters)) {
             Random random = world.random;
             this.cooldown = this.cooldown + 12000 + random.nextInt(12000);
             int numSuccessfullySpawned = 0;
             for (PlayerEntity playerEntity : world.getPlayers(LivingEntity::isAlive)) {
                 if (playerEntity == null || playerEntity.isSpectator()) {
-                    return 0;
+                    continue;
                 } else {
                     // Get spawn location
                     BlockPos.Mutable mutableBlockPos = playerEntity.getBlockPos().mutableCopy().move(
@@ -66,7 +66,7 @@ public class PatrolSpawnerMixin implements SpecialSpawner {
     
                     RegistryEntry<Biome> registryEntry = world.getBiome(mutableBlockPos);
                     if (registryEntry.isIn(BiomeTags.WITHOUT_PATROL_SPAWNS)) {
-                        return 0;
+                        continue;
                     } 
                     
                     double percentDifficulty = ScalingDifficulty.getPercentDifficulty(world, mutableBlockPos.toCenterPos());
@@ -84,9 +84,7 @@ public class PatrolSpawnerMixin implements SpecialSpawner {
     
                 }
             }
-            return numSuccessfullySpawned;
         }
-        return 0;
 	}
 
 	/**

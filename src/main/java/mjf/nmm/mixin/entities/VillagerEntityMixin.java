@@ -186,7 +186,8 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 
     @ModifyVariable(method = "fillRecipes", at = @At("STORE"), ordinal = 0)
     private Int2ObjectMap<TradeOffers.Factory[]> replaceVillagerTrades(Int2ObjectMap<TradeOffers.Factory[]> map) {
-        return CUSTOM_TRADES.get(this.getVillagerData().getProfession());
+		Optional<RegistryKey<VillagerProfession>> optional = this.getVillagerData().profession().getKey();
+        return optional.isPresent() ? CUSTOM_TRADES.get(optional.get()) : null;
     }
 
 	private static ItemStack enchantWithLevel(ItemStack itemStack, int level, Random random, Entity entity) {
@@ -202,8 +203,8 @@ public abstract class VillagerEntityMixin extends MerchantEntity {
 			new EnchantmentLevelEntry(enchantmentRegistry.getEntry(enchantment.getValue()).get(), enchantmentRegistry.get(enchantment).getMaxLevel()));
 	}
 
-	private static final Map<VillagerProfession, Int2ObjectMap<TradeOffers.Factory[]>> CUSTOM_TRADES = Util.make(() -> {
-		Map<VillagerProfession, Int2ObjectMap<TradeOffers.Factory[]>> trades = new HashMap<>();
+	private static final Map<RegistryKey<VillagerProfession>, Int2ObjectMap<TradeOffers.Factory[]>> CUSTOM_TRADES = Util.make(() -> {
+		Map<RegistryKey<VillagerProfession>, Int2ObjectMap<TradeOffers.Factory[]>> trades = new HashMap<>();
 		
 		trades.put(VillagerProfession.ARMORER, 
 			new Int2ObjectOpenHashMap<>(Map.of(
