@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMap;
 
 import mjf.nmm.entities.ai.sensors.CustomMemoryModuleType;
 import net.minecraft.entity.ai.brain.MemoryModuleState;
+import net.minecraft.entity.ai.brain.MemoryModuleType;
+import net.minecraft.entity.ai.brain.WalkTarget;
 import net.minecraft.entity.ai.brain.task.MultiTickTask;
 import net.minecraft.entity.ai.pathing.Path;
 import net.minecraft.entity.mob.MobEntity;
@@ -26,6 +28,7 @@ public class MineBlockTask<E extends MobEntity> extends MultiTickTask<E> {
     protected void run(ServerWorld world, E entity, long time) {
         this.elapsedTime = 0;
         this.targetPos = entity.getBrain().getOptionalMemory(CustomMemoryModuleType.MINE_BLOCK_LOCATION).get();
+        entity.getBrain().forget(MemoryModuleType.WALK_TARGET);
 
         float miningSpeed = entity.getMainHandStack().getItem().getMiningSpeed(entity.getMainHandStack(), world.getBlockState(this.targetPos));
         float hardness = world.getBlockState(this.targetPos).getHardness(world, this.targetPos);
@@ -57,7 +60,7 @@ public class MineBlockTask<E extends MobEntity> extends MultiTickTask<E> {
         
         return this.breakTime >= time
             && entity.squaredDistanceTo(this.targetPos.getX(), this.targetPos.getY(), this.targetPos.getZ()) < 25.0
-            && entity.hurtTime == 0 && entity.isAlive() 
+            && entity.isAlive() 
             && (path == null 
                 || path.getLastNode() == null 
                 || path.getLastNode().getManhattanDistance(entity.getBlockPos()) < entity.getNavigation().getNodeReachProximity());

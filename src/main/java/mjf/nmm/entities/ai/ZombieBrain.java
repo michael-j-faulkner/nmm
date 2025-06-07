@@ -12,6 +12,7 @@ import mjf.nmm.entities.ai.sensors.CustomSensorType;
 import mjf.nmm.entities.ai.tasks.ForgetTargetOrBuildAndMineTask;
 import mjf.nmm.entities.ai.tasks.MineBlockTask;
 import mjf.nmm.entities.ai.tasks.PlaceBlockTask;
+import mjf.nmm.entities.ai.tasks.RangedApproachOrMineTask;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.ai.brain.Brain;
@@ -76,9 +77,9 @@ public class ZombieBrain {
     private static void addFightActivities(ZombieEntity zombie, Brain<ZombieEntity> brain) {
         brain.setTaskList(Activity.FIGHT, 10, ImmutableList.of(
             ForgetTargetOrBuildAndMineTask.create(),
-            RangedApproachTask.create(1.0f),
-            MeleeAttackTask.create(10),
             new MineBlockTask<ZombieEntity>(),
+            RangedApproachOrMineTask.create(1.0f),
+            MeleeAttackTask.create(10),
             PlaceBlockTask.create()
         ), MemoryModuleType.ATTACK_TARGET);
     }
