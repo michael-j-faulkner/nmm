@@ -15,7 +15,7 @@ public class ScalingDifficulty {
 
     public static double getDifficulty(ServerWorldAccess world, Vec3d pos) {
         OptionalDouble avgPlayerDifficulty = world.toServerWorld().getPlayers().stream().filter(player -> player.squaredDistanceTo(pos) < 128 * 128 && !player.isSpectator()).mapToDouble(player -> getPlayerDifficulty(world.getServer(), player)).average();
-        double moonDifficulty = 0.0; // 2.0 * world.getMoonSize();
+        double moonDifficulty = 2.0 * (world.getMoonSize() - 0.5);
 
         return MathHelper.clamp((avgPlayerDifficulty.isPresent() ? avgPlayerDifficulty.getAsDouble() : 0.0) + moonDifficulty, 0.0, 10.0);
     }
@@ -47,7 +47,8 @@ public class ScalingDifficulty {
             difficulty += 1;
         
         // Nether Age
-        if (player.getAdvancementTracker().getProgress(server.getAdvancementLoader().get(Identifier.of("nether/root"))).isDone())
+        if (player.getAdvancementTracker().getProgress(server.getAdvancementLoader().get(Identifier.of("nether/find_bastion"))).isDone()
+            || player.getAdvancementTracker().getProgress(server.getAdvancementLoader().get(Identifier.of("nether/find_fortress"))).isDone())
             difficulty += 1;
         
         // Brewing Age
@@ -60,7 +61,9 @@ public class ScalingDifficulty {
             difficulty += 1;
         
         // End Age
-        if (player.getAdvancementTracker().getProgress(server.getAdvancementLoader().get(Identifier.of("end/root"))).isDone())
+        if (player.getAdvancementTracker().getProgress(server.getAdvancementLoader().get(Identifier.of("end/kill_dragon"))).isDone()
+            || player.getAdvancementTracker().getProgress(server.getAdvancementLoader().get(Identifier.of("end/enter_end_gateway"))).isDone()
+            || player.getAdvancementTracker().getProgress(server.getAdvancementLoader().get(Identifier.of("end/find_end_city"))).isDone())
             difficulty += 1;
         
         // Elytra Age
