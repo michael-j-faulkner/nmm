@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import mjf.nmm.entities.ScalingDifficulty;
 import mjf.nmm.entities.ai.goals.PhantomFindTargetGoal;
 import mjf.nmm.entities.ai.goals.PhantomStartSwoopGoal;
+import mjf.nmm.entities.ai.goals.PhantomSwoopGoal;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -74,8 +75,13 @@ public abstract class PhantomEntityMixin extends FlyingEntity {
         return new PhantomStartSwoopGoal((PhantomEntity) (Object) this);
     }
 
-    @ModifyArg(method = "initGoals", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/goal/GoalSelector;add(ILnet/minecraft/entity/ai/goal/Goal;)V", ordinal = 3))
+    @ModifyArg(method = "initGoals", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/goal/GoalSelector;add(ILnet/minecraft/entity/ai/goal/Goal;)V", ordinal = 0))
     private Goal seeThroughWalls2(Goal goal) {
+        return new PhantomSwoopGoal((PhantomEntity) (Object) this);
+    }
+
+    @ModifyArg(method = "initGoals", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/goal/GoalSelector;add(ILnet/minecraft/entity/ai/goal/Goal;)V", ordinal = 3))
+    private Goal seeThroughWalls3(Goal goal) {
         return new PhantomFindTargetGoal((PhantomEntity) (Object) this);
     }
 }

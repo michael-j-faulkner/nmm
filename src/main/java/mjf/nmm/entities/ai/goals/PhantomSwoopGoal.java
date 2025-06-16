@@ -18,7 +18,8 @@ public class PhantomSwoopGoal extends Goal {
         private PhantomEntity phantomEntity;
 
 
-		public PhantomSwoopGoal() {
+		public PhantomSwoopGoal(PhantomEntity phantomEntity) {
+			this.phantomEntity = phantomEntity;
 			this.setControls(EnumSet.of(Goal.Control.MOVE));
 		}
 
