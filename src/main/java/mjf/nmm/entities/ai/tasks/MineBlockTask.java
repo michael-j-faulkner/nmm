@@ -59,7 +59,7 @@ public class MineBlockTask<E extends MobEntity> extends MultiTickTask<E> {
         Path path = entity.getNavigation().getCurrentPath();
         
         return this.breakTime >= time
-            && entity.squaredDistanceTo(this.targetPos.getX(), this.targetPos.getY(), this.targetPos.getZ()) < 25.0
+            && entity.squaredDistanceTo(this.targetPos.getX(), this.targetPos.getY(), this.targetPos.getZ()) < 9.0
             && entity.isAlive() 
             && (path == null 
                 || path.getLastNode() == null 

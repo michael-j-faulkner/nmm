@@ -30,7 +30,7 @@ public abstract class FireworkRocketEntityMixin extends ProjectileEntity impleme
         this.lifeTime = lifeTime;
     }
 
-    private static final float PILLAGER_DAMAGE = 30.0f;
+    private static final float PILLAGER_DAMAGE = 15.0f;
 
     @ModifyArg(method = "explode", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;damage(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/damage/DamageSource;F)Z"))
     private float scaleDamage(float damage) {

@@ -36,7 +36,7 @@ public abstract class SpiderEntityMixin extends HostileEntity {
 	private static void editAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
 		cir.setReturnValue(cir.getReturnValue()
 			.add(EntityAttributes.MOVEMENT_SPEED, 0.4)
-            .add(EntityAttributes.ATTACK_DAMAGE, 6.0));
+            .add(EntityAttributes.ATTACK_DAMAGE, 5.0));
 	}
     
     @Override
