@@ -7,8 +7,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
 import mjf.nmm.entities.ScalingDifficulty;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.VaultBlockEntity.Server;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
@@ -19,15 +17,12 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.AbstractSkeletonEntity;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.WitherSkeletonEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
@@ -123,14 +118,11 @@ public abstract class WitherSkeletonEntityMixin extends AbstractSkeletonEntity {
         if (!this.getWorld().isClient) {
             ServerWorld  world = this.getServer().getWorld(this.getWorld().getRegistryKey());
             for (BlockPos direction : List.of(this.getBlockPos().north(), this.getBlockPos().east(), this.getBlockPos().south(), this.getBlockPos().west())) {
-                int emptyCount = 0;    
                 for (int i = 0; i < 3; ++i)
                     if (isEmpty(world, direction.up(i))) {
-                        ++emptyCount;
                         world.breakBlock(direction.up(i), true);
                     }
             }
-            
         }
         super.tick();
     }

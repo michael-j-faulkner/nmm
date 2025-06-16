@@ -2,3 +2,4 @@ accessWidener v2 named
 accessible class net/minecraft/entity/mob/PhantomEntity$PhantomMovementType
 accessible field net/minecraft/entity/mob/PhantomEntity movementType Lnet/minecraft/entity/mob/PhantomEntity$PhantomMovementType;
 accessible field net/minecraft/entity/mob/PhantomEntity circlingCenter Lnet/minecraft/util/math/BlockPos;
+accessible field net/minecraft/entity/mob/PhantomEntity targetPosition Lnet/minecraft/util/math/Vec3d;

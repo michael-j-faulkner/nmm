@@ -2,7 +2,6 @@ package mjf.nmm.entities.ai.tasks;
 
 import java.util.Optional;
 
-import mjf.nmm.entities.ScalingDifficulty;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.LivingTargetCache;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
