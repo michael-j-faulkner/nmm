@@ -23,5 +23,6 @@ public class Events {
 		server.getGameRules().get(GameRules.PLAYERS_SLEEPING_PERCENTAGE).set(101, server);
 		server.getGameRules().get(GameRules.UNIVERSAL_ANGER).set(true, server);
 		server.getGameRules().get(GameRules.FORGIVE_DEAD_PLAYERS).set(false, server);
+		server.getGameRules().get(GameRules.DO_INSOMNIA).set(false, server);
 	}
 }

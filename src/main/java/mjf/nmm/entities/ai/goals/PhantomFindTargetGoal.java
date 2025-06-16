@@ -12,7 +12,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 
 public class PhantomFindTargetGoal extends Goal {
-    private final TargetPredicate TARGET_PREDICATE = TargetPredicate.createAttackable().ignoreVisibility().setBaseMaxDistance(64.0);
+    private final TargetPredicate TARGET_PREDICATE = TargetPredicate.createAttackable().setBaseMaxDistance(64.0); // .ignoreVisibility()
     private int delay = toGoalTicks(20);
 
     private PhantomEntity phantomEntity;

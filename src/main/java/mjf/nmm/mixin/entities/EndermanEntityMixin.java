@@ -111,14 +111,21 @@ public abstract class EndermanEntityMixin extends HostileEntity implements Anger
 
     @Inject(method = "teleportRandomly", at = @At("HEAD"), cancellable = true)
     protected void teleportRandomly(CallbackInfoReturnable<Boolean> cir) {
-        PlayerEntity entity = this.getWorld().getClosestPlayer(this, 128);
-        if (entity != null) {
-
-            this.teleportTo(
-                entity.getX() + this.getRandom().nextTriangular(0.0, 0.5) * 128.0, 
-                entity.getY() + this.getRandom().nextTriangular(0.0, 0.5) * 128.0, 
-                entity.getZ() + this.getRandom().nextTriangular(0.0, 0.5) * 128.0);
-            cir.cancel();
+        if (this.getRandom().nextBoolean()) {
+            PlayerEntity entity = this.getWorld().getClosestPlayer(this, 128);
+            if (entity != null) {
+                this.teleportTo(
+                    entity.getX() + this.getRandom().nextTriangular(0.0, 0.5) * 128.0, 
+                    entity.getY() + this.getRandom().nextTriangular(0.0, 0.5) * 128.0, 
+                    entity.getZ() + this.getRandom().nextTriangular(0.0, 0.5) * 128.0);
+                cir.cancel();
+            }
+        } else {
+                this.teleportTo(
+                    this.getX() + this.getRandom().nextTriangular(0.0, 0.5) * 128.0, 
+                    this.getY() + this.getRandom().nextTriangular(0.0, 0.5) * 128.0, 
+                    this.getZ() + this.getRandom().nextTriangular(0.0, 0.5) * 128.0);
+                cir.cancel();
         }
 	}
 }
