@@ -33,6 +33,11 @@ public abstract class PhantomEntityMixin extends FlyingEntity {
         super(entityType, world);
     }
 
+    @Override
+    public boolean spawnsTooManyForEachTry(int count) {
+        return super.spawnsTooManyForEachTry(count);
+    }
+
     @Shadow
     BlockPos circlingCenter;
     
@@ -75,7 +80,7 @@ public abstract class PhantomEntityMixin extends FlyingEntity {
         return new PhantomStartSwoopGoal((PhantomEntity) (Object) this);
     }
 
-    @ModifyArg(method = "initGoals", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/goal/GoalSelector;add(ILnet/minecraft/entity/ai/goal/Goal;)V", ordinal = 0))
+    @ModifyArg(method = "initGoals", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/goal/GoalSelector;add(ILnet/minecraft/entity/ai/goal/Goal;)V", ordinal = 1))
     private Goal seeThroughWalls2(Goal goal) {
         return new PhantomSwoopGoal((PhantomEntity) (Object) this);
     }
